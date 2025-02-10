@@ -1596,26 +1596,33 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
             .canvas-container {
                 position: relative;
                 width: 100%;
-                height: 600px;
-                background: var(--background);
+                height: 800px;
+                background-color: var(--background);
+                background-image: radial-gradient(circle, var(--border-color) 1px, transparent 1px);
+                background-size: 20px 20px;
                 border: 1px solid var(--border-color);
                 border-radius: 8px;
                 overflow: hidden;
                 margin: 1rem 0;
+                cursor: grab;
+            }
+            .canvas-container:active {
+                cursor: grabbing;
             }
             .canvas-node {
                 position: absolute;
                 background: var(--background);
-                border: 1px solid var(--border-color);
+                border: 2px solid var(--border-color);
                 border-radius: 4px;
                 padding: 1rem;
                 max-width: 300px;
-                transition: transform 0.2s;
+                transition: all 0.2s ease;
                 z-index: 1;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
             .canvas-node:hover {
                 transform: translateY(-2px);
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
                 z-index: 2;
             }
             .canvas-node-text {
@@ -1627,19 +1634,30 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+                background: var(--background);
+                padding: 1rem;
+                border-radius: 4px;
             }
             .canvas-node-file img {
                 max-width: 100%;
                 height: auto;
                 margin-bottom: 0.5rem;
                 border-radius: 4px;
+                border: 1px solid var(--border-color);
             }
             .canvas-node-file a {
                 color: var(--accent);
                 text-decoration: none;
+                font-weight: bold;
+                padding: 0.5rem 1rem;
+                background: var(--background);
+                border: 1px solid var(--accent);
+                border-radius: 4px;
+                transition: all 0.2s ease;
             }
             .canvas-node-file a:hover {
-                text-decoration: underline;
+                background: var(--accent);
+                color: var(--background);
             }
             .canvas-edge {
                 position: absolute;
@@ -1648,11 +1666,16 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
                 opacity: 0.5;
                 transform-origin: left center;
                 pointer-events: none;
+                transition: opacity 0.2s ease;
+            }
+            .canvas-edge:hover {
+                opacity: 1;
             }
             @media (max-width: 768px) {
                 .canvas-container {
                     height: auto;
-                    min-height: 400px;
+                    min-height: 600px;
+                    background-image: none;
                 }
                 .canvas-node {
                     position: relative !important;
@@ -1666,26 +1689,67 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
                 }
             }
         &lt;/style&gt;
-&lt;div class=&#34;canvas-node&#34; id=&#34;node-d496a4076ca8b6f2&#34; style=&#34;left: -206px; top: -153px;&#34;&gt;
+&lt;script&gt;
+            document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+                const container = document.querySelector(&#39;.canvas-container&#39;);
+                let isPanning = false;
+                let startX, startY, scrollLeft, scrollTop;
+&lt;pre&gt;&lt;code&gt;            container.addEventListener(&#39;mousedown&#39;, function(e) {
+                isPanning = true;
+                startX = e.pageX - container.offsetLeft;
+                startY = e.pageY - container.offsetTop;
+                scrollLeft = container.scrollLeft;
+                scrollTop = container.scrollTop;
+            });
+
+            container.addEventListener(&#39;mousemove&#39;, function(e) {
+                if (!isPanning) return;
+                e.preventDefault();
+                const x = e.pageX - container.offsetLeft;
+                const y = e.pageY - container.offsetTop;
+                const dx = x - startX;
+                const dy = y - startY;
+                container.scrollLeft = scrollLeft - dx;
+                container.scrollTop = scrollTop - dy;
+            });
+
+            container.addEventListener(&#39;mouseup&#39;, function() {
+                isPanning = false;
+            });
+
+            container.addEventListener(&#39;mouseleave&#39;, function() {
+                isPanning = false;
+            });
+
+            // Prevent dragging on nodes
+            container.querySelectorAll(&#39;.canvas-node&#39;).forEach(node =&amp;gt; {
+                node.addEventListener(&#39;mousedown&#39;, e =&amp;gt; e.stopPropagation());
+            });
+        });
+    &amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&#34;canvas-node&#34; id=&#34;node-d496a4076ca8b6f2&#34; style=&#34;left: -206px; top: -153px; width: 250px; height: 60px;&#34;&gt;
 &lt;div class=&#34;canvas-node-text&#34;&gt;Test Canvas&lt;/div&gt;
 &lt;/div&gt;
-&lt;div class=&#34;canvas-node&#34; id=&#34;node-ecd6036b38b97a2b&#34; style=&#34;left: -281px; top: -60px;&#34;&gt;
+&lt;div class=&#34;canvas-node&#34; id=&#34;node-ecd6036b38b97a2b&#34; style=&#34;left: -281px; top: -60px; width: 400px; height: 400px;&#34;&gt;
 &lt;div class=&#34;canvas-node-file&#34;&gt;
-&lt;a href=&#34;https://erinskidds.com/blog/test-blog-2&#34;&gt;Test Blog 2&lt;/a&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/test-blog-2&#34;&gt;View Post: Test Blog 2&lt;/a&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;div class=&#34;canvas-node&#34; id=&#34;node-eeebaba9464d388d&#34; style=&#34;left: 161px; top: -125px;&#34;&gt;
+&lt;div class=&#34;canvas-node&#34; id=&#34;node-eeebaba9464d388d&#34; style=&#34;left: 161px; top: -125px; width: 400px; height: 400px;&#34;&gt;
 &lt;div class=&#34;canvas-node-file&#34;&gt;
-&lt;a href=&#34;https://erinskidds.com/blog/files/IMG-20250210021231508.pdf&#34; target=&#34;_blank&#34;&gt;IMG-20250210021231508.pdf&lt;/a&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/files/IMG-20250210021231508.pdf&#34; target=&#34;_blank&#34;&gt;Open PDF: IMG-20250210021231508.pdf&lt;/a&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;div class=&#34;canvas-node&#34; id=&#34;node-fe7b5889183c6889&#34; style=&#34;left: 161px; top: 320px;&#34;&gt;
+&lt;div class=&#34;canvas-node&#34; id=&#34;node-fe7b5889183c6889&#34; style=&#34;left: 161px; top: 320px; width: 400px; height: 246px;&#34;&gt;
 &lt;div class=&#34;canvas-node-file&#34;&gt;
 &lt;img src=&#34;https://erinskidds.com/blog/images/IMG-20250210021231096.jpeg&#34; alt=&#34;IMG-20250210021231096.jpeg&#34;&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/images/IMG-20250210021231096.jpeg&#34; target=&#34;_blank&#34;&gt;View Image&lt;/a&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 ## Kanban - h2
+&lt;h2&gt;1&lt;/h2&gt;
 &lt;div class=&#34;kanban-board&#34;&gt;
 &lt;style&gt;
             .kanban-board {
@@ -1762,15 +1826,7 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
             }
         &lt;/style&gt;
 &lt;div class=&#34;kanban-lane&#34;&gt;
-&lt;div class=&#34;kanban-lane-header&#34;&gt;1&lt;/div&gt;
-&lt;div class=&#34;kanban-cards&#34;&gt;
-&lt;div class=&#34;kanban-card&#34;&gt;
-&lt;div class=&#34;kanban-card-title&#34;&gt;First Card&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;kanban-lane&#34;&gt;
-&lt;div class=&#34;kanban-lane-header&#34;&gt;2&lt;/div&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;-&lt;/div&gt;
 &lt;div class=&#34;kanban-cards&#34;&gt;
 &lt;div class=&#34;kanban-card&#34;&gt;
 &lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Another One&lt;/div&gt;
@@ -1778,14 +1834,85 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
 &lt;div class=&#34;kanban-card&#34;&gt;
 &lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Checklist&lt;/div&gt;
 &lt;/div&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Test&lt;/div&gt;
+&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&#34;kanban-lane&#34;&gt;
-&lt;div class=&#34;kanban-lane-header&#34;&gt;3&lt;/div&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;]&lt;/div&gt;
+&lt;div class=&#34;kanban-cards&#34;&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Another One&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Checklist&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Test&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-lane&#34;&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;rs&lt;/div&gt;
+&lt;div class=&#34;kanban-cards&#34;&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Another One&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Checklist&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Test&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-lane&#34;&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;#&lt;/div&gt;
+&lt;div class=&#34;kanban-cards&#34;&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Another One&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Checklist&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Test&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-lane&#34;&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;no&lt;/div&gt;
+&lt;div class=&#34;kanban-cards&#34;&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Checklist&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Test&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-lane&#34;&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;-&lt;/div&gt;
 &lt;div class=&#34;kanban-cards&#34;&gt;
 &lt;div class=&#34;kanban-card&#34;&gt;
 &lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Test&lt;/div&gt;
 &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-lane&#34;&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;`&lt;/div&gt;
+&lt;div class=&#34;kanban-cards&#34;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-lane&#34;&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;&#34;b&lt;/div&gt;
+&lt;div class=&#34;kanban-cards&#34;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-lane&#34;&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;[f&lt;/div&gt;
+&lt;div class=&#34;kanban-cards&#34;&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;</content>

@@ -533,19 +533,20 @@ def parse_kanban(kanban_content):
         # Get content after frontmatter
         content = kanban_content[frontmatter_match.end():]
         
-        # Split content into sections by headers (##)
-        sections = re.split(r'(?m)^(## [^\n]+)', content)
-        
-        # Remove settings section if present
-        sections = [s for s in sections if not s.strip().startswith('%%')]
+        # Extract header and content separately
+        header_match = re.search(r'(?m)^(## [^\n]+)', content)
+        if header_match:
+            header = header_match.group(1).strip('# ').strip()
+            content = content[header_match.end():].strip()
+        else:
+            header = None
+            content = content.strip()
         
         html = []
         
-        # Add any header that appears before the Kanban board
-        if sections and not sections[0].startswith('## '):
-            header = sections.pop(0).strip()
-            if header:
-                html.append(f'<h2>{header}</h2>')
+        # Add the header if found
+        if header:
+            html.append(f'<h2>{header}</h2>')
         
         html.append('<div class="kanban-board">')
         html.append('''<style>
@@ -624,9 +625,9 @@ def parse_kanban(kanban_content):
         </style>''')
         
         # Process each section as a lane
-        for i in range(0, len(sections), 2):
-            header = sections[i].strip('## ').strip() if i < len(sections) else None
-            content = sections[i + 1] if i + 1 < len(sections) else ""
+        for i in range(0, len(content), 2):
+            header = content[i:i+2].strip() if i+1 < len(content) else None
+            content = content[i+2:].strip() if i+1 < len(content) else ""
             
             if not header:
                 continue
@@ -727,26 +728,33 @@ def parse_canvas(canvas_content):
             .canvas-container {
                 position: relative;
                 width: 100%;
-                height: 600px;
-                background: var(--background);
+                height: 800px;
+                background-color: var(--background);
+                background-image: radial-gradient(circle, var(--border-color) 1px, transparent 1px);
+                background-size: 20px 20px;
                 border: 1px solid var(--border-color);
                 border-radius: 8px;
                 overflow: hidden;
                 margin: 1rem 0;
+                cursor: grab;
+            }
+            .canvas-container:active {
+                cursor: grabbing;
             }
             .canvas-node {
                 position: absolute;
                 background: var(--background);
-                border: 1px solid var(--border-color);
+                border: 2px solid var(--border-color);
                 border-radius: 4px;
                 padding: 1rem;
                 max-width: 300px;
-                transition: transform 0.2s;
+                transition: all 0.2s ease;
                 z-index: 1;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
             .canvas-node:hover {
                 transform: translateY(-2px);
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
                 z-index: 2;
             }
             .canvas-node-text {
@@ -758,19 +766,30 @@ def parse_canvas(canvas_content):
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+                background: var(--background);
+                padding: 1rem;
+                border-radius: 4px;
             }
             .canvas-node-file img {
                 max-width: 100%;
                 height: auto;
                 margin-bottom: 0.5rem;
                 border-radius: 4px;
+                border: 1px solid var(--border-color);
             }
             .canvas-node-file a {
                 color: var(--accent);
                 text-decoration: none;
+                font-weight: bold;
+                padding: 0.5rem 1rem;
+                background: var(--background);
+                border: 1px solid var(--accent);
+                border-radius: 4px;
+                transition: all 0.2s ease;
             }
             .canvas-node-file a:hover {
-                text-decoration: underline;
+                background: var(--accent);
+                color: var(--background);
             }
             .canvas-edge {
                 position: absolute;
@@ -779,11 +798,16 @@ def parse_canvas(canvas_content):
                 opacity: 0.5;
                 transform-origin: left center;
                 pointer-events: none;
+                transition: opacity 0.2s ease;
+            }
+            .canvas-edge:hover {
+                opacity: 1;
             }
             @media (max-width: 768px) {
                 .canvas-container {
                     height: auto;
-                    min-height: 400px;
+                    min-height: 600px;
+                    background-image: none;
                 }
                 .canvas-node {
                     position: relative !important;
@@ -798,19 +822,60 @@ def parse_canvas(canvas_content):
             }
         </style>''')
         
-        # Process nodes
-        node_positions = {}  # Store node positions for edge calculations
+        # Add pan and zoom functionality
+        html.append('''<script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const container = document.querySelector('.canvas-container');
+                let isPanning = false;
+                let startX, startY, scrollLeft, scrollTop;
+
+                container.addEventListener('mousedown', function(e) {
+                    isPanning = true;
+                    startX = e.pageX - container.offsetLeft;
+                    startY = e.pageY - container.offsetTop;
+                    scrollLeft = container.scrollLeft;
+                    scrollTop = container.scrollTop;
+                });
+
+                container.addEventListener('mousemove', function(e) {
+                    if (!isPanning) return;
+                    e.preventDefault();
+                    const x = e.pageX - container.offsetLeft;
+                    const y = e.pageY - container.offsetTop;
+                    const dx = x - startX;
+                    const dy = y - startY;
+                    container.scrollLeft = scrollLeft - dx;
+                    container.scrollTop = scrollTop - dy;
+                });
+
+                container.addEventListener('mouseup', function() {
+                    isPanning = false;
+                });
+
+                container.addEventListener('mouseleave', function() {
+                    isPanning = false;
+                });
+
+                // Prevent dragging on nodes
+                container.querySelectorAll('.canvas-node').forEach(node => {
+                    node.addEventListener('mousedown', e => e.stopPropagation());
+                });
+            });
+        </script>''')
+        
+        # Process nodes with enhanced styling
+        node_positions = {}
         for node in data.get('nodes', []):
             node_id = node.get('id', '')
             x = node.get('x', 0)
             y = node.get('y', 0)
             node_type = node.get('type', '')
+            width = node.get('width', 300)
+            height = node.get('height', 'auto')
             
-            # Store node position for edge calculations
             node_positions[node_id] = {'x': x, 'y': y}
             
-            # Add node HTML based on type
-            html.append(f'<div class="canvas-node" id="node-{node_id}" style="left: {x}px; top: {y}px;">')
+            html.append(f'<div class="canvas-node" id="node-{node_id}" style="left: {x}px; top: {y}px; width: {width}px; height: {height}px;">')
             
             if node_type == 'text':
                 text = node.get('text', '')
@@ -823,20 +888,20 @@ def parse_canvas(canvas_content):
                 html.append('<div class="canvas-node-file">')
                 if file_ext in ['.jpg', '.jpeg', '.png', '.gif']:
                     html.append(f'<img src="/blog/images/{file_name}" alt="{file_name}">')
+                    html.append(f'<a href="/blog/images/{file_name}" target="_blank">View Image</a>')
                 elif file_ext == '.pdf':
-                    html.append(f'<a href="/blog/files/{file_name}" target="_blank">{file_name}</a>')
+                    html.append(f'<a href="/blog/files/{file_name}" target="_blank">Open PDF: {file_name}</a>')
                 elif file_ext == '.md':
-                    # Convert to blog post link
                     title = os.path.splitext(file_name)[0]
                     url = get_file_url(title)
-                    html.append(f'<a href="/blog/{url}">{title}</a>')
+                    html.append(f'<a href="/blog/{url}">View Post: {title}</a>')
                 else:
                     html.append(f'<div class="canvas-node-text">{file_name}</div>')
                 html.append('</div>')
             
-            html.append('</div>')  # Close canvas-node
+            html.append('</div>')
         
-        # Process edges/connections
+        # Process edges with enhanced styling
         for edge in data.get('edges', []):
             from_id = edge.get('fromNode', '')
             to_id = edge.get('toNode', '')
@@ -845,13 +910,11 @@ def parse_canvas(canvas_content):
                 from_pos = node_positions[from_id]
                 to_pos = node_positions[to_id]
                 
-                # Calculate edge position and rotation
                 dx = to_pos['x'] - from_pos['x']
                 dy = to_pos['y'] - from_pos['y']
                 length = (dx * dx + dy * dy) ** 0.5
                 angle = math.atan2(dy, dx) * (180 / math.pi)
                 
-                # Add edge HTML with calculated position and rotation
                 html.append(f'''<div class="canvas-edge" style="
                     left: {from_pos['x']}px;
                     top: {from_pos['y']}px;
@@ -859,7 +922,7 @@ def parse_canvas(canvas_content):
                     transform: rotate({angle}deg);
                 "></div>''')
         
-        html.append('</div>')  # Close canvas-container
+        html.append('</div>')
         
         result = '\n'.join(html)
         print("\nGenerated Canvas HTML preview:")
@@ -871,7 +934,7 @@ def parse_canvas(canvas_content):
         print("Full traceback:")
         traceback.print_exc()
         print("\nCanvas content preview:")
-        print(canvas_content[:500])  # Print first 500 chars to help debug
+        print(canvas_content[:500])
         return f'<div class="error">Error parsing Canvas: {str(e)}</div>'
 
 def is_kanban_file(content):
