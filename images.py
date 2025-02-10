@@ -517,6 +517,9 @@ def parse_cardlink(cardlink_block):
 def parse_kanban(kanban_content):
     """Parse a Kanban board and convert it to HTML."""
     try:
+        # Replace tabs with spaces to avoid YAML parsing issues
+        kanban_content = kanban_content.replace('\t', '    ')
+        
         # Extract YAML frontmatter
         frontmatter_match = re.search(r'^---\s*(.*?)\s*---', kanban_content, re.DOTALL)
         if not frontmatter_match:
@@ -526,10 +529,11 @@ def parse_kanban(kanban_content):
         if not frontmatter.get('kanban-plugin') == 'board':
             raise ValueError("Not a Kanban board")
 
-        # Parse the remaining content as YAML
-        content_start = frontmatter_match.end()
-        board_content = kanban_content[content_start:].strip()
-        data = yaml.safe_load(board_content)
+        # Split content into sections by headers (##)
+        sections = re.split(r'(?m)^## ', kanban_content[frontmatter_match.end():])
+        
+        # Remove settings section if present
+        sections = [s for s in sections if not s.strip().startswith('%%')]
         
         html = ['<div class="kanban-board">']
         html.append('''<style>
@@ -580,6 +584,23 @@ def parse_kanban(kanban_content):
                 font-size: 0.9rem;
                 white-space: pre-wrap;
             }
+            .kanban-card-checkbox {
+                margin-right: 0.5rem;
+                opacity: 0.6;
+            }
+            .kanban-card-title {
+                font-weight: bold;
+                margin-bottom: 0.5rem;
+            }
+            .kanban-card-checklist {
+                margin-left: 1.5rem;
+                margin-top: 0.5rem;
+            }
+            .kanban-card-checklist-item {
+                display: flex;
+                align-items: flex-start;
+                margin-bottom: 0.25rem;
+            }
             @media (max-width: 768px) {
                 .kanban-board {
                     flex-direction: column;
@@ -590,28 +611,70 @@ def parse_kanban(kanban_content):
             }
         </style>''')
         
-        # Process lanes
-        lanes = data.get('lanes', [])
-        if not lanes and isinstance(data, dict):
-            # If lanes aren't in a 'lanes' key, assume top-level keys are lane names
-            lanes = [{'id': k, 'title': k, 'items': v} for k, v in data.items() if isinstance(v, list)]
-        
-        for lane in lanes:
+        # Process each section as a lane
+        for section in sections:
+            if not section.strip():
+                continue
+                
+            # Split section into title and items
+            lines = section.strip().split('\n')
+            title = lines[0].strip()
+            items = []
+            
+            current_card = None
+            for line in lines[1:]:
+                line = line.strip()
+                if not line:
+                    continue
+                    
+                if line.startswith('- [ ]'):  # New card
+                    if current_card:
+                        items.append(current_card)
+                    current_card = {
+                        'text': line[5:].strip(),
+                        'checklist': []
+                    }
+                elif line.startswith('    - [ ]') and current_card:  # Checklist item
+                    current_card['checklist'].append(line[9:].strip())
+                elif line.startswith('    ') and current_card:  # Card text
+                    if 'description' not in current_card:
+                        current_card['description'] = []
+                    current_card['description'].append(line.strip())
+            
+            if current_card:
+                items.append(current_card)
+            
+            # Generate HTML for lane
             html.append('<div class="kanban-lane">')
-            html.append(f'<div class="kanban-lane-header">{lane.get("title", "")}</div>')
+            html.append(f'<div class="kanban-lane-header">{title}</div>')
             html.append('<div class="kanban-cards">')
             
-            # Process cards in lane
-            items = lane.get('items', []) or lane.get('cards', [])
+            # Generate HTML for cards
             for item in items:
-                if isinstance(item, str):
-                    text = item
-                else:
-                    text = item.get('text', '') or item.get('title', '')
-                
                 html.append('<div class="kanban-card">')
-                html.append(f'<div class="kanban-card-text">{text}</div>')
-                html.append('</div>')
+                
+                # Card title/text
+                text = item['text']
+                if text.startswith('# '):  # Handle title formatting
+                    title = text[2:].strip()
+                    html.append(f'<div class="kanban-card-title">{title}</div>')
+                else:
+                    html.append(f'<div class="kanban-card-text"><span class="kanban-card-checkbox">☐</span>{text}</div>')
+                
+                # Card description
+                if 'description' in item:
+                    html.append(f'<div class="kanban-card-text">{" ".join(item["description"])}</div>')
+                
+                # Card checklist
+                if item['checklist']:
+                    html.append('<div class="kanban-card-checklist">')
+                    for checklist_item in item['checklist']:
+                        html.append('<div class="kanban-card-checklist-item">')
+                        html.append(f'<span class="kanban-card-checkbox">☐</span>{checklist_item}')
+                        html.append('</div>')
+                    html.append('</div>')
+                
+                html.append('</div>')  # Close kanban-card
             
             html.append('</div>')  # Close kanban-cards
             html.append('</div>')  # Close kanban-lane
@@ -620,7 +683,10 @@ def parse_kanban(kanban_content):
         return '\n'.join(html)
     except Exception as e:
         print(f"Error parsing Kanban: {e}")
+        print("Full traceback:")
         traceback.print_exc()
+        print("\nKanban content preview:")
+        print(kanban_content[:500])  # Print first 500 chars to help debug
         return f'<div class="error">Error parsing Kanban board: {str(e)}</div>'
 
 def parse_canvas(canvas_content):
