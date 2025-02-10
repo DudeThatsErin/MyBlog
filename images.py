@@ -713,15 +713,25 @@ def is_kanban_file(content):
 
 def process_embedded_files(content, base_name):
     """Process embedded Kanban and Canvas files."""
+    print("\nChecking content for embedded files...")
+    print(f"Content preview: {content[:200]}...")  # Debug: Show content preview
+    
     # Pattern for embedded files: ![[filename.extension|embed]] or ![[filename.extension]]
     embed_pattern = r'!\[\[(.*?(?:\.canvas|\.md))(?:\|([^]]*)?)?\]\]'
-    matches = re.finditer(embed_pattern, content, re.IGNORECASE)
+    matches = list(re.finditer(embed_pattern, content, re.IGNORECASE))
+    print(f"Found {len(matches)} potential embedded files")  # Debug: Show number of matches
     
     for match in matches:
         file_path = match.group(1)
-        is_embed = match.group(2) == 'embed' if match.group(2) else False
+        is_embed = match.group(2) == 'embed' if match.group(2) else True  # Default to embed if not specified
         file_name = clean_filename(file_path)
         file_ext = os.path.splitext(file_name)[1].lower()
+        
+        print(f"\nProcessing embedded file:")  # Debug info
+        print(f"  File path: {file_path}")
+        print(f"  Is embed: {is_embed}")
+        print(f"  File name: {file_name}")
+        print(f"  Extension: {file_ext}")
         
         # Get the post-specific attachments directory
         post_attachments_dir = get_post_attachments_dir(base_name)
@@ -729,7 +739,7 @@ def process_embedded_files(content, base_name):
         # Try multiple possible locations for the file
         possible_sources = [
             os.path.join(post_attachments_dir, file_name),
-            os.path.join(attachments_base, "Test Blog", file_name),  # Ensure Test Blog folder is checked
+            os.path.join(attachments_base, "Test Blog", file_name),
             os.path.join(attachments_base, file_name),
             os.path.join(posts_dir, file_name),
             os.path.join(posts_dir, "attachments", file_name)
@@ -737,29 +747,38 @@ def process_embedded_files(content, base_name):
         
         file_found = False
         for file_source in possible_sources:
-            print(f"Checking for file at: {file_source}")  # Debug statement
+            print(f"Checking for file at: {file_source}")
             if os.path.exists(file_source):
-                print(f"Found file at: {file_source}")  # Debug statement
+                print(f"Found file at: {file_source}")
                 try:
                     with open(file_source, 'r', encoding='utf-8') as f:
                         file_content = f.read()
+                        print(f"File content preview: {file_content[:200]}...")  # Debug: Show file content
                     
                     if is_embed:
-                        # Generate embedded view
                         if file_ext == '.md':
                             # Check if it's a Kanban file
-                            if is_kanban_file(file_content):
-                                print(f"Processing Kanban file: {file_name}")  # Debug statement
+                            is_kanban = is_kanban_file(file_content)
+                            print(f"Is Kanban file: {is_kanban}")  # Debug: Show Kanban detection result
+                            if is_kanban:
+                                print(f"Processing Kanban file: {file_name}")
                                 html = parse_kanban(file_content)
+                                print(f"Generated HTML preview: {html[:200]}...")  # Debug: Show generated HTML
                             else:
                                 html = f'<div class="error">Not a Kanban board: {file_name}</div>'
                         elif file_ext == '.canvas':
-                            print(f"Processing Canvas file: {file_name}")  # Debug statement
+                            print(f"Processing Canvas file: {file_name}")
                             html = parse_canvas(file_content)
                         else:
                             html = f'<div class="error">Unsupported file type for embedding: {file_ext}</div>'
                         
+                        # Replace the match with the generated HTML
+                        old_content = content
                         content = content.replace(match.group(0), html)
+                        if content == old_content:
+                            print("Warning: Content replacement did not change the content")  # Debug: Check if replacement worked
+                        else:
+                            print("Successfully replaced content with HTML")
                     else:
                         # Generate link to separate note
                         title = os.path.splitext(file_name)[0]
@@ -768,7 +787,6 @@ def process_embedded_files(content, base_name):
                         # Copy file to posts directory if it's not already there
                         target_path = os.path.join(posts_dir, f"{title}.md")
                         if not os.path.exists(target_path):
-                            # Create a new markdown file with the canvas/kanban content
                             with open(target_path, 'w', encoding='utf-8') as f:
                                 f.write(f'''---
 title: "{title}"

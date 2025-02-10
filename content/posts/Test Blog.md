@@ -101,4 +101,8 @@ Random Text
 </div>
 ## Kanban - h2
 
-![[Untitled Kanban|embed]]
+<div class="error">Error parsing Kanban board: while scanning for the next token
+found character '\t' that cannot start any token
+  in "<unicode string>", line 4, column 1:
+    	Text
+    ^</div>
