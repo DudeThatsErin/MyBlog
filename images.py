@@ -154,16 +154,24 @@ for filename in os.listdir(posts_dir):
             file_name = clean_filename(file_path)
             file_ext = os.path.splitext(file_name)[1].lower()
             
-            # Try both with and without 'attachments' in the path
+            # Try multiple possible locations for the file
             possible_sources = [
-                os.path.join(attachments_dir, file_name),
-                os.path.join(attachments_dir, file_path)
+                os.path.join(attachments_dir, file_name),  # Direct in attachments
+                os.path.join(attachments_dir, file_path),  # Full path in attachments
+                os.path.join(posts_dir, file_name),        # Direct in posts
+                os.path.join(posts_dir, "attachments", file_name),  # In posts/attachments
+                file_path  # Try the exact path as given
             ]
+            
+            print(f"\nLooking for {file_name}")
+            print(f"Original path: {file_path}")
+            print(f"Alias: {alias}")
             
             file_found = False
             for file_source in possible_sources:
-                print(f"\nTrying path: {file_source}")
+                print(f"Trying path: {file_source}")
                 if os.path.exists(file_source):
+                    print(f"Found file at: {file_source}")
                     if file_ext in ['.jpg', '.jpeg', '.png', '.gif']:
                         # Handle images
                         target_path = os.path.join(static_images_dir, file_name)
@@ -185,12 +193,20 @@ for filename in os.listdir(posts_dir):
             
             if not file_found:
                 print(f"Warning: File not found in any location")
-                print(f"Tried paths: {possible_sources}")
-                print(f"Contents of attachments directory:")
+                print(f"Tried paths:")
+                for path in possible_sources:
+                    print(f"  - {path}")
+                print(f"\nContents of directories:")
+                print(f"Attachments dir ({attachments_dir}):")
                 try:
                     print(os.listdir(attachments_dir))
                 except Exception as e:
                     print(f"Error listing attachments directory: {e}")
+                print(f"\nPosts dir ({posts_dir}):")
+                try:
+                    print(os.listdir(posts_dir))
+                except Exception as e:
+                    print(f"Error listing posts directory: {e}")
 
         # Write the updated content back
         with open(filepath, "w", encoding="utf-8") as file:
