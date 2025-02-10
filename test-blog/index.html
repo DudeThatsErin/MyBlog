@@ -262,39 +262,51 @@ document.addEventListener('DOMContentLoaded', function() {
 <h3 id="canvas---h3">Canvas - h3</h3>
 <div class="canvas-container">
 <style>
-<pre><code>        .canvas-container {
-            position: relative;
-            width: 100%;
-            height: 600px;
-            background: var(--background);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .canvas-node {
-            position: absolute;
-            background: var(--background);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            padding: 1rem;
-            max-width: 300px;
-        }
-        .canvas-node-text {
-            font-size: 0.9rem;
-        }
-        .canvas-edge {
-            position: absolute;
-            border-top: 2px solid var(--accent);
-            opacity: 0.5;
-        }
-        @media (max-width: 768px) {
             .canvas-container {
-                height: auto;
-                min-height: 400px;
+                position: relative;
+                width: 100%;
+                height: 600px;
+                background: var(--background);
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                overflow: hidden;
+                margin: 1rem 0;
             }
-        }
-</code></pre>
-<p></style></p>
+            .canvas-node {
+                position: absolute;
+                background: var(--background);
+                border: 1px solid var(--border-color);
+                border-radius: 4px;
+                padding: 1rem;
+                max-width: 300px;
+                transition: transform 0.2s;
+            }
+            .canvas-node:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .canvas-node-text {
+                font-size: 0.9rem;
+                color: var(--color);
+            }
+            .canvas-edge {
+                position: absolute;
+                border-top: 2px solid var(--accent);
+                opacity: 0.5;
+            }
+            @media (max-width: 768px) {
+                .canvas-container {
+                    height: auto;
+                    min-height: 400px;
+                }
+                .canvas-node {
+                    position: relative;
+                    left: 0 !important;
+                    top: 0 !important;
+                    margin: 1rem 0;
+                }
+            }
+        </style>
 <div class="canvas-node" style="left: -206px; top: -153px;">
 <div class="canvas-node-text">Test Canvas</div>
 </div>
