@@ -2,6 +2,7 @@ import os
 import re
 import shutil
 import yaml
+from urllib.parse import quote
 
 # Paths
 posts_dir = r"F:\repos\CURRENTBLOG\erinblog-1\content\posts"
@@ -17,8 +18,8 @@ def slugify(title):
     """Convert a title to a URL-friendly slug."""
     # First convert spaces to hyphens and make lowercase
     slug = title.lower().replace(' ', '-')
-    # Then replace hashtag with URL-encoded version (%23)
-    return slug.replace('#', '%23')
+    # Then properly URL encode the hash symbol
+    return quote(slug, safe='-')
 
 def clean_filename(filename):
     """Extract the actual filename from Obsidian path and remove alias."""

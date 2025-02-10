@@ -23,6 +23,11 @@ paginate = 5
 [permalinks]
   posts = "/:slug/"
 
+[urls]
+  # Preserve URL encoding
+  disablePathToLower = true
+  preserveSymlinks = true
+
 [outputs]
   home = ["html", "json"]
 
