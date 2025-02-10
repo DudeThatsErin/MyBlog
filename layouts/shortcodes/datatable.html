@@ -1,0 +1,49 @@
+{{ $headers := .Get "headers" | split "," }}
+{{ $data := .Inner }}
+
+<div class="dataview-table">
+  <table>
+    <thead>
+      <tr>
+        {{ range $headers }}
+        <th>{{ . }}</th>
+        {{ end }}
+      </tr>
+    </thead>
+    <tbody>
+      {{ range split $data "\n" }}
+        {{ if . }}
+        <tr>
+          {{ range split . "|" }}
+          <td>{{ . | trim }}</td>
+          {{ end }}
+        </tr>
+        {{ end }}
+      {{ end }}
+    </tbody>
+  </table>
+</div>
+
+<style>
+.dataview-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.dataview-table th {
+  background-color: #f4f4f4;
+  padding: 0.5rem;
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+}
+
+.dataview-table td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.dataview-table tr:hover {
+  background-color: #f8f8f8;
+}
+</style> 

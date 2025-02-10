@@ -17,7 +17,7 @@ os.makedirs(static_files_dir, exist_ok=True)
 def parse_dataview_query(query_block):
     """Parse a Dataview query block and convert it to Hugo-compatible format."""
     # Extract the query type and parameters
-    lines = query_block.strip().split('\n')
+    lines = [line.strip() for line in query_block.strip().split('\n')]
     query_type = lines[0].lower()
     
     # Initialize result
@@ -26,19 +26,44 @@ def parse_dataview_query(query_block):
     if 'table' in query_type:
         # Handle TABLE queries
         fields = []
-        for line in lines[1:]:
-            if 'from' in line.lower():
-                break
-            fields.extend(f.strip() for f in line.split(',') if f.strip())
+        data = []
+        in_data = False
         
-        # Create Hugo table header
+        for line in lines[1:]:
+            if not line:  # Skip empty lines
+                continue
+            if 'from' in line.lower():
+                in_data = True
+                continue
+            if not in_data:
+                # Collect fields before 'from'
+                fields.extend(f.strip() for f in line.split(',') if f.strip())
+            else:
+                # Collect data after 'from'
+                if 'where' not in line.lower() and 'sort' not in line.lower():
+                    data.append(line)
+        
         if fields:
-            result.append('| ' + ' | '.join(fields) + ' |')
-            result.append('|' + '---|' * len(fields))
+            # Create datatable shortcode
+            result.append(f'{{{{< datatable headers="{",".join(fields)}" >}}')
+            for row in data:
+                result.append(row)
+            result.append('{{< /datatable >}}')
     
     elif 'list' in query_type:
         # Handle LIST queries
-        result.append('{{< postlist >}}')
+        query = ""
+        for line in lines[1:]:
+            if line.lower().startswith('where'):
+                query = line[6:].strip()  # Extract the where clause
+                break
+        
+        # Create datalist shortcode with optional query
+        if query:
+            result.append(f'{{{{< datalist query="{query}" >}}')
+        else:
+            result.append('{{{{< datalist >}}')
+        result.append('{{< /datalist >}}')
     
     return '\n'.join(result)
 
