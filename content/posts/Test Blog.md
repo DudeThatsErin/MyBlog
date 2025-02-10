@@ -33,6 +33,6 @@ Random Text
 `inline code` random text here next to it.
 
 ## Image - h2
-![[galaxy.jpeg]]
+![[Blogs/attachments/blue_galaxy.jpeg]]
 ### PDF - h3
-![[src6.pdf]]
+![[Blogs/attachments/src3.pdf|src3]]
