@@ -71,14 +71,17 @@ lastmod: 2024-02-10
 <thead><tr>
 <th>Name</th>
 <th>Title</th>
+<th>Url</th>
 </tr></thead>
 <tbody>
 <tr>
 <td>Test Blog 2</td>
 <td></td>
+<td></td>
 </tr>
 <tr>
 <td>Test Blog</td>
+<td></td>
 <td></td>
 </tr>
 </tbody>
