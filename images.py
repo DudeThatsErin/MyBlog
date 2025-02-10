@@ -4,6 +4,7 @@ import shutil
 import yaml
 import json
 from datetime import datetime
+import traceback
 
 # Paths
 posts_dir = r"F:\repos\CURRENTBLOG\erinblog-1\content\posts"
@@ -516,17 +517,27 @@ def parse_cardlink(cardlink_block):
 def parse_kanban(kanban_content):
     """Parse a Kanban board and convert it to HTML."""
     try:
-        data = yaml.safe_load(kanban_content)
+        # First try to parse as YAML
+        try:
+            data = yaml.safe_load(kanban_content)
+        except:
+            # If YAML parsing fails, try to extract the Kanban data structure
+            kanban_pattern = r'---\s*kanban-plugin\s*---\n(.*?)(?=\n---|\Z)'
+            match = re.search(kanban_pattern, kanban_content, re.DOTALL)
+            if match:
+                data = yaml.safe_load(match.group(1))
+            else:
+                raise ValueError("Could not find Kanban data structure")
         
         html = ['<div class="kanban-board">']
-        html.append('<style>')
-        html.append('''
+        html.append('''<style>
             .kanban-board {
                 display: flex;
                 gap: 1rem;
                 overflow-x: auto;
                 padding: 1rem 0;
                 min-height: 400px;
+                margin: 1rem 0;
             }
             .kanban-lane {
                 min-width: 300px;
@@ -540,6 +551,7 @@ def parse_kanban(kanban_content):
                 margin-bottom: 1rem;
                 padding-bottom: 0.5rem;
                 border-bottom: 2px solid var(--accent);
+                color: var(--color);
             }
             .kanban-card {
                 background: var(--background);
@@ -547,9 +559,15 @@ def parse_kanban(kanban_content):
                 border-radius: 4px;
                 padding: 0.75rem;
                 margin-bottom: 0.75rem;
+                transition: transform 0.2s;
             }
             .kanban-card:hover {
+                transform: translateY(-2px);
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .kanban-card-text {
+                color: var(--color);
+                font-size: 0.9rem;
             }
             @media (max-width: 768px) {
                 .kanban-board {
@@ -559,8 +577,7 @@ def parse_kanban(kanban_content):
                     min-width: 100%;
                 }
             }
-        ''')
-        html.append('</style>')
+        </style>''')
         
         # Process lanes
         for lane in data.get('lanes', []):
@@ -587,8 +604,8 @@ def parse_canvas(canvas_content):
         data = json.loads(canvas_content)
         
         html = ['<div class="canvas-container">']
-        html.append('<style>')
-        html.append('''
+        # Add styles to head instead of inline
+        html.append('''<style>
             .canvas-container {
                 position: relative;
                 width: 100%;
@@ -597,6 +614,7 @@ def parse_canvas(canvas_content):
                 border: 1px solid var(--border-color);
                 border-radius: 8px;
                 overflow: hidden;
+                margin: 1rem 0;
             }
             .canvas-node {
                 position: absolute;
@@ -605,9 +623,15 @@ def parse_canvas(canvas_content):
                 border-radius: 4px;
                 padding: 1rem;
                 max-width: 300px;
+                transition: transform 0.2s;
+            }
+            .canvas-node:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
             .canvas-node-text {
                 font-size: 0.9rem;
+                color: var(--color);
             }
             .canvas-edge {
                 position: absolute;
@@ -619,9 +643,14 @@ def parse_canvas(canvas_content):
                     height: auto;
                     min-height: 400px;
                 }
+                .canvas-node {
+                    position: relative;
+                    left: 0 !important;
+                    top: 0 !important;
+                    margin: 1rem 0;
+                }
             }
-        ''')
-        html.append('</style>')
+        </style>''')
         
         # Process nodes
         for node in data.get('nodes', []):
@@ -648,13 +677,13 @@ def parse_canvas(canvas_content):
 
 def process_embedded_files(content, base_name):
     """Process embedded Kanban and Canvas files."""
-    # Pattern for embedded files: ![[filename.extension]]
-    embed_pattern = r'!\[\[(.*?(?:\.canvas|\.md))(?:\|embed)?\]\]'
+    # Pattern for embedded files: ![[filename.extension|embed]] or ![[filename.extension]]
+    embed_pattern = r'!\[\[(.*?(?:\.canvas|\.md))(?:\|([^]]*)?)?\]\]'
     matches = re.finditer(embed_pattern, content, re.IGNORECASE)
     
     for match in matches:
         file_path = match.group(1)
-        is_embed = '|embed' in match.group(0)
+        is_embed = match.group(2) == 'embed' if match.group(2) else False
         file_name = clean_filename(file_path)
         file_ext = os.path.splitext(file_name)[1].lower()
         
@@ -678,11 +707,13 @@ def process_embedded_files(content, base_name):
                     
                     if is_embed:
                         # Generate embedded view
-                        if file_ext == '.md' and '%%kanban%%' in file_content:
-                            # Process as Kanban
-                            html = parse_kanban(file_content)
+                        if file_ext == '.md':
+                            # Check if it's a Kanban file
+                            if '```kanban' in file_content or 'kanban-plugin' in file_content:
+                                html = parse_kanban(file_content)
+                            else:
+                                html = f'<div class="error">Not a Kanban board: {file_name}</div>'
                         elif file_ext == '.canvas':
-                            # Process as Canvas
                             html = parse_canvas(file_content)
                         else:
                             html = f'<div class="error">Unsupported file type for embedding: {file_ext}</div>'
@@ -715,9 +746,13 @@ type: "{file_ext.replace('.', '')}"
                     break
                 except Exception as e:
                     print(f"Error processing file {file_name}: {e}")
+                    traceback.print_exc()
         
         if not file_found:
             print(f"Warning: File not found in any location: {file_name}")
+            print(f"Tried paths:")
+            for path in possible_sources:
+                print(f"  - {path}")
 
     return content
 
