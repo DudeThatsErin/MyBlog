@@ -1,0 +1,55 @@
+{{ $pages := where .Site.RegularPages "Type" "in" (slice "posts") }}
+<div class="post-list">
+  {{ range $pages.ByDate.Reverse }}
+  <div class="post-item">
+    <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+    <div class="post-meta">
+      <span class="date">{{ .Date.Format "2006-01-02" }}</span>
+      {{ with .Params.tags }}
+      <span class="tags">
+        {{ range . }}
+        <a href="/blog/tags/{{ . | urlize }}">#{{ . }}</a>
+        {{ end }}
+      </span>
+      {{ end }}
+    </div>
+    {{ with .Description }}
+    <div class="description">{{ . }}</div>
+    {{ end }}
+  </div>
+  {{ end }}
+</div>
+
+<style>
+.post-list {
+  margin: 2rem 0;
+}
+.post-item {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+.post-item:last-child {
+  border-bottom: none;
+}
+.post-meta {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0.5rem 0;
+}
+.post-meta .tags {
+  margin-left: 1rem;
+}
+.post-meta .tags a {
+  margin-right: 0.5rem;
+  color: #0066cc;
+  text-decoration: none;
+}
+.post-meta .tags a:hover {
+  text-decoration: underline;
+}
+.description {
+  margin-top: 0.5rem;
+  color: #444;
+}
+</style> 

@@ -2,6 +2,7 @@ import os
 import re
 import shutil
 import yaml
+from datetime import datetime
 
 # Paths
 posts_dir = r"F:\repos\CURRENTBLOG\erinblog-1\content\posts"
@@ -13,12 +14,50 @@ static_files_dir = r"F:\repos\CURRENTBLOG\erinblog-1\static\files"
 os.makedirs(static_images_dir, exist_ok=True)
 os.makedirs(static_files_dir, exist_ok=True)
 
+def parse_dataview_query(query_block):
+    """Parse a Dataview query block and convert it to Hugo-compatible format."""
+    # Extract the query type and parameters
+    lines = query_block.strip().split('\n')
+    query_type = lines[0].lower()
+    
+    # Initialize result
+    result = []
+    
+    if 'table' in query_type:
+        # Handle TABLE queries
+        fields = []
+        for line in lines[1:]:
+            if 'from' in line.lower():
+                break
+            fields.extend(f.strip() for f in line.split(',') if f.strip())
+        
+        # Create Hugo table header
+        if fields:
+            result.append('| ' + ' | '.join(fields) + ' |')
+            result.append('|' + '---|' * len(fields))
+    
+    elif 'list' in query_type:
+        # Handle LIST queries
+        result.append('{{< postlist >}}')
+    
+    return '\n'.join(result)
+
+def process_dataview(content):
+    """Find and process Dataview code blocks."""
+    dataview_pattern = r'```dataview\n(.*?)\n```'
+    
+    def replace_dataview(match):
+        query_block = match.group(1)
+        return parse_dataview_query(query_block)
+    
+    return re.sub(dataview_pattern, replace_dataview, content, flags=re.DOTALL)
+
 def create_filename(title):
     """Convert a title to a filename-friendly format."""
     # Replace spaces with hyphens and preserve special characters
     filename = title.lower().replace(' ', '-')
-    # Ensure special characters are preserved
-    filename = filename.replace('#', '%232')
+    # Ensure special characters are preserved (single encoding)
+    filename = filename.replace('#', '2')  # Just use 2 for the number
     return filename
 
 def format_url(title):
@@ -79,6 +118,9 @@ for filename in os.listdir(posts_dir):
 
         with open(filepath, "r", encoding="utf-8") as file:
             content = file.read()
+
+        # Process Dataview blocks first
+        content = process_dataview(content)
 
         # Handle internal links (links to other posts)
         internal_links = re.findall(r'\[\[([^]\.]*)\]\]', content)

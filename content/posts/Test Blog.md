@@ -33,6 +33,6 @@ Random Text
 `inline code` random text here next to it.
 
 ## Image - h2
-![blue_galaxy.jpeg](/blog/images/blue_galaxy.jpeg)
+![[IMG-20250210021231096.jpeg]]
 ### PDF - h3
-{{< pdf src="/blog/files/src3.pdf" >}}
+![[IMG-20250210021231508.pdf|src3]]
