@@ -8,7 +8,7 @@ import traceback
 
 # Paths
 posts_dir = r"F:\repos\CURRENTBLOG\erinblog-1\content\posts"
-attachments_base = r"E:\Obs\MyVault\90-Attachments\blogs"  # Updated base attachments path
+attachments_base = r"E:\Obs\MyVault\90-Attachments\Blogs"  # Updated base attachments path
 static_images_dir = r"F:\repos\CURRENTBLOG\erinblog-1\static\images"
 static_files_dir = r"F:\repos\CURRENTBLOG\erinblog-1\static\files"
 
@@ -729,6 +729,7 @@ def process_embedded_files(content, base_name):
         # Try multiple possible locations for the file
         possible_sources = [
             os.path.join(post_attachments_dir, file_name),
+            os.path.join(attachments_base, "Test Blog", file_name),  # Ensure Test Blog folder is checked
             os.path.join(attachments_base, file_name),
             os.path.join(posts_dir, file_name),
             os.path.join(posts_dir, "attachments", file_name)
@@ -736,7 +737,9 @@ def process_embedded_files(content, base_name):
         
         file_found = False
         for file_source in possible_sources:
+            print(f"Checking for file at: {file_source}")  # Debug statement
             if os.path.exists(file_source):
+                print(f"Found file at: {file_source}")  # Debug statement
                 try:
                     with open(file_source, 'r', encoding='utf-8') as f:
                         file_content = f.read()
@@ -746,10 +749,12 @@ def process_embedded_files(content, base_name):
                         if file_ext == '.md':
                             # Check if it's a Kanban file
                             if is_kanban_file(file_content):
+                                print(f"Processing Kanban file: {file_name}")  # Debug statement
                                 html = parse_kanban(file_content)
                             else:
                                 html = f'<div class="error">Not a Kanban board: {file_name}</div>'
                         elif file_ext == '.canvas':
+                            print(f"Processing Canvas file: {file_name}")  # Debug statement
                             html = parse_canvas(file_content)
                         else:
                             html = f'<div class="error">Unsupported file type for embedding: {file_ext}</div>'
