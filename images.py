@@ -104,9 +104,8 @@ def parse_dataview_query(query_block):
                             print(f"Field {field}: {value}")
                         
                         if row_data:
-                            row_str = '|'.join(row_data)
-                            data.append(row_str)
-                            print(f"Added row: {row_str}")
+                            data.append(row_data)
+                            print(f"Added row: {row_data}")
                 continue
             
             if 'where' in line.lower() or 'sort' in line.lower():
@@ -114,17 +113,83 @@ def parse_dataview_query(query_block):
                 continue
         
         if fields:
-            # Use aliases for headers
-            header_names = [field_aliases.get(field, field) for field in fields]
-            # Create datatable shortcode with quoted parameters
-            shortcode_start = '{{< datatable headers="%s" >}}' % ','.join(header_names)
-            result.append(shortcode_start)
-            print(f"Created shortcode start: {shortcode_start}")
+            # Generate HTML table
+            html = ['<div class="dataview-table">']
+            html.append('<style>')
+            html.append('''
+                .dataview-table {
+                    margin: 2rem 0;
+                    overflow-x: auto;
+                }
+                .dataview-table table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 0;
+                    font-size: 0.95rem;
+                    background: var(--background);
+                }
+                .dataview-table th {
+                    background-color: var(--accent);
+                    color: var(--background);
+                    padding: 0.75rem 1rem;
+                    text-align: left;
+                    font-weight: bold;
+                    border-bottom: 2px solid var(--border-color);
+                }
+                .dataview-table td {
+                    padding: 0.75rem 1rem;
+                    border-bottom: 1px solid var(--border-color);
+                    vertical-align: top;
+                }
+                .dataview-table tr:hover {
+                    background-color: var(--hover);
+                }
+                .dataview-table tr:last-child td {
+                    border-bottom: none;
+                }
+                .dataview-table a {
+                    color: var(--accent);
+                    text-decoration: none;
+                }
+                .dataview-table a:hover {
+                    text-decoration: underline;
+                }
+                @media (max-width: 768px) {
+                    .dataview-table {
+                        margin: 1rem -1rem;
+                        width: calc(100% + 2rem);
+                    }
+                    .dataview-table th,
+                    .dataview-table td {
+                        padding: 0.5rem;
+                    }
+                }
+            ''')
+            html.append('</style>')
+            html.append('<table>')
+            
+            # Add headers
+            header_names = [field_aliases.get(field, field).title() for field in fields]
+            html.append('<thead><tr>')
+            for header in header_names:
+                html.append(f'<th>{header}</th>')
+            html.append('</tr></thead>')
+            
+            # Add data rows
+            html.append('<tbody>')
             for row in data:
-                result.append(row)
-                print(f"Added data row: {row}")
-            result.append('{{< /datatable >}}')
-            print("Added shortcode end")
+                html.append('<tr>')
+                for cell in row:
+                    html.append(f'<td>{cell}</td>')
+                html.append('</tr>')
+            html.append('</tbody>')
+            
+            html.append('</table>')
+            html.append('</div>')
+            
+            result = '\n'.join(html)
+            print("\nGenerated HTML table:")
+            print(result)
     
     elif 'list' in query_type:
         print("Processing LIST query")
@@ -136,20 +201,97 @@ def parse_dataview_query(query_block):
                 print(f"Found WHERE clause: {query}")
                 break
         
-        # Create datalist shortcode with quoted parameters
-        if query:
-            shortcode = '{{< datalist query="%s" >}}' % query
-        else:
-            shortcode = '{{< datalist >}}'
-        result.append(shortcode)
-        print(f"Created shortcode: {shortcode}")
-        result.append('{{< /datalist >}}')
-        print("Added shortcode end")
+        # Generate HTML list
+        html = ['<div class="dataview-list">']
+        html.append('<style>')
+        html.append('''
+            .dataview-list {
+                margin: 2rem 0;
+            }
+            .dataview-list ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .dataview-list li {
+                margin-bottom: 1.5rem;
+                padding-bottom: 1rem;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .dataview-list li:last-child {
+                border-bottom: none;
+            }
+            .dataview-list h4 {
+                margin: 0 0 0.5rem 0;
+            }
+            .dataview-list .metadata {
+                font-size: 0.9rem;
+                color: #666;
+                margin-bottom: 0.5rem;
+            }
+            .dataview-list .tags {
+                margin-left: 1rem;
+            }
+            .dataview-list .tags a {
+                margin-right: 0.5rem;
+                color: var(--accent);
+                text-decoration: none;
+            }
+            .dataview-list .tags a:hover {
+                text-decoration: underline;
+            }
+            .dataview-list .description {
+                margin: 0.5rem 0 0 0;
+                color: #444;
+            }
+        ''')
+        html.append('</style>')
+        html.append('<ul>')
+        
+        # Get all markdown files in the posts directory
+        for filename in os.listdir(posts_dir):
+            if filename.endswith('.md'):
+                file_path = os.path.join(posts_dir, filename)
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                        front_matter = re.search(r'^---\s*\n(.*?)\n\s*---', content, re.DOTALL)
+                        if front_matter:
+                            metadata = yaml.safe_load(front_matter.group(1))
+                            if not query or query.lower() in content.lower():
+                                title = metadata.get('title', os.path.splitext(filename)[0])
+                                date = metadata.get('date', '')
+                                tags = metadata.get('tags', [])
+                                description = metadata.get('description', '')
+                                url = get_file_url(os.path.splitext(filename)[0])
+                                
+                                html.append('<li>')
+                                html.append('<div class="list-item">')
+                                html.append(f'<h4><a href="/blog/{url}">{title}</a></h4>')
+                                html.append('<div class="metadata">')
+                                if date:
+                                    html.append(f'<span class="date">{date}</span>')
+                                if tags:
+                                    html.append('<span class="tags">')
+                                    for tag in tags:
+                                        html.append(f'<a href="/blog/tags/{tag.lower()}">{tag}</a>')
+                                    html.append('</span>')
+                                html.append('</div>')
+                                if description:
+                                    html.append(f'<p class="description">{description}</p>')
+                                html.append('</div>')
+                                html.append('</li>')
+                except Exception as e:
+                    print(f"Error processing file {filename}: {e}")
+        
+        html.append('</ul>')
+        html.append('</div>')
+        
+        result = '\n'.join(html)
+        print("\nGenerated HTML list:")
+        print(result)
     
-    final_result = '\n'.join(result)
-    print("\nFinal processed output:")
-    print(final_result)
-    return final_result
+    return result
 
 def process_dataview(content):
     """Find and process Dataview code blocks."""
