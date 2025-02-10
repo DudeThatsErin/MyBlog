@@ -40,7 +40,6 @@ Random Text
 ### Canvas - h3
 <div class="canvas-container">
 <style>
-
             .canvas-container {
                 position: relative;
                 width: 100%;
@@ -49,6 +48,7 @@ Random Text
                 border: 1px solid var(--border-color);
                 border-radius: 8px;
                 overflow: hidden;
+                margin: 1rem 0;
             }
             .canvas-node {
                 position: absolute;
@@ -57,9 +57,15 @@ Random Text
                 border-radius: 4px;
                 padding: 1rem;
                 max-width: 300px;
+                transition: transform 0.2s;
+            }
+            .canvas-node:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
             .canvas-node-text {
                 font-size: 0.9rem;
+                color: var(--color);
             }
             .canvas-edge {
                 position: absolute;
@@ -71,9 +77,14 @@ Random Text
                     height: auto;
                     min-height: 400px;
                 }
+                .canvas-node {
+                    position: relative;
+                    left: 0 !important;
+                    top: 0 !important;
+                    margin: 1rem 0;
+                }
             }
-        
-</style>
+        </style>
 <div class="canvas-node" style="left: -206px; top: -153px;">
 <div class="canvas-node-text">Test Canvas</div>
 </div>
