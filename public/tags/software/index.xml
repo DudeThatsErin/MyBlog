@@ -16,10 +16,244 @@
       <guid>https://erinskidds.com/blog/test-blog-2/</guid>
       <description>&lt;h1 id=&#34;h1-title&#34;&gt;H1 Title&lt;/h1&gt;
 &lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/test-blog&#34;&gt;My Test Blog Post&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id=&#34;dataview&#34;&gt;Dataview&lt;/h2&gt;</description>
+&lt;h2 id=&#34;dataview&#34;&gt;Dataview&lt;/h2&gt;
+
+
+
+
+
+
+&lt;div class=&#34;dataview-table&#34;&gt;
+  &lt;table&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        
+        &lt;th&gt;,&lt;/th&gt;
+        
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      
+      
+        
+        
+        &lt;tr&gt;
+          
+          
+          &lt;td&gt;Test Blog 2&lt;/td&gt;
+          
+        &lt;/tr&gt;
+        
+      
+        
+        
+        &lt;tr&gt;
+          
+          
+          &lt;td&gt;Test Blog&lt;/td&gt;
+          
+        &lt;/tr&gt;
+        
+      
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+.dataview-table {
+  margin: 2rem 0;
+  overflow-x: auto;
+}
+
+.dataview-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+  font-size: 0.95rem;
+  background: var(--background);
+}
+
+.dataview-table th {
+  background-color: var(--accent);
+  color: var(--background);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: bold;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.dataview-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: top;
+}
+
+.dataview-table tr:hover {
+  background-color: var(--hover);
+}
+
+.dataview-table tr:last-child td {
+  border-bottom: none;
+}
+
+.dataview-table a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.dataview-table a:hover {
+  text-decoration: underline;
+}
+
+.debug-info {
+  background: #f0f0f0;
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid #ddd;
+  white-space: pre-wrap;
+}
+
+.toggle-debug {
+  background: #eee;
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  margin: 1rem 0;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .dataview-table {
+    margin: 1rem -1rem;
+    width: calc(100% + 2rem);
+  }
+  
+  .dataview-table th,
+  .dataview-table td {
+    padding: 0.5rem;
+  }
+}
+&lt;/style&gt;</description>
       <content>&lt;h1 id=&#34;h1-title&#34;&gt;H1 Title&lt;/h1&gt;
 &lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/test-blog&#34;&gt;My Test Blog Post&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;dataview&#34;&gt;Dataview&lt;/h2&gt;
+
+
+
+
+
+
+&lt;div class=&#34;dataview-table&#34;&gt;
+  &lt;table&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        
+        &lt;th&gt;,&lt;/th&gt;
+        
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      
+      
+        
+        
+        &lt;tr&gt;
+          
+          
+          &lt;td&gt;Test Blog 2&lt;/td&gt;
+          
+        &lt;/tr&gt;
+        
+      
+        
+        
+        &lt;tr&gt;
+          
+          
+          &lt;td&gt;Test Blog&lt;/td&gt;
+          
+        &lt;/tr&gt;
+        
+      
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+.dataview-table {
+  margin: 2rem 0;
+  overflow-x: auto;
+}
+
+.dataview-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+  font-size: 0.95rem;
+  background: var(--background);
+}
+
+.dataview-table th {
+  background-color: var(--accent);
+  color: var(--background);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: bold;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.dataview-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: top;
+}
+
+.dataview-table tr:hover {
+  background-color: var(--hover);
+}
+
+.dataview-table tr:last-child td {
+  border-bottom: none;
+}
+
+.dataview-table a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.dataview-table a:hover {
+  text-decoration: underline;
+}
+
+.debug-info {
+  background: #f0f0f0;
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid #ddd;
+  white-space: pre-wrap;
+}
+
+.toggle-debug {
+  background: #eee;
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  margin: 1rem 0;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .dataview-table {
+    margin: 1rem -1rem;
+    width: calc(100% + 2rem);
+  }
+  
+  .dataview-table th,
+  .dataview-table td {
+    padding: 0.5rem;
+  }
+}
+&lt;/style&gt;
+
+ 
 </content>
     </item>
     

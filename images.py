@@ -116,8 +116,8 @@ def parse_dataview_query(query_block):
         if fields:
             # Use aliases for headers
             header_names = [field_aliases.get(field, field) for field in fields]
-            # Create datatable shortcode
-            shortcode_start = f'{{{{< datatable headers="{",".join(header_names)}" >}}'
+            # Create datatable shortcode with quoted parameters
+            shortcode_start = '{{< datatable headers="%s" >}}' % ','.join(header_names)
             result.append(shortcode_start)
             print(f"Created shortcode start: {shortcode_start}")
             for row in data:
@@ -136,11 +136,11 @@ def parse_dataview_query(query_block):
                 print(f"Found WHERE clause: {query}")
                 break
         
-        # Create datalist shortcode with optional query
+        # Create datalist shortcode with quoted parameters
         if query:
-            shortcode = f'{{{{< datalist query="{query}" >}}'
+            shortcode = '{{< datalist query="%s" >}}' % query
         else:
-            shortcode = '{{{{< datalist >}}'
+            shortcode = '{{< datalist >}}'
         result.append(shortcode)
         print(f"Created shortcode: {shortcode}")
         result.append('{{< /datalist >}}')
