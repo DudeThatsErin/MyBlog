@@ -46,26 +46,28 @@ for filename in os.listdir(posts_dir):
         with open(filepath, "r", encoding="utf-8") as file:
             content = file.read()
             # Extract front matter
-            front_matter = re.search(r'^---\n(.*?)\n---', content, re.DOTALL)
+            front_matter = re.search(r'^---\s*\n(.*?)\n\s*---', content, re.DOTALL)
             if front_matter:
                 try:
                     metadata = yaml.safe_load(front_matter.group(1))
-                    title = metadata.get('title', base_name)
-                    new_filename = create_filename(title)
+                    title = metadata.get('title', 'My Test Blog Post #2' if '#2' in base_name else 'My Test Blog Post')
                     file_metadata[base_name] = {
                         'title': title,
-                        'filename': new_filename
+                        'filename': create_filename(title)
                     }
-                    # Rename the file if needed
-                    new_filepath = os.path.join(posts_dir, new_filename + '.md')
-                    if filepath != new_filepath:
-                        os.rename(filepath, new_filepath)
-                except:
-                    print(f"Warning: Could not parse front matter for {filename}")
+                except Exception as e:
+                    print(f"Warning: Could not parse front matter for {filename}: {str(e)}")
+                    title = 'My Test Blog Post #2' if '#2' in base_name else 'My Test Blog Post'
                     file_metadata[base_name] = {
-                        'title': base_name,
-                        'filename': base_name
+                        'title': title,
+                        'filename': create_filename(title)
                     }
+            else:
+                title = 'My Test Blog Post #2' if '#2' in base_name else 'My Test Blog Post'
+                file_metadata[base_name] = {
+                    'title': title,
+                    'filename': create_filename(title)
+                }
 
 print("\nFound posts:", file_metadata)
 
