@@ -12,7 +12,7 @@ permalink: posts/test-blog
 ---
 # Test Blog
 More Stuff
-[My Test Blog Post #2](/blog/posts/my-test-blog-post-2)
+[My Test Blog Post #2](/blog/my-test-blog-post-2)
 
 **Bold**
 *italic*
@@ -33,6 +33,6 @@ Random Text
 `inline code` random text here next to it.
 
 ## Image - h2
-![[Blogs/attachments/blue_galaxy.jpeg]]
+![blue_galaxy.jpeg](/blog/images/blue_galaxy.jpeg)
 ### PDF - h3
-![[Blogs/attachments/src3.pdf|src3]]
+{{< pdf src="/blog/files/src3.pdf" >}}
