@@ -2,6 +2,7 @@ import os
 import re
 import shutil
 import yaml
+import json
 from datetime import datetime
 
 # Paths
@@ -512,23 +513,235 @@ def parse_cardlink(cardlink_block):
     
     return '\n'.join(html)
 
-# Process each markdown file
+def parse_kanban(kanban_content):
+    """Parse a Kanban board and convert it to HTML."""
+    try:
+        data = yaml.safe_load(kanban_content)
+        
+        html = ['<div class="kanban-board">']
+        html.append('<style>')
+        html.append('''
+            .kanban-board {
+                display: flex;
+                gap: 1rem;
+                overflow-x: auto;
+                padding: 1rem 0;
+                min-height: 400px;
+            }
+            .kanban-lane {
+                min-width: 300px;
+                background: var(--background);
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                padding: 1rem;
+            }
+            .kanban-lane-header {
+                font-weight: bold;
+                margin-bottom: 1rem;
+                padding-bottom: 0.5rem;
+                border-bottom: 2px solid var(--accent);
+            }
+            .kanban-card {
+                background: var(--background);
+                border: 1px solid var(--border-color);
+                border-radius: 4px;
+                padding: 0.75rem;
+                margin-bottom: 0.75rem;
+            }
+            .kanban-card:hover {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            @media (max-width: 768px) {
+                .kanban-board {
+                    flex-direction: column;
+                }
+                .kanban-lane {
+                    min-width: 100%;
+                }
+            }
+        ''')
+        html.append('</style>')
+        
+        # Process lanes
+        for lane in data.get('lanes', []):
+            html.append('<div class="kanban-lane">')
+            html.append(f'<div class="kanban-lane-header">{lane.get("title", "")}</div>')
+            
+            # Process cards in lane
+            for card in lane.get('cards', []):
+                html.append('<div class="kanban-card">')
+                html.append(f'<div class="kanban-card-text">{card.get("text", "")}</div>')
+                html.append('</div>')
+            
+            html.append('</div>')
+        
+        html.append('</div>')
+        return '\n'.join(html)
+    except Exception as e:
+        print(f"Error parsing Kanban: {e}")
+        return f'<div class="error">Error parsing Kanban board: {str(e)}</div>'
+
+def parse_canvas(canvas_content):
+    """Parse a Canvas file and convert it to HTML."""
+    try:
+        data = json.loads(canvas_content)
+        
+        html = ['<div class="canvas-container">']
+        html.append('<style>')
+        html.append('''
+            .canvas-container {
+                position: relative;
+                width: 100%;
+                height: 600px;
+                background: var(--background);
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            .canvas-node {
+                position: absolute;
+                background: var(--background);
+                border: 1px solid var(--border-color);
+                border-radius: 4px;
+                padding: 1rem;
+                max-width: 300px;
+            }
+            .canvas-node-text {
+                font-size: 0.9rem;
+            }
+            .canvas-edge {
+                position: absolute;
+                border-top: 2px solid var(--accent);
+                opacity: 0.5;
+            }
+            @media (max-width: 768px) {
+                .canvas-container {
+                    height: auto;
+                    min-height: 400px;
+                }
+            }
+        ''')
+        html.append('</style>')
+        
+        # Process nodes
+        for node in data.get('nodes', []):
+            x = node.get('x', 0)
+            y = node.get('y', 0)
+            text = node.get('text', '')
+            
+            html.append(f'<div class="canvas-node" style="left: {x}px; top: {y}px;">')
+            html.append(f'<div class="canvas-node-text">{text}</div>')
+            html.append('</div>')
+        
+        # Process edges/connections
+        for edge in data.get('edges', []):
+            from_node = edge.get('from', '')
+            to_node = edge.get('to', '')
+            # Add simple line between nodes
+            html.append(f'<div class="canvas-edge" data-from="{from_node}" data-to="{to_node}"></div>')
+        
+        html.append('</div>')
+        return '\n'.join(html)
+    except Exception as e:
+        print(f"Error parsing Canvas: {e}")
+        return f'<div class="error">Error parsing Canvas: {str(e)}</div>'
+
+def process_embedded_files(content, base_name):
+    """Process embedded Kanban and Canvas files."""
+    # Pattern for embedded files: ![[filename.extension]]
+    embed_pattern = r'!\[\[(.*?(?:\.canvas|\.md))(?:\|embed)?\]\]'
+    matches = re.finditer(embed_pattern, content, re.IGNORECASE)
+    
+    for match in matches:
+        file_path = match.group(1)
+        is_embed = '|embed' in match.group(0)
+        file_name = clean_filename(file_path)
+        file_ext = os.path.splitext(file_name)[1].lower()
+        
+        # Get the post-specific attachments directory
+        post_attachments_dir = get_post_attachments_dir(base_name)
+        
+        # Try multiple possible locations for the file
+        possible_sources = [
+            os.path.join(post_attachments_dir, file_name),
+            os.path.join(attachments_base, file_name),
+            os.path.join(posts_dir, file_name),
+            os.path.join(posts_dir, "attachments", file_name)
+        ]
+        
+        file_found = False
+        for file_source in possible_sources:
+            if os.path.exists(file_source):
+                try:
+                    with open(file_source, 'r', encoding='utf-8') as f:
+                        file_content = f.read()
+                    
+                    if is_embed:
+                        # Generate embedded view
+                        if file_ext == '.md' and '%%kanban%%' in file_content:
+                            # Process as Kanban
+                            html = parse_kanban(file_content)
+                        elif file_ext == '.canvas':
+                            # Process as Canvas
+                            html = parse_canvas(file_content)
+                        else:
+                            html = f'<div class="error">Unsupported file type for embedding: {file_ext}</div>'
+                        
+                        content = content.replace(match.group(0), html)
+                    else:
+                        # Generate link to separate note
+                        title = os.path.splitext(file_name)[0]
+                        url = get_file_url(title)
+                        
+                        # Copy file to posts directory if it's not already there
+                        target_path = os.path.join(posts_dir, f"{title}.md")
+                        if not os.path.exists(target_path):
+                            # Create a new markdown file with the canvas/kanban content
+                            with open(target_path, 'w', encoding='utf-8') as f:
+                                f.write(f'''---
+title: "{title}"
+date: {datetime.now().strftime('%Y-%m-%d')}
+type: "{file_ext.replace('.', '')}"
+---
+
+{file_content}
+''')
+                        
+                        # Replace with markdown link
+                        markdown_link = f'[{title}](/blog/{url})'
+                        content = content.replace(match.group(0), markdown_link)
+                    
+                    file_found = True
+                    break
+                except Exception as e:
+                    print(f"Error processing file {file_name}: {e}")
+        
+        if not file_found:
+            print(f"Warning: File not found in any location: {file_name}")
+
+    return content
+
+# Update the main file processing loop
 for filename in os.listdir(posts_dir):
     if filename.endswith(".md"):
         filepath = os.path.join(posts_dir, filename)
         print(f"\nProcessing file: {filename}")
+        base_name = os.path.splitext(filename)[0]
 
         with open(filepath, "r", encoding="utf-8") as file:
             content = file.read()
 
-        # Process Dataview blocks first
+        # Process Dataview blocks
         content = process_dataview(content)
 
         # Process Cardlink blocks
         cardlink_pattern = r'```cardlink\n(.*?)\n```'
         content = re.sub(cardlink_pattern, lambda m: parse_cardlink(m.group(1)), content, flags=re.DOTALL)
 
-        # Handle internal links (links to other posts)
+        # Process embedded Kanban and Canvas files
+        content = process_embedded_files(content, base_name)
+
+        # Handle internal links
         internal_links = re.findall(r'\[\[([^]\.]*)\]\]', content)
         for link_name in internal_links:
             # Try to match the link with a file

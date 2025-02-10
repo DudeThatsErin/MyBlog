@@ -1591,10 +1591,56 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
 });
 &lt;/script&gt; 
 &lt;h3 id=&#34;canvas---h3&#34;&gt;Canvas - h3&lt;/h3&gt;
-&lt;p&gt;![[Untitled.canvas|Untitled]]&lt;/p&gt;
-&lt;h2 id=&#34;kanban---h2&#34;&gt;Kanban - h2&lt;/h2&gt;
-&lt;p&gt;![[Untitled Kanban]]&lt;/p&gt;
-</content>
+&lt;div class=&#34;canvas-container&#34;&gt;
+&lt;style&gt;
+&lt;pre&gt;&lt;code&gt;        .canvas-container {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            background: var(--background);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .canvas-node {
+            position: absolute;
+            background: var(--background);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 1rem;
+            max-width: 300px;
+        }
+        .canvas-node-text {
+            font-size: 0.9rem;
+        }
+        .canvas-edge {
+            position: absolute;
+            border-top: 2px solid var(--accent);
+            opacity: 0.5;
+        }
+        @media (max-width: 768px) {
+            .canvas-container {
+                height: auto;
+                min-height: 400px;
+            }
+        }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;div class=&#34;canvas-node&#34; style=&#34;left: -206px; top: -153px;&#34;&gt;
+&lt;div class=&#34;canvas-node-text&#34;&gt;Test Canvas&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;canvas-node&#34; style=&#34;left: -281px; top: -60px;&#34;&gt;
+&lt;div class=&#34;canvas-node-text&#34;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;canvas-node&#34; style=&#34;left: 161px; top: -125px;&#34;&gt;
+&lt;div class=&#34;canvas-node-text&#34;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;canvas-node&#34; style=&#34;left: 161px; top: 320px;&#34;&gt;
+&lt;div class=&#34;canvas-node-text&#34;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+## Kanban - h2
+![[Untitled Kanban|embed]]</content>
     </item>
     
   </channel>

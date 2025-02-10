@@ -38,6 +38,54 @@ Random Text
 {{< pdf src="/blog/files/IMG-20250210021231508.pdf" >}}
 
 ### Canvas - h3
-![[Untitled.canvas|Untitled]]
+<div class="canvas-container">
+<style>
+
+            .canvas-container {
+                position: relative;
+                width: 100%;
+                height: 600px;
+                background: var(--background);
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            .canvas-node {
+                position: absolute;
+                background: var(--background);
+                border: 1px solid var(--border-color);
+                border-radius: 4px;
+                padding: 1rem;
+                max-width: 300px;
+            }
+            .canvas-node-text {
+                font-size: 0.9rem;
+            }
+            .canvas-edge {
+                position: absolute;
+                border-top: 2px solid var(--accent);
+                opacity: 0.5;
+            }
+            @media (max-width: 768px) {
+                .canvas-container {
+                    height: auto;
+                    min-height: 400px;
+                }
+            }
+        
+</style>
+<div class="canvas-node" style="left: -206px; top: -153px;">
+<div class="canvas-node-text">Test Canvas</div>
+</div>
+<div class="canvas-node" style="left: -281px; top: -60px;">
+<div class="canvas-node-text"></div>
+</div>
+<div class="canvas-node" style="left: 161px; top: -125px;">
+<div class="canvas-node-text"></div>
+</div>
+<div class="canvas-node" style="left: 161px; top: 320px;">
+<div class="canvas-node-text"></div>
+</div>
+</div>
 ## Kanban - h2
-![[Untitled Kanban]]
+![[Untitled Kanban|embed]]
