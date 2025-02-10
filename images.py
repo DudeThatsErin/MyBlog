@@ -5,8 +5,8 @@ import shutil
 # Paths
 posts_dir = r"F:\repos\CURRENTBLOG\erinblog-1\content\posts"
 attachments_dir = r"E:\Obs\MyVault\Blogs\attachments"
-static_images_dir = r"F:\repos\CURRENTBLOG\erinblog-1\static\images"  # Changed to match Hugo's standard static directory
-static_files_dir = r"F:\repos\CURRENTBLOG\erinblog-1\static\files"    # For PDFs and other files
+static_images_dir = r"F:\repos\CURRENTBLOG\erinblog-1\static\images"
+static_files_dir = r"F:\repos\CURRENTBLOG\erinblog-1\static\files"
 
 # Ensure the target directories exist
 os.makedirs(static_images_dir, exist_ok=True)
@@ -26,58 +26,52 @@ all_posts = [f.replace('.md', '') for f in os.listdir(posts_dir) if f.endswith('
 for filename in os.listdir(posts_dir):
     if filename.endswith(".md"):
         filepath = os.path.join(posts_dir, filename)
+        print(f"\nProcessing file: {filename}")
 
         with open(filepath, "r", encoding="utf-8") as file:
             content = file.read()
-            print(f"Processing: {filename}\n---\n{content}\n---\n")  # Debugging output
 
         # First handle internal links (links to other posts)
-        # Find all internal links in the format [[Post Title]]
         internal_links = re.findall(r'\[\[([^]\.]*)\]\]', content)
-        print(f"Found internal links in {filename}: {internal_links}")  # Debugging output
-
         for link_title in internal_links:
-            # Check if this is a link to another post
             if link_title in all_posts:
-                # Convert to Hugo internal link format
                 slug = slugify(link_title)
                 markdown_link = f"[{link_title}](/blog/posts/{slug})"
-                print(f"Replacing [[{link_title}]] with {markdown_link}")
+                print(f"Converting internal link: {link_title} -> {markdown_link}")
                 content = re.sub(r'\[\[' + re.escape(link_title) + r'\]\]', markdown_link, content)
 
-        # Then handle media files (images, PDFs, etc.)
-        # Find all file links in the format [[file.ext]]
-        files = re.findall(r'!?\[\[([^]]*\.(png|jpg|jpeg|pdf|gif))\]\]', content, re.IGNORECASE)
-        print(f"Found files in {filename}: {files}")  # Debugging output
-
-        for file_match in files:
-            file_name = file_match[0]  # The full filename
-            file_ext = file_match[1].lower()  # The extension
-
-            # Copy the file if it exists
+        # Then handle media files (images and PDFs)
+        media_pattern = r'!\[\[([^]]+\.(jpg|jpeg|png|gif|pdf))\]\]'
+        media_matches = re.finditer(media_pattern, content, re.IGNORECASE)
+        
+        for match in media_matches:
+            file_name = match.group(1)
+            file_ext = match.group(2).lower()
             file_source = os.path.join(attachments_dir, file_name)
+            
+            print(f"Processing media file: {file_name}")
+            
             if os.path.exists(file_source):
-                if file_ext in ['png', 'jpg', 'jpeg', 'gif']:
-                    # Copy images to the images directory
-                    shutil.copy(file_source, static_images_dir)
-                    # For images, use Hugo's figure shortcode
-                    markdown_link = f'{{{{< figure src="/blog/images/{file_name}" title="{file_name}" >}}}}'
-                else:
-                    # Copy PDFs to the files directory
-                    shutil.copy(file_source, static_files_dir)
-                    # For PDFs, use Hugo's PDF shortcode (we'll create this)
+                if file_ext in ['jpg', 'jpeg', 'png', 'gif']:
+                    # Handle images
+                    target_path = os.path.join(static_images_dir, file_name)
+                    shutil.copy(file_source, target_path)
+                    markdown_link = f'![{file_name}](/blog/images/{file_name})'
+                    print(f"Copied image to: {target_path}")
+                elif file_ext == 'pdf':
+                    # Handle PDFs
+                    target_path = os.path.join(static_files_dir, file_name)
+                    shutil.copy(file_source, target_path)
                     markdown_link = f'{{{{< pdf src="/blog/files/{file_name}" >}}}}'
-                print(f"Copied {file_name} to static directory")
+                    print(f"Copied PDF to: {target_path}")
+                
+                # Replace the Obsidian link with the new markdown/shortcode
+                content = content.replace(match.group(0), markdown_link)
             else:
                 print(f"Warning: File not found: {file_source}")
-                continue
-
-            print(f"Replacing [[{file_name}]] with {markdown_link}")
-            # Handle both with and without exclamation mark
-            content = re.sub(r'!?\[\[' + re.escape(file_name) + r'\]\]', markdown_link, content)
 
         # Write the updated content back
         with open(filepath, "w", encoding="utf-8") as file:
             file.write(content)
 
-print("Markdown files processed and files copied successfully.")
+print("\nAll files processed successfully!")

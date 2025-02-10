@@ -1,4 +1,21 @@
-<object data="{{ .Get "src" }}" type="application/pdf" width="100%" height="800px">
-    <p>It appears you don't have a PDF plugin for this browser. You can 
-    <a href="{{ .Get "src" }}">click here to download the PDF file.</a></p>
-</object> 
+<div class="pdf-container">
+    <iframe src="{{ .Get "src" }}" style="width: 100%; height: 800px;" frameborder="0">
+        <p>It appears your browser doesn't support iframes.</p>
+    </iframe>
+    <p class="pdf-fallback" style="display: none;">
+        If the PDF is not displaying correctly, you can 
+        <a href="{{ .Get "src" }}" target="_blank">open it in a new tab</a>.
+    </p>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var iframe = document.querySelector('.pdf-container iframe');
+    var fallback = document.querySelector('.pdf-fallback');
+    
+    iframe.onload = function() {
+        if (iframe.contentDocument === null) {
+            fallback.style.display = 'block';
+        }
+    };
+});
+</script> 
