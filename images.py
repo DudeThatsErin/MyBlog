@@ -35,13 +35,51 @@ def parse_dataview_query(query_block):
             if 'from' in line.lower():
                 in_data = True
                 continue
+            if 'where' in line.lower() or 'sort' in line.lower():
+                continue
             if not in_data:
                 # Collect fields before 'from'
                 fields.extend(f.strip() for f in line.split(',') if f.strip())
             else:
-                # Collect data after 'from'
-                if 'where' not in line.lower() and 'sort' not in line.lower():
-                    data.append(line)
+                # Format data row
+                row_data = []
+                for field in fields:
+                    # Extract value for each field from the data
+                    if 'file.name' in field:
+                        row_data.append(os.path.splitext(os.path.basename(line))[0])
+                    elif 'date' in field:
+                        # Try to extract date from metadata
+                        try:
+                            with open(os.path.join(posts_dir, line + '.md'), 'r', encoding='utf-8') as f:
+                                content = f.read()
+                                front_matter = re.search(r'^---\s*\n(.*?)\n\s*---', content, re.DOTALL)
+                                if front_matter:
+                                    metadata = yaml.safe_load(front_matter.group(1))
+                                    row_data.append(metadata.get('date', ''))
+                                else:
+                                    row_data.append('')
+                        except:
+                            row_data.append('')
+                    elif 'tags' in field:
+                        # Try to extract tags from metadata
+                        try:
+                            with open(os.path.join(posts_dir, line + '.md'), 'r', encoding='utf-8') as f:
+                                content = f.read()
+                                front_matter = re.search(r'^---\s*\n(.*?)\n\s*---', content, re.DOTALL)
+                                if front_matter:
+                                    metadata = yaml.safe_load(front_matter.group(1))
+                                    tags = metadata.get('tags', [])
+                                    row_data.append(', '.join(tags))
+                                else:
+                                    row_data.append('')
+                        except:
+                            row_data.append('')
+                    else:
+                        row_data.append('')
+                
+                # Add the formatted row to data
+                if row_data:
+                    data.append('|'.join(row_data))
         
         if fields:
             # Create datatable shortcode
