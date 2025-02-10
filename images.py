@@ -18,19 +18,32 @@ def slugify(title):
     # Convert spaces to hyphens and make lowercase
     return title.lower().replace(' ', '-').replace('#', '')
 
-# Get list of all markdown files for reference
-all_posts = {}
+# Get list of all markdown files and their metadata
+file_metadata = {}
 for filename in os.listdir(posts_dir):
     if filename.endswith(".md"):
+        base_name = filename.replace('.md', '')
         filepath = os.path.join(posts_dir, filename)
         with open(filepath, "r", encoding="utf-8") as file:
             content = file.read()
             # Extract front matter
             front_matter = re.search(r'^---\n(.*?)\n---', content, re.DOTALL)
             if front_matter:
-                metadata = yaml.safe_load(front_matter.group(1))
-                title = metadata.get('title', filename.replace('.md', ''))
-                all_posts[title] = slugify(title)
+                try:
+                    metadata = yaml.safe_load(front_matter.group(1))
+                    title = metadata.get('title', base_name)
+                    file_metadata[base_name] = {
+                        'title': title,
+                        'slug': slugify(title)
+                    }
+                except:
+                    print(f"Warning: Could not parse front matter for {filename}")
+                    file_metadata[base_name] = {
+                        'title': base_name,
+                        'slug': slugify(base_name)
+                    }
+
+print("\nFound posts:", file_metadata)
 
 # Process each markdown file
 for filename in os.listdir(posts_dir):
@@ -41,16 +54,18 @@ for filename in os.listdir(posts_dir):
         with open(filepath, "r", encoding="utf-8") as file:
             content = file.read()
 
-        # First handle internal links (links to other posts)
+        # Handle internal links (links to other posts)
         internal_links = re.findall(r'\[\[([^]\.]*)\]\]', content)
-        for link_title in internal_links:
-            if link_title in all_posts:
-                slug = all_posts[link_title]
-                markdown_link = f"[{link_title}](/blog/{slug})"
-                print(f"Converting internal link: {link_title} -> {markdown_link}")
-                content = re.sub(r'\[\[' + re.escape(link_title) + r'\]\]', markdown_link, content)
+        for link_name in internal_links:
+            # Try to match the link with a file
+            link_base = link_name.replace('.md', '')
+            if link_base in file_metadata:
+                meta = file_metadata[link_base]
+                markdown_link = f"[{meta['title']}](/blog/posts/{meta['slug']})"
+                print(f"Converting internal link: {link_name} -> {markdown_link}")
+                content = re.sub(r'\[\[' + re.escape(link_name) + r'\]\]', markdown_link, content)
 
-        # Then handle media files (images and PDFs)
+        # Handle media files (images and PDFs)
         media_pattern = r'!\[\[([^]]+\.(jpg|jpeg|png|gif|pdf))\]\]'
         media_matches = re.finditer(media_pattern, content, re.IGNORECASE)
         
@@ -59,7 +74,8 @@ for filename in os.listdir(posts_dir):
             file_ext = match.group(2).lower()
             file_source = os.path.join(attachments_dir, file_name)
             
-            print(f"Processing media file: {file_name}")
+            print(f"\nProcessing media file: {file_name}")
+            print(f"Looking for file at: {file_source}")
             
             if os.path.exists(file_source):
                 if file_ext in ['jpg', 'jpeg', 'png', 'gif']:
@@ -75,10 +91,16 @@ for filename in os.listdir(posts_dir):
                     markdown_link = f'{{{{< pdf src="/blog/files/{file_name}" >}}}}'
                     print(f"Copied PDF to: {target_path}")
                 
+                print(f"Replacing {match.group(0)} with {markdown_link}")
                 # Replace the Obsidian link with the new markdown/shortcode
                 content = content.replace(match.group(0), markdown_link)
             else:
-                print(f"Warning: File not found: {file_source}")
+                print(f"Warning: File not found at {file_source}")
+                print(f"Contents of attachments directory:")
+                try:
+                    print(os.listdir(attachments_dir))
+                except Exception as e:
+                    print(f"Error listing attachments directory: {e}")
 
         # Write the updated content back
         with open(filepath, "w", encoding="utf-8") as file:
