@@ -21,7 +21,7 @@ paginate = 5
   lastmod = ["lastmod", ":fileModTime", ":default"]
 
 [permalinks]
-  posts = "/posts/:slug/"
+  posts = "/:slug/"
 
 [outputs]
   home = ["html", "json"]

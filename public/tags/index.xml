@@ -6,6 +6,37 @@
     <description>Recent content in Tags on Erin&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <copyright>© 2025 Erin Skidds</copyright><atom:link href="https://erinskidds.com/blog/tags/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>© 2025 Erin Skidds</copyright>
+    <lastBuildDate>Sat, 10 Feb 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://erinskidds.com/blog/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Engineering</title>
+      <link>https://erinskidds.com/blog/tags/engineering/</link>
+      <pubDate>Sat, 10 Feb 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://erinskidds.com/blog/tags/engineering/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>Software</title>
+      <link>https://erinskidds.com/blog/tags/software/</link>
+      <pubDate>Sat, 10 Feb 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://erinskidds.com/blog/tags/software/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>Tutorial</title>
+      <link>https://erinskidds.com/blog/tags/tutorial/</link>
+      <pubDate>Sat, 10 Feb 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://erinskidds.com/blog/tags/tutorial/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
   </channel>
 </rss>

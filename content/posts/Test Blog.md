@@ -1,3 +1,15 @@
+---
+title: "My Test Blog Post"
+date: 2024-02-10
+author: "Erin"
+description: "This is a test blog post about software engineering"
+tags: ["software", "engineering", "tutorial"]
+categories: ["tech"]
+draft: false
+toc: true
+lastmod: 2024-02-10
+permalink: posts/test-blog
+---
 # Test Blog
 More Stuff
 [Test Blog 2](/blog/posts/test-blog-2)
