@@ -31,76 +31,93 @@ def parse_dataview_query(query_block):
         print("Processing TABLE query")
         # Handle TABLE queries
         fields = []
+        field_aliases = {}
         data = []
         in_data = False
         
+        # First line might contain field definitions
+        field_line = lines[0].lower().replace('table', '').strip()
+        if field_line:
+            # Parse fields and their aliases
+            field_parts = [f.strip() for f in field_line.split(',')]
+            for part in field_parts:
+                if ' as ' in part.lower():
+                    field, alias = part.lower().split(' as ')
+                    field = field.strip()
+                    alias = alias.strip().strip('"')
+                    fields.append(field)
+                    field_aliases[field] = alias
+                else:
+                    fields.append(part)
+                    field_aliases[part] = part
+        
+        print(f"Fields: {fields}")
+        print(f"Aliases: {field_aliases}")
+        
+        # Process the remaining lines
         for line in lines[1:]:
             if not line:  # Skip empty lines
                 continue
             print(f"Processing line: {line}")
             if 'from' in line.lower():
                 in_data = True
-                print("Found FROM clause")
+                source_folder = line.split('"')[1] if '"' in line else line.split(' ')[1]
+                print(f"Found FROM clause, source: {source_folder}")
+                # Get all markdown files in the posts directory
+                for filename in os.listdir(posts_dir):
+                    if filename.endswith('.md'):
+                        file_path = os.path.join(posts_dir, filename)
+                        row_data = []
+                        for field in fields:
+                            if 'file.name' in field:
+                                value = os.path.splitext(filename)[0]
+                            elif 'date' in field:
+                                try:
+                                    with open(file_path, 'r', encoding='utf-8') as f:
+                                        content = f.read()
+                                        front_matter = re.search(r'^---\s*\n(.*?)\n\s*---', content, re.DOTALL)
+                                        if front_matter:
+                                            metadata = yaml.safe_load(front_matter.group(1))
+                                            value = metadata.get('date', '')
+                                        else:
+                                            value = ''
+                                except Exception as e:
+                                    print(f"Error getting date: {e}")
+                                    value = ''
+                            elif 'tags' in field:
+                                try:
+                                    with open(file_path, 'r', encoding='utf-8') as f:
+                                        content = f.read()
+                                        front_matter = re.search(r'^---\s*\n(.*?)\n\s*---', content, re.DOTALL)
+                                        if front_matter:
+                                            metadata = yaml.safe_load(front_matter.group(1))
+                                            tags = metadata.get('tags', [])
+                                            value = ', '.join(tags)
+                                        else:
+                                            value = ''
+                                except Exception as e:
+                                    print(f"Error getting tags: {e}")
+                                    value = ''
+                            else:
+                                value = ''
+                            row_data.append(value)
+                            print(f"Field {field}: {value}")
+                        
+                        if row_data:
+                            row_str = '|'.join(row_data)
+                            data.append(row_str)
+                            print(f"Added row: {row_str}")
                 continue
+            
             if 'where' in line.lower() or 'sort' in line.lower():
                 print(f"Skipping {line}")
                 continue
-            if not in_data:
-                # Collect fields before 'from'
-                new_fields = [f.strip() for f in line.split(',') if f.strip()]
-                fields.extend(new_fields)
-                print(f"Added fields: {new_fields}")
-            else:
-                # Format data row
-                row_data = []
-                print(f"Processing data line: {line}")
-                for field in fields:
-                    # Extract value for each field from the data
-                    if 'file.name' in field:
-                        value = os.path.splitext(os.path.basename(line))[0]
-                    elif 'date' in field:
-                        # Try to extract date from metadata
-                        try:
-                            with open(os.path.join(posts_dir, line + '.md'), 'r', encoding='utf-8') as f:
-                                content = f.read()
-                                front_matter = re.search(r'^---\s*\n(.*?)\n\s*---', content, re.DOTALL)
-                                if front_matter:
-                                    metadata = yaml.safe_load(front_matter.group(1))
-                                    value = metadata.get('date', '')
-                                else:
-                                    value = ''
-                        except Exception as e:
-                            print(f"Error getting date: {e}")
-                            value = ''
-                    elif 'tags' in field:
-                        # Try to extract tags from metadata
-                        try:
-                            with open(os.path.join(posts_dir, line + '.md'), 'r', encoding='utf-8') as f:
-                                content = f.read()
-                                front_matter = re.search(r'^---\s*\n(.*?)\n\s*---', content, re.DOTALL)
-                                if front_matter:
-                                    metadata = yaml.safe_load(front_matter.group(1))
-                                    tags = metadata.get('tags', [])
-                                    value = ', '.join(tags)
-                                else:
-                                    value = ''
-                        except Exception as e:
-                            print(f"Error getting tags: {e}")
-                            value = ''
-                    else:
-                        value = ''
-                    row_data.append(value)
-                    print(f"Field {field}: {value}")
-                
-                # Add the formatted row to data
-                if row_data:
-                    row_str = '|'.join(row_data)
-                    data.append(row_str)
-                    print(f"Added row: {row_str}")
         
         if fields:
+            # Use aliases for headers
+            header_names = [field_aliases.get(field, field) for field in fields]
             # Create datatable shortcode
-            shortcode_start = f'{{{{< datatable headers="{",".join(fields)}" >}}'
+            shortcode_start = f'{{{{< datatable headers="{",".join(header_names)}" >}}'
             result.append(shortcode_start)
             print(f"Created shortcode start: {shortcode_start}")
             for row in data:

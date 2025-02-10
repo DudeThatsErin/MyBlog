@@ -15,4 +15,7 @@ lastmod: 2024-02-10
 [My Test Blog Post](/blog/test-blog)
 
 ## Dataview
-
+{{< datatable headers="name" >}
+Test Blog 2
+Test Blog
+{{< /datatable >}}
