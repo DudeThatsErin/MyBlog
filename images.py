@@ -10,6 +10,16 @@ static_images_dir = r"F:\repos\CURRENTBLOG\erinblog-1\static\posts\attachments"
 # Ensure the target directory exists
 os.makedirs(static_images_dir, exist_ok=True)
 
+def slugify(title):
+    """Convert a title to a URL-friendly slug."""
+    # Remove the .md extension if present
+    title = title.replace('.md', '')
+    # Convert spaces to hyphens and make lowercase
+    return title.lower().replace(' ', '-')
+
+# Get list of all markdown files for reference
+all_posts = [f.replace('.md', '') for f in os.listdir(posts_dir) if f.endswith('.md')]
+
 # Process each markdown file
 for filename in os.listdir(posts_dir):
     if filename.endswith(".md"):
@@ -19,7 +29,22 @@ for filename in os.listdir(posts_dir):
             content = file.read()
             print(f"Processing: {filename}\n---\n{content}\n---\n")  # Debugging output
 
-        # Find all image links in the format [[file.ext]] where ext can be png, jpg, jpeg, pdf, etc.
+        # First handle internal links (links to other posts)
+        # Find all internal links in the format [[Post Title]]
+        internal_links = re.findall(r'\[\[([^]\.]*)\]\]', content)
+        print(f"Found internal links in {filename}: {internal_links}")  # Debugging output
+
+        for link_title in internal_links:
+            # Check if this is a link to another post
+            if link_title in all_posts:
+                # Convert to Hugo internal link format
+                slug = slugify(link_title)
+                markdown_link = f"[{link_title}](/blog/posts/{slug})"
+                print(f"Replacing [[{link_title}]] with {markdown_link}")
+                content = re.sub(r'\[\[' + re.escape(link_title) + r'\]\]', markdown_link, content)
+
+        # Then handle media files (images, PDFs, etc.)
+        # Find all file links in the format [[file.ext]]
         files = re.findall(r'\[\[([^]]*\.(png|jpg|jpeg|pdf))\]\]', content, re.IGNORECASE)
         print(f"Found files in {filename}: {files}")  # Debugging output
 

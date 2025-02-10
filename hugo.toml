@@ -13,6 +13,9 @@ paginate = 5
   centerTheme = true
   autoCover = true
   showLastUpdated = true
+  # Show post summaries on the homepage
+  showReadMore = true
+  readMore = "Read post"
 
 [frontmatter]
   lastmod = ["lastmod", ":fileModTime", ":default"]

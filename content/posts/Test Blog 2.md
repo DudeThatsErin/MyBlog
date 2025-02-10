@@ -1,2 +1,2 @@
 # H1 Title
-[[Test Blog]]
+[Test Blog](/blog/posts/test-blog)

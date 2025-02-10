@@ -14,9 +14,9 @@
       
       <guid>https://erinskidds.com/blog/posts/</guid>
       <description>&lt;h1 id=&#34;h1-title&#34;&gt;H1 Title&lt;/h1&gt;
-&lt;p&gt;[[Test Blog]]&lt;/p&gt;</description>
+&lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/blog/posts/test-blog/&#34;&gt;Test Blog&lt;/a&gt;&lt;/p&gt;</description>
       <content>&lt;h1 id=&#34;h1-title&#34;&gt;H1 Title&lt;/h1&gt;
-&lt;p&gt;[[Test Blog]]&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/blog/posts/test-blog/&#34;&gt;Test Blog&lt;/a&gt;&lt;/p&gt;
 </content>
     </item>
     
@@ -28,7 +28,7 @@
       <guid>https://erinskidds.com/blog/posts/</guid>
       <description>&lt;h1 id=&#34;test-blog&#34;&gt;Test Blog&lt;/h1&gt;
 &lt;p&gt;More Stuff
-[[Test Blog 2]]&lt;/p&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/blog/posts/test-blog-2/&#34;&gt;Test Blog 2&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;
 &lt;em&gt;italic&lt;/em&gt;
 ==highlight==&lt;/p&gt;
@@ -40,7 +40,7 @@
 &lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/posts/attachments/src6.pdf&#34;&gt;src6.pdf&lt;/a&gt;&lt;/p&gt;</description>
       <content>&lt;h1 id=&#34;test-blog&#34;&gt;Test Blog&lt;/h1&gt;
 &lt;p&gt;More Stuff
-[[Test Blog 2]]&lt;/p&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/blog/posts/test-blog-2/&#34;&gt;Test Blog 2&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;
 &lt;em&gt;italic&lt;/em&gt;
 ==highlight==&lt;/p&gt;
