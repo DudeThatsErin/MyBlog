@@ -5,10 +5,12 @@ import shutil
 # Paths
 posts_dir = r"F:\repos\CURRENTBLOG\erinblog-1\content\posts"
 attachments_dir = r"E:\Obs\MyVault\Blogs\attachments"
-static_images_dir = r"F:\repos\CURRENTBLOG\erinblog-1\static\posts\attachments"
+static_images_dir = r"F:\repos\CURRENTBLOG\erinblog-1\static\images"  # Changed to match Hugo's standard static directory
+static_files_dir = r"F:\repos\CURRENTBLOG\erinblog-1\static\files"    # For PDFs and other files
 
-# Ensure the target directory exists
+# Ensure the target directories exist
 os.makedirs(static_images_dir, exist_ok=True)
+os.makedirs(static_files_dir, exist_ok=True)
 
 def slugify(title):
     """Convert a title to a URL-friendly slug."""
@@ -45,33 +47,34 @@ for filename in os.listdir(posts_dir):
 
         # Then handle media files (images, PDFs, etc.)
         # Find all file links in the format [[file.ext]]
-        files = re.findall(r'\[\[([^]]*\.(png|jpg|jpeg|pdf))\]\]', content, re.IGNORECASE)
+        files = re.findall(r'!?\[\[([^]]*\.(png|jpg|jpeg|pdf|gif))\]\]', content, re.IGNORECASE)
         print(f"Found files in {filename}: {files}")  # Debugging output
 
         for file_match in files:
             file_name = file_match[0]  # The full filename
             file_ext = file_match[1].lower()  # The extension
 
-            # Correct the Markdown link format
-            if file_ext in ['png', 'jpg', 'jpeg']:
-                # For images, use image syntax
-                markdown_link = f"![{file_name}](/blog/posts/attachments/{file_name.replace(' ', '%20')})"
-            else:
-                # For PDFs, use link syntax
-                markdown_link = f"[{file_name}](/blog/posts/attachments/{file_name.replace(' ', '%20')})"
-
-            print(f"Replacing [[{file_name}]] with {markdown_link}")  # Debugging output
-
-            # Ensure replacement works correctly
-            content = re.sub(r'!?\[\[' + re.escape(file_name) + r'\]\]', markdown_link, content)
-
             # Copy the file if it exists
             file_source = os.path.join(attachments_dir, file_name)
             if os.path.exists(file_source):
-                shutil.copy(file_source, static_images_dir)
-                print(f"Copied {file_name} to {static_images_dir}")
+                if file_ext in ['png', 'jpg', 'jpeg', 'gif']:
+                    # Copy images to the images directory
+                    shutil.copy(file_source, static_images_dir)
+                    # For images, use Hugo's figure shortcode
+                    markdown_link = f'{{{{< figure src="/blog/images/{file_name}" title="{file_name}" >}}}}'
+                else:
+                    # Copy PDFs to the files directory
+                    shutil.copy(file_source, static_files_dir)
+                    # For PDFs, use Hugo's PDF shortcode (we'll create this)
+                    markdown_link = f'{{{{< pdf src="/blog/files/{file_name}" >}}}}'
+                print(f"Copied {file_name} to static directory")
             else:
                 print(f"Warning: File not found: {file_source}")
+                continue
+
+            print(f"Replacing [[{file_name}]] with {markdown_link}")
+            # Handle both with and without exclamation mark
+            content = re.sub(r'!?\[\[' + re.escape(file_name) + r'\]\]', markdown_link, content)
 
         # Write the updated content back
         with open(filepath, "w", encoding="utf-8") as file:

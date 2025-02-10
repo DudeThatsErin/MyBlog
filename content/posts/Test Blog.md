@@ -4,12 +4,23 @@ More Stuff
 
 **Bold**
 *italic*
-==highlight==
 
 Random Text
+
 [External Link](https://google.com)
 
+```html
+<body>
+	<h1>Header 1</h1>
+	<p>
+		Paragraph
+	</p>
+</body>
+```
+
+`inline code` random text here next to it.
+
 ## Image - h2
-![galaxy.jpeg](/blog/posts/attachments/galaxy.jpeg)
+![[galaxy.jpeg]]
 ### PDF - h3
-[src6.pdf](/blog/posts/attachments/src6.pdf)
+![[src6.pdf]]

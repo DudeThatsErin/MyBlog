@@ -30,26 +30,38 @@
 &lt;p&gt;More Stuff
 &lt;a href=&#34;https://erinskidds.com/blog/blog/posts/test-blog-2/&#34;&gt;Test Blog 2&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;
-&lt;em&gt;italic&lt;/em&gt;
-==highlight==&lt;/p&gt;
-&lt;p&gt;Random Text
-&lt;a href=&#34;https://google.com&#34;&gt;External Link&lt;/a&gt;&lt;/p&gt;
+&lt;em&gt;italic&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Random Text&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://google.com&#34;&gt;External Link&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;body&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;h1&lt;/span&gt;&amp;gt;Header 1&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;h1&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;p&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		Paragraph
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;p&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;body&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;inline code&lt;/code&gt; random text here next to it.&lt;/p&gt;
 &lt;h2 id=&#34;image---h2&#34;&gt;Image - h2&lt;/h2&gt;
-&lt;p&gt;&lt;img src=&#34;https://erinskidds.com/blog/posts/attachments/galaxy.jpeg&#34; alt=&#34;galaxy.jpeg&#34;&gt;&lt;/p&gt;
+&lt;p&gt;![[galaxy.jpeg]]&lt;/p&gt;
 &lt;h3 id=&#34;pdf---h3&#34;&gt;PDF - h3&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/posts/attachments/src6.pdf&#34;&gt;src6.pdf&lt;/a&gt;&lt;/p&gt;</description>
+&lt;p&gt;![[src6.pdf]]&lt;/p&gt;</description>
       <content>&lt;h1 id=&#34;test-blog&#34;&gt;Test Blog&lt;/h1&gt;
 &lt;p&gt;More Stuff
 &lt;a href=&#34;https://erinskidds.com/blog/blog/posts/test-blog-2/&#34;&gt;Test Blog 2&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;
-&lt;em&gt;italic&lt;/em&gt;
-==highlight==&lt;/p&gt;
-&lt;p&gt;Random Text
-&lt;a href=&#34;https://google.com&#34;&gt;External Link&lt;/a&gt;&lt;/p&gt;
+&lt;em&gt;italic&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Random Text&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://google.com&#34;&gt;External Link&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;body&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;h1&lt;/span&gt;&amp;gt;Header 1&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;h1&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;p&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		Paragraph
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;p&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;body&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;inline code&lt;/code&gt; random text here next to it.&lt;/p&gt;
 &lt;h2 id=&#34;image---h2&#34;&gt;Image - h2&lt;/h2&gt;
-&lt;p&gt;&lt;img src=&#34;https://erinskidds.com/blog/posts/attachments/galaxy.jpeg&#34; alt=&#34;galaxy.jpeg&#34;&gt;&lt;/p&gt;
+&lt;p&gt;![[galaxy.jpeg]]&lt;/p&gt;
 &lt;h3 id=&#34;pdf---h3&#34;&gt;PDF - h3&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/posts/attachments/src6.pdf&#34;&gt;src6.pdf&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;![[src6.pdf]]&lt;/p&gt;
 </content>
     </item>
     
