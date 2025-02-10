@@ -504,3 +504,116 @@ for filename in os.listdir(posts_dir):
             file.write(content)
 
 print("\nAll files processed successfully!")
+
+def parse_cardlink(cardlink_block):
+    """Parse a Cardlink block and convert it to Hugo-compatible HTML."""
+    print("\nProcessing Cardlink block:")
+    print(cardlink_block)
+    
+    # Extract cardlink properties
+    properties = {}
+    lines = [line.strip() for line in cardlink_block.strip().split('\n')]
+    for line in lines:
+        if ':' in line:
+            key, value = line.split(':', 1)
+            properties[key.strip()] = value.strip().strip('"')
+    
+    # Generate HTML for the cardlink
+    html = ['<div class="cardlink">']
+    html.append('<style>')
+    html.append('''
+        .cardlink {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: var(--background);
+            transition: transform 0.2s;
+        }
+        .cardlink:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .cardlink a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .cardlink-content {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .cardlink-text {
+            flex: 1;
+        }
+        .cardlink-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin: 0 0 0.5rem 0;
+        }
+        .cardlink-description {
+            font-size: 0.9rem;
+            color: var(--color);
+            margin: 0;
+            opacity: 0.8;
+        }
+        .cardlink-host {
+            font-size: 0.8rem;
+            color: var(--color);
+            opacity: 0.6;
+            margin-top: 0.5rem;
+        }
+        .cardlink-image {
+            width: 120px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        @media (max-width: 600px) {
+            .cardlink-content {
+                flex-direction: column;
+            }
+            .cardlink-image {
+                width: 100%;
+                height: 160px;
+            }
+        }
+    ''')
+    html.append('</style>')
+    
+    # Create the card content
+    html.append(f'<a href="{properties.get("url", "#")}" target="_blank" rel="noopener noreferrer">')
+    html.append('<div class="cardlink-content">')
+    
+    # Text content
+    html.append('<div class="cardlink-text">')
+    if 'title' in properties:
+        html.append(f'<h3 class="cardlink-title">{properties["title"]}</h3>')
+    if 'description' in properties:
+        html.append(f'<p class="cardlink-description">{properties["description"]}</p>')
+    if 'host' in properties:
+        html.append(f'<div class="cardlink-host">{properties["host"]}</div>')
+    html.append('</div>')
+    
+    # Image if available
+    if 'image' in properties:
+        html.append(f'<img class="cardlink-image" src="{properties["image"]}" alt="{properties.get("title", "Link preview")}">')
+    
+    html.append('</div>')
+    html.append('</a>')
+    html.append('</div>')
+    
+    return '\n'.join(html)
+
+def process_markdown_content(content):
+    """Process markdown content and convert special blocks."""
+    # Process Dataview blocks
+    dataview_pattern = r'```dataview\n(.*?)\n```'
+    content = re.sub(dataview_pattern, lambda m: parse_dataview_query(m.group(1)), content, flags=re.DOTALL)
+    
+    # Process Cardlink blocks
+    cardlink_pattern = r'```cardlink\n(.*?)\n```'
+    content = re.sub(cardlink_pattern, lambda m: parse_cardlink(m.group(1)), content, flags=re.DOTALL)
+    
+    return content

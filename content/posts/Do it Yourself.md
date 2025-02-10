@@ -32,6 +32,12 @@ image: https://downloads.intercomcdn.com/i/o/288430/865baa10d93939db2c24769a/a05
 
 You can use this to pull from the `hostinger-deploy` branch that gets created. That is the branch you will want to push to whatever web hosting you use to display your site online similar to this one.
 
+### Works with several Obsidian Plugins
+I have set up the `files.py` file to work with several plugins...
+- Dataview
+- Card Link
+- Handwritten Notes - it displays PDFs online.
+
 ## Prerequisites
 
 You'll need:
