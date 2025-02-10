@@ -132,12 +132,12 @@
 &lt;tr&gt;
 &lt;td&gt;Test Blog 2&lt;/td&gt;
 &lt;td&gt;My Test Blog Post #2&lt;/td&gt;
-&lt;td&gt;/blog/test-blog-2&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://erinskidds.com/blog/test-blog-2&#34;&gt;/blog/test-blog-2&lt;/a&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;Test Blog&lt;/td&gt;
 &lt;td&gt;My Test Blog Post&lt;/td&gt;
-&lt;td&gt;/blog/test-blog&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://erinskidds.com/blog/test-blog&#34;&gt;/blog/test-blog&lt;/a&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
