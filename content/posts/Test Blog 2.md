@@ -76,13 +76,13 @@ lastmod: 2024-02-10
 <tbody>
 <tr>
 <td>Test Blog 2</td>
-<td></td>
-<td></td>
+<td>My Test Blog Post #2</td>
+<td>/blog/test-blog-2</td>
 </tr>
 <tr>
 <td>Test Blog</td>
-<td></td>
-<td></td>
+<td>My Test Blog Post</td>
+<td>/blog/test-blog</td>
 </tr>
 </tbody>
 </table>

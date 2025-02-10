@@ -42,9 +42,7 @@ def parse_dataview_query(query_block):
             field_parts = [f.strip() for f in field_line.split(',')]
             for part in field_parts:
                 if ' as ' in part.lower():
-                    field, alias = part.lower().split(' as ')
-                    field = field.strip()
-                    alias = alias.strip().strip('"')
+                    field, alias = [p.strip().strip('"') for p in part.lower().split(' as ')]
                     fields.append(field)
                     field_aliases[field] = alias
                 else:
@@ -71,6 +69,21 @@ def parse_dataview_query(query_block):
                         for field in fields:
                             if 'file.name' in field:
                                 value = os.path.splitext(filename)[0]
+                            elif 'title' in field.lower():
+                                try:
+                                    with open(file_path, 'r', encoding='utf-8') as f:
+                                        content = f.read()
+                                        front_matter = re.search(r'^---\s*\n(.*?)\n\s*---', content, re.DOTALL)
+                                        if front_matter:
+                                            metadata = yaml.safe_load(front_matter.group(1))
+                                            value = metadata.get('title', os.path.splitext(filename)[0])
+                                        else:
+                                            value = os.path.splitext(filename)[0]
+                                except Exception as e:
+                                    print(f"Error getting title: {e}")
+                                    value = os.path.splitext(filename)[0]
+                            elif 'url' in field.lower() or 'file.path' in field.lower():
+                                value = f"/blog/{get_file_url(os.path.splitext(filename)[0])}"
                             elif 'date' in field:
                                 try:
                                     with open(file_path, 'r', encoding='utf-8') as f:
