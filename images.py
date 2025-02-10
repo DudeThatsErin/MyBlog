@@ -3,9 +3,9 @@ import re
 import shutil
 
 # Paths
-posts_dir = r"F:\repos\CURRENTBLOG\erinblog\content\blog\posts"
-attachments_dir = r"E:\Obs\MyVault\posts\attachments"
-static_images_dir = r"F:\repos\CURRENTBLOG\erinblog\static\posts\attachments"
+posts_dir = r"F:\repos\CURRENTBLOG\erinblog-1\content\posts"
+attachments_dir = r"E:\Obs\MyVault\Blogs\attachments"
+static_images_dir = r"F:\repos\CURRENTBLOG\erinblog-1\static\posts\attachments"
 
 # Ensure the target directory exists
 os.makedirs(static_images_dir, exist_ok=True)

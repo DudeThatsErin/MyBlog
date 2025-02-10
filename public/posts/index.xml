@@ -17,11 +17,11 @@
       <description>&lt;h2 id=&#34;obsidian&#34;&gt;Obsidian&lt;/h2&gt;
 &lt;h2 id=&#34;other-stuff&#34;&gt;Other stuff&lt;/h2&gt;
 &lt;p&gt;regular text&lt;/p&gt;
-&lt;p&gt;![[posts/attachments/first.png]]&lt;/p&gt;</description>
+&lt;p&gt;&lt;img src=&#34;https://erinskidds.com/blog/posts/attachments/first.png&#34; alt=&#34;Image Description&#34;&gt;&lt;/p&gt;</description>
       <content>&lt;h2 id=&#34;obsidian&#34;&gt;Obsidian&lt;/h2&gt;
 &lt;h2 id=&#34;other-stuff&#34;&gt;Other stuff&lt;/h2&gt;
 &lt;p&gt;regular text&lt;/p&gt;
-&lt;p&gt;![[posts/attachments/first.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://erinskidds.com/blog/posts/attachments/first.png&#34; alt=&#34;Image Description&#34;&gt;&lt;/p&gt;
 </content>
     </item>
     

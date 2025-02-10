@@ -2,22 +2,17 @@ baseURL = "https://erinskidds.com/blog"
 languageCode = "en-us"
 title = "Erin's blog"
 theme = "terminal"
-pygmentsCodeFences = true
-pygmentsUseClasses = true
+paginate = 5
 
 [params]
   # Terminal theme specific settings
   contentTypeName = "posts"
   themeColor = "teal"
   showMenuItems = 2
-  fullWidthTheme = true
+  fullWidthTheme = false
   centerTheme = true
   autoCover = true
   showLastUpdated = true
-
-  [[params.links]]
-    title = "Link"
-    href = "https://erinskidds.com"
 
 [frontmatter]
   lastmod = ["lastmod", ":fileModTime", ":default"]

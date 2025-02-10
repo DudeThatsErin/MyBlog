@@ -148,8 +148,3 @@ try {
     git branch -D hostinger-deploy
     exit 1
 }
-
-# Delete the temporary branch
-git branch -D hostinger-deploy
-
-Write-Host "All done! Site synced, processed, committed, built, and deployed."

@@ -15,4 +15,4 @@ tags:
 
 regular text
 
-![[posts/attachments/first.png]]
+![Image Description](/posts/attachments/first.png)
