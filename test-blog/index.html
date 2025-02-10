@@ -203,7 +203,6 @@
         <li><a href="#canvas---h3">Canvas - h3</a></li>
       </ul>
     </li>
-    <li><a href="#kanban---h2">Kanban - h2</a></li>
   </ul>
 </nav>
     </div>
@@ -261,10 +260,56 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script> 
 <h3 id="canvas---h3">Canvas - h3</h3>
-<p>![[Untitled.canvas|Untitled]]</p>
-<h2 id="kanban---h2">Kanban - h2</h2>
-<p>![[Untitled Kanban]]</p>
-
+<div class="canvas-container">
+<style>
+<pre><code>        .canvas-container {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            background: var(--background);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .canvas-node {
+            position: absolute;
+            background: var(--background);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 1rem;
+            max-width: 300px;
+        }
+        .canvas-node-text {
+            font-size: 0.9rem;
+        }
+        .canvas-edge {
+            position: absolute;
+            border-top: 2px solid var(--accent);
+            opacity: 0.5;
+        }
+        @media (max-width: 768px) {
+            .canvas-container {
+                height: auto;
+                min-height: 400px;
+            }
+        }
+</code></pre>
+<p></style></p>
+<div class="canvas-node" style="left: -206px; top: -153px;">
+<div class="canvas-node-text">Test Canvas</div>
+</div>
+<div class="canvas-node" style="left: -281px; top: -60px;">
+<div class="canvas-node-text"></div>
+</div>
+<div class="canvas-node" style="left: 161px; top: -125px;">
+<div class="canvas-node-text"></div>
+</div>
+<div class="canvas-node" style="left: 161px; top: 320px;">
+<div class="canvas-node-text"></div>
+</div>
+</div>
+## Kanban - h2
+![[Untitled Kanban|embed]]
   </div>
 
   
