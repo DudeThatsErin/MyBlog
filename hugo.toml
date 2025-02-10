@@ -2,7 +2,19 @@ baseURL = "https://erinskidds.com/blog"
 languageCode = "en-us"
 title = "Erin's blog"
 theme = "terminal"
-paginate = 5
+
+# Update paginate to use the new syntax
+pagination.pagerSize = 5
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true  # Allow HTML in markdown
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = true
+    lineNos = true
+    style = "monokai"
 
 [params]
   # Terminal theme specific settings
