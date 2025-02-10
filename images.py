@@ -517,17 +517,19 @@ def parse_cardlink(cardlink_block):
 def parse_kanban(kanban_content):
     """Parse a Kanban board and convert it to HTML."""
     try:
-        # First try to parse as YAML
-        try:
-            data = yaml.safe_load(kanban_content)
-        except:
-            # If YAML parsing fails, try to extract the Kanban data structure
-            kanban_pattern = r'---\s*kanban-plugin\s*---\n(.*?)(?=\n---|\Z)'
-            match = re.search(kanban_pattern, kanban_content, re.DOTALL)
-            if match:
-                data = yaml.safe_load(match.group(1))
-            else:
-                raise ValueError("Could not find Kanban data structure")
+        # Extract YAML frontmatter
+        frontmatter_match = re.search(r'^---\s*(.*?)\s*---', kanban_content, re.DOTALL)
+        if not frontmatter_match:
+            raise ValueError("No YAML frontmatter found")
+        
+        frontmatter = yaml.safe_load(frontmatter_match.group(1))
+        if not frontmatter.get('kanban-plugin') == 'board':
+            raise ValueError("Not a Kanban board")
+
+        # Parse the remaining content as YAML
+        content_start = frontmatter_match.end()
+        board_content = kanban_content[content_start:].strip()
+        data = yaml.safe_load(board_content)
         
         html = ['<div class="kanban-board">']
         html.append('''<style>
@@ -538,13 +540,17 @@ def parse_kanban(kanban_content):
                 padding: 1rem 0;
                 min-height: 400px;
                 margin: 1rem 0;
+                background: var(--background);
             }
             .kanban-lane {
                 min-width: 300px;
+                flex: 1;
                 background: var(--background);
                 border: 1px solid var(--border-color);
                 border-radius: 8px;
                 padding: 1rem;
+                display: flex;
+                flex-direction: column;
             }
             .kanban-lane-header {
                 font-weight: bold;
@@ -552,6 +558,10 @@ def parse_kanban(kanban_content):
                 padding-bottom: 0.5rem;
                 border-bottom: 2px solid var(--accent);
                 color: var(--color);
+            }
+            .kanban-cards {
+                flex: 1;
+                min-height: 100px;
             }
             .kanban-card {
                 background: var(--background);
@@ -568,6 +578,7 @@ def parse_kanban(kanban_content):
             .kanban-card-text {
                 color: var(--color);
                 font-size: 0.9rem;
+                white-space: pre-wrap;
             }
             @media (max-width: 768px) {
                 .kanban-board {
@@ -580,22 +591,36 @@ def parse_kanban(kanban_content):
         </style>''')
         
         # Process lanes
-        for lane in data.get('lanes', []):
+        lanes = data.get('lanes', [])
+        if not lanes and isinstance(data, dict):
+            # If lanes aren't in a 'lanes' key, assume top-level keys are lane names
+            lanes = [{'id': k, 'title': k, 'items': v} for k, v in data.items() if isinstance(v, list)]
+        
+        for lane in lanes:
             html.append('<div class="kanban-lane">')
             html.append(f'<div class="kanban-lane-header">{lane.get("title", "")}</div>')
+            html.append('<div class="kanban-cards">')
             
             # Process cards in lane
-            for card in lane.get('cards', []):
+            items = lane.get('items', []) or lane.get('cards', [])
+            for item in items:
+                if isinstance(item, str):
+                    text = item
+                else:
+                    text = item.get('text', '') or item.get('title', '')
+                
                 html.append('<div class="kanban-card">')
-                html.append(f'<div class="kanban-card-text">{card.get("text", "")}</div>')
+                html.append(f'<div class="kanban-card-text">{text}</div>')
                 html.append('</div>')
             
-            html.append('</div>')
+            html.append('</div>')  # Close kanban-cards
+            html.append('</div>')  # Close kanban-lane
         
-        html.append('</div>')
+        html.append('</div>')  # Close kanban-board
         return '\n'.join(html)
     except Exception as e:
         print(f"Error parsing Kanban: {e}")
+        traceback.print_exc()
         return f'<div class="error">Error parsing Kanban board: {str(e)}</div>'
 
 def parse_canvas(canvas_content):
@@ -675,6 +700,17 @@ def parse_canvas(canvas_content):
         print(f"Error parsing Canvas: {e}")
         return f'<div class="error">Error parsing Canvas: {str(e)}</div>'
 
+def is_kanban_file(content):
+    """Check if a file is a Kanban board by looking for the kanban-plugin YAML frontmatter."""
+    try:
+        frontmatter_match = re.search(r'^---\s*(.*?)\s*---', content, re.DOTALL)
+        if frontmatter_match:
+            frontmatter = yaml.safe_load(frontmatter_match.group(1))
+            return frontmatter.get('kanban-plugin') == 'board'
+    except:
+        pass
+    return False
+
 def process_embedded_files(content, base_name):
     """Process embedded Kanban and Canvas files."""
     # Pattern for embedded files: ![[filename.extension|embed]] or ![[filename.extension]]
@@ -709,7 +745,7 @@ def process_embedded_files(content, base_name):
                         # Generate embedded view
                         if file_ext == '.md':
                             # Check if it's a Kanban file
-                            if '```kanban' in file_content or 'kanban-plugin' in file_content:
+                            if is_kanban_file(file_content):
                                 html = parse_kanban(file_content)
                             else:
                                 html = f'<div class="error">Not a Kanban board: {file_name}</div>'
