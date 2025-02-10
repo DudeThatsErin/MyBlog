@@ -12,3 +12,4 @@ lastmod: 2024-02-10
 
 
 # H1 Title
+[My Test Blog Post](/blog/my-test-blog-post)
