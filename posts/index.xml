@@ -27,7 +27,7 @@
       <guid>https://erinskidds.com/blog/my-test-blog-post/</guid>
       <description>&lt;h1 id=&#34;test-blog&#34;&gt;Test Blog&lt;/h1&gt;
 &lt;p&gt;More Stuff
-[[Test Blog 2]]&lt;/p&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/posts/my-test-blog-post-2&#34;&gt;My Test Blog Post #2&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;
 &lt;em&gt;italic&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Random Text&lt;/p&gt;
@@ -45,7 +45,7 @@
 &lt;p&gt;![[src6.pdf]]&lt;/p&gt;</description>
       <content>&lt;h1 id=&#34;test-blog&#34;&gt;Test Blog&lt;/h1&gt;
 &lt;p&gt;More Stuff
-[[Test Blog 2]]&lt;/p&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/posts/my-test-blog-post-2&#34;&gt;My Test Blog Post #2&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;
 &lt;em&gt;italic&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Random Text&lt;/p&gt;
