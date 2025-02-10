@@ -192,8 +192,11 @@ def parse_dataview_query(query_block):
             html.append('<tbody>')
             for row in data:
                 html.append('<tr>')
-                for cell in row:
-                    html.append(f'<td>{cell}</td>')
+                for i, cell in enumerate(row):
+                    if 'url' in fields[i].lower() or 'file.path' in fields[i].lower():
+                        html.append(f'<td><a href="{cell}">{cell}</a></td>')
+                    else:
+                        html.append(f'<td>{cell}</td>')
                 html.append('</tr>')
             html.append('</tbody>')
             

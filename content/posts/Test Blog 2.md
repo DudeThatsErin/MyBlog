@@ -77,12 +77,12 @@ lastmod: 2024-02-10
 <tr>
 <td>Test Blog 2</td>
 <td>My Test Blog Post #2</td>
-<td>/blog/test-blog-2</td>
+<td><a href="/blog/test-blog-2">/blog/test-blog-2</a></td>
 </tr>
 <tr>
 <td>Test Blog</td>
 <td>My Test Blog Post</td>
-<td>/blog/test-blog</td>
+<td><a href="/blog/test-blog">/blog/test-blog</a></td>
 </tr>
 </tbody>
 </table>
