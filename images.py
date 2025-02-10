@@ -6,7 +6,7 @@ from datetime import datetime
 
 # Paths
 posts_dir = r"F:\repos\CURRENTBLOG\erinblog-1\content\posts"
-attachments_dir = r"E:\Obs\MyVault\Blogs\attachments"
+attachments_base = r"E:\Obs\MyVault\90-Attachments\blogs"  # Updated base attachments path
 static_images_dir = r"F:\repos\CURRENTBLOG\erinblog-1\static\images"
 static_files_dir = r"F:\repos\CURRENTBLOG\erinblog-1\static\files"
 
@@ -88,6 +88,10 @@ def get_file_url(filename):
         return 'test-blog'
     return base_name.lower().replace(' ', '-')
 
+def get_post_attachments_dir(post_name):
+    """Get the attachments directory for a specific post."""
+    return os.path.join(attachments_base, post_name)
+
 # Get list of all markdown files and their metadata
 file_metadata = {}
 for filename in os.listdir(posts_dir):
@@ -154,18 +158,21 @@ for filename in os.listdir(posts_dir):
             file_name = clean_filename(file_path)
             file_ext = os.path.splitext(file_name)[1].lower()
             
+            # Get the post-specific attachments directory
+            post_attachments_dir = get_post_attachments_dir(base_name)
+            
             # Try multiple possible locations for the file
             possible_sources = [
-                os.path.join(attachments_dir, file_name),  # Direct in attachments
-                os.path.join(attachments_dir, file_path),  # Full path in attachments
-                os.path.join(posts_dir, file_name),        # Direct in posts
-                os.path.join(posts_dir, "attachments", file_name),  # In posts/attachments
-                file_path  # Try the exact path as given
+                os.path.join(post_attachments_dir, file_name),  # In post's attachments folder
+                os.path.join(attachments_base, file_name),      # In base attachments
+                os.path.join(posts_dir, file_name),             # Direct in posts
+                os.path.join(posts_dir, "attachments", file_name)  # In posts/attachments
             ]
             
             print(f"\nLooking for {file_name}")
             print(f"Original path: {file_path}")
             print(f"Alias: {alias}")
+            print(f"Post attachments dir: {post_attachments_dir}")
             
             file_found = False
             for file_source in possible_sources:
@@ -197,16 +204,16 @@ for filename in os.listdir(posts_dir):
                 for path in possible_sources:
                     print(f"  - {path}")
                 print(f"\nContents of directories:")
-                print(f"Attachments dir ({attachments_dir}):")
+                print(f"Post attachments dir ({post_attachments_dir}):")
                 try:
-                    print(os.listdir(attachments_dir))
+                    print(os.listdir(post_attachments_dir))
                 except Exception as e:
-                    print(f"Error listing attachments directory: {e}")
-                print(f"\nPosts dir ({posts_dir}):")
+                    print(f"Error listing post attachments directory: {e}")
+                print(f"\nBase attachments dir ({attachments_base}):")
                 try:
-                    print(os.listdir(posts_dir))
+                    print(os.listdir(attachments_base))
                 except Exception as e:
-                    print(f"Error listing posts directory: {e}")
+                    print(f"Error listing base attachments directory: {e}")
 
         # Write the updated content back
         with open(filepath, "w", encoding="utf-8") as file:
