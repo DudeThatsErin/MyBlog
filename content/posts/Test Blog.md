@@ -38,6 +38,7 @@ Random Text
 {{< pdf src="/blog/files/IMG-20250210021231508.pdf" >}}
 
 ### Canvas - h3
+
 <div class="canvas-container">
 <style>
             .canvas-container {
@@ -99,4 +100,5 @@ Random Text
 </div>
 </div>
 ## Kanban - h2
+
 ![[Untitled Kanban|embed]]
