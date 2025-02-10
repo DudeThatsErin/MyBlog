@@ -6,37 +6,50 @@
     <description>Recent content in Posts on Erin&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <copyright>© 2025 Erin Skidds</copyright>
-    <lastBuildDate>Tue, 04 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://erinskidds.com/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>© 2025 Erin Skidds</copyright><atom:link href="https://erinskidds.com/blog/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>PLEASEWORK</title>
-      <link>https://erinskidds.com/blog/posts/pleasework/</link>
-      <pubDate>Tue, 04 Feb 2025 00:00:00 +0000</pubDate>
+      <title></title>
+      <link>https://erinskidds.com/blog/posts/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://erinskidds.com/blog/posts/pleasework/</guid>
-      <description>&lt;h2 id=&#34;obsidian&#34;&gt;Obsidian&lt;/h2&gt;
-&lt;h2 id=&#34;other-stuff&#34;&gt;Other stuff&lt;/h2&gt;
-&lt;p&gt;regular text&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://erinskidds.com/blog/posts/attachments/first.png&#34; alt=&#34;Image Description&#34;&gt;&lt;/p&gt;</description>
-      <content>&lt;h2 id=&#34;obsidian&#34;&gt;Obsidian&lt;/h2&gt;
-&lt;h2 id=&#34;other-stuff&#34;&gt;Other stuff&lt;/h2&gt;
-&lt;p&gt;regular text&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://erinskidds.com/blog/posts/attachments/first.png&#34; alt=&#34;Image Description&#34;&gt;&lt;/p&gt;
+      <guid>https://erinskidds.com/blog/posts/</guid>
+      <description>&lt;h1 id=&#34;h1-title&#34;&gt;H1 Title&lt;/h1&gt;
+&lt;p&gt;[[Test Blog]]&lt;/p&gt;</description>
+      <content>&lt;h1 id=&#34;h1-title&#34;&gt;H1 Title&lt;/h1&gt;
+&lt;p&gt;[[Test Blog]]&lt;/p&gt;
 </content>
     </item>
     
     <item>
-      <title>blogtitle</title>
-      <link>https://erinskidds.com/blog/posts/blogtitle/</link>
-      <pubDate>Wed, 06 Nov 2024 00:00:00 +0000</pubDate>
+      <title></title>
+      <link>https://erinskidds.com/blog/posts/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://erinskidds.com/blog/posts/blogtitle/</guid>
-      <description>&lt;h2 id=&#34;obsidian&#34;&gt;Obsidian&lt;/h2&gt;
-&lt;h2 id=&#34;other-stuff&#34;&gt;Other stuff&lt;/h2&gt;
-&lt;p&gt;regular text&lt;/p&gt;</description>
-      <content>&lt;h2 id=&#34;obsidian&#34;&gt;Obsidian&lt;/h2&gt;
-&lt;h2 id=&#34;other-stuff&#34;&gt;Other stuff&lt;/h2&gt;
-&lt;p&gt;regular text&lt;/p&gt;
+      <guid>https://erinskidds.com/blog/posts/</guid>
+      <description>&lt;h1 id=&#34;test-blog&#34;&gt;Test Blog&lt;/h1&gt;
+&lt;p&gt;More Stuff
+[[Test Blog 2]]&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;
+&lt;em&gt;italic&lt;/em&gt;
+==highlight==&lt;/p&gt;
+&lt;p&gt;Random Text
+&lt;a href=&#34;https://google.com&#34;&gt;External Link&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;image---h2&#34;&gt;Image - h2&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;https://erinskidds.com/blog/posts/attachments/galaxy.jpeg&#34; alt=&#34;galaxy.jpeg&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;pdf---h3&#34;&gt;PDF - h3&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/posts/attachments/src6.pdf&#34;&gt;src6.pdf&lt;/a&gt;&lt;/p&gt;</description>
+      <content>&lt;h1 id=&#34;test-blog&#34;&gt;Test Blog&lt;/h1&gt;
+&lt;p&gt;More Stuff
+[[Test Blog 2]]&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;
+&lt;em&gt;italic&lt;/em&gt;
+==highlight==&lt;/p&gt;
+&lt;p&gt;Random Text
+&lt;a href=&#34;https://google.com&#34;&gt;External Link&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;image---h2&#34;&gt;Image - h2&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;https://erinskidds.com/blog/posts/attachments/galaxy.jpeg&#34; alt=&#34;galaxy.jpeg&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;pdf---h3&#34;&gt;PDF - h3&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/posts/attachments/src6.pdf&#34;&gt;src6.pdf&lt;/a&gt;&lt;/p&gt;
 </content>
     </item>
     

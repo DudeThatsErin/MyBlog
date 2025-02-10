@@ -19,25 +19,37 @@ for filename in os.listdir(posts_dir):
             content = file.read()
             print(f"Processing: {filename}\n---\n{content}\n---\n")  # Debugging output
 
-        # Find all image links in the format [[image.png]]
-        images = re.findall(r'\[\[([^]]*\.png)\]\]', content)
-        print(f"Found images in {filename}: {images}")  # Debugging output
+        # Find all image links in the format [[file.ext]] where ext can be png, jpg, jpeg, pdf, etc.
+        files = re.findall(r'\[\[([^]]*\.(png|jpg|jpeg|pdf))\]\]', content, re.IGNORECASE)
+        print(f"Found files in {filename}: {files}")  # Debugging output
 
-        for image in images:
-            # Correct the Markdown image link format
-            markdown_image = f"![Image Description](/{image.replace(' ', '%20')})"
-            print(f"Replacing [[{image}]] with {markdown_image}")  # Debugging output
+        for file_match in files:
+            file_name = file_match[0]  # The full filename
+            file_ext = file_match[1].lower()  # The extension
 
-            # Ensure replacement works correctly, avoiding double '!'
-            content = re.sub(r'!?(\[\[' + re.escape(image) + r'\]\])', markdown_image, content)
+            # Correct the Markdown link format
+            if file_ext in ['png', 'jpg', 'jpeg']:
+                # For images, use image syntax
+                markdown_link = f"![{file_name}](/blog/posts/attachments/{file_name.replace(' ', '%20')})"
+            else:
+                # For PDFs, use link syntax
+                markdown_link = f"[{file_name}](/blog/posts/attachments/{file_name.replace(' ', '%20')})"
 
-            # Copy the image if it exists
-            image_source = os.path.join(attachments_dir, image)
-            if os.path.exists(image_source):
-                shutil.copy(image_source, static_images_dir)
+            print(f"Replacing [[{file_name}]] with {markdown_link}")  # Debugging output
+
+            # Ensure replacement works correctly
+            content = re.sub(r'!?\[\[' + re.escape(file_name) + r'\]\]', markdown_link, content)
+
+            # Copy the file if it exists
+            file_source = os.path.join(attachments_dir, file_name)
+            if os.path.exists(file_source):
+                shutil.copy(file_source, static_images_dir)
+                print(f"Copied {file_name} to {static_images_dir}")
+            else:
+                print(f"Warning: File not found: {file_source}")
 
         # Write the updated content back
         with open(filepath, "w", encoding="utf-8") as file:
             file.write(content)
 
-print("Markdown files processed and images copied successfully.")
+print("Markdown files processed and files copied successfully.")
