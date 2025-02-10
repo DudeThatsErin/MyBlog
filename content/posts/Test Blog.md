@@ -12,7 +12,7 @@ permalink: posts/test-blog
 ---
 # Test Blog
 More Stuff
-[My Test Blog Post #2](/blog/my-test-blog-post-%2322)
+[My Test Blog Post #2](/blog/test-blog-2)
 
 **Bold**
 *italic*

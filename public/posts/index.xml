@@ -15,7 +15,7 @@
       
       <guid>https://erinskidds.com/blog/test-blog-2/</guid>
       <description>&lt;h1 id=&#34;h1-title&#34;&gt;H1 Title&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/my-test-blog-post&#34;&gt;My Test Blog Post&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/test-blog&#34;&gt;My Test Blog Post&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;dataview&#34;&gt;Dataview&lt;/h2&gt;
 
 &lt;div class=&#34;post-list&#34;&gt;
@@ -98,7 +98,7 @@
 }
 &lt;/style&gt;</description>
       <content>&lt;h1 id=&#34;h1-title&#34;&gt;H1 Title&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/my-test-blog-post&#34;&gt;My Test Blog Post&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/test-blog&#34;&gt;My Test Blog Post&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;dataview&#34;&gt;Dataview&lt;/h2&gt;
 
 &lt;div class=&#34;post-list&#34;&gt;
@@ -191,7 +191,7 @@
       <guid>https://erinskidds.com/blog/test-blog/</guid>
       <description>&lt;h1 id=&#34;test-blog&#34;&gt;Test Blog&lt;/h1&gt;
 &lt;p&gt;More Stuff
-&lt;a href=&#34;https://erinskidds.com/blog/my-test-blog-post-%2322&#34;&gt;My Test Blog Post #2&lt;/a&gt;&lt;/p&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/test-blog-2&#34;&gt;My Test Blog Post #2&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;
 &lt;em&gt;italic&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Random Text&lt;/p&gt;
@@ -209,7 +209,7 @@
 &lt;p&gt;![[IMG-20250210021231508.pdf|src3]]&lt;/p&gt;</description>
       <content>&lt;h1 id=&#34;test-blog&#34;&gt;Test Blog&lt;/h1&gt;
 &lt;p&gt;More Stuff
-&lt;a href=&#34;https://erinskidds.com/blog/my-test-blog-post-%2322&#34;&gt;My Test Blog Post #2&lt;/a&gt;&lt;/p&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/test-blog-2&#34;&gt;My Test Blog Post #2&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;
 &lt;em&gt;italic&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Random Text&lt;/p&gt;
