@@ -15,10 +15,10 @@ os.makedirs(static_files_dir, exist_ok=True)
 
 def slugify(title):
     """Convert a title to a URL-friendly slug."""
-    # Replace hashtag with URL-encoded version (%23)
-    title = title.replace('#', '%23')
-    # Convert spaces to hyphens and make lowercase
-    return title.lower().replace(' ', '-')
+    # First convert spaces to hyphens and make lowercase
+    slug = title.lower().replace(' ', '-')
+    # Then replace hashtag with URL-encoded version (%23)
+    return slug.replace('#', '%23')
 
 def clean_filename(filename):
     """Extract the actual filename from Obsidian path and remove alias."""
