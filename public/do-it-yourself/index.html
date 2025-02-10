@@ -213,6 +213,7 @@
     <li><a href="#step-4-adding-special-features">Step 4: Adding Special Features</a>
       <ul>
         <li><a href="#dataview-support">Dataview Support</a></li>
+        <li><a href="#pdf-embedding">PDF Embedding</a></li>
       </ul>
     </li>
     <li><a href="#step-5-writing-blog-posts">Step 5: Writing Blog Posts</a></li>
@@ -254,7 +255,9 @@
 <ul>
 <li>Dataview</li>
 <li>Card Link</li>
-<li>Handwritten Notes - it displays PDFs online.</li>
+<li>Handwritten Notes - it displays PDFs inline via the browser&rsquo;s PDF viewer.</li>
+<li>Obsidian Canvas - Can display an embedded canvas on the page.</li>
+<li>Obsidian Kanban - Can display an embedded Kanban on the page.</li>
 </ul>
 <h2 id="prerequisites">Prerequisites</h2>
 <p>You&rsquo;ll need:</p>
@@ -1231,180 +1234,28 @@
 <p>Example Dataview query that works with this setup:</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">63
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">64
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">65
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">66
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">67
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">68
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">69
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">70
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">71
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">72
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">73
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">74
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">75
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">76
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">77
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">78
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">79
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">80
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">81
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">82
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">83
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">84
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">85
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">86
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">87
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">88
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>&lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;dataview-table&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">style</span>&gt;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>                .<span style="color:#a6e22e">dataview-table</span> {
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">margin</span>: <span style="color:#ae81ff">2</span><span style="color:#66d9ef">rem</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">overflow-x</span>: <span style="color:#66d9ef">auto</span>;
-</span></span><span style="display:flex;"><span>                }
-</span></span><span style="display:flex;"><span>                .<span style="color:#a6e22e">dataview-table</span> <span style="color:#f92672">table</span> {
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>;
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">border-collapse</span>: <span style="color:#66d9ef">collapse</span>;
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">margin</span>: <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">0.95</span><span style="color:#66d9ef">rem</span>;
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">background</span>: <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>background);
-</span></span><span style="display:flex;"><span>                }
-</span></span><span style="display:flex;"><span>                .<span style="color:#a6e22e">dataview-table</span> <span style="color:#f92672">th</span> {
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">background-color</span>: <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>accent);
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">color</span>: <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>background);
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">0.75</span><span style="color:#66d9ef">rem</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">rem</span>;
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">text-align</span>: <span style="color:#66d9ef">left</span>;
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">font-weight</span>: <span style="color:#66d9ef">bold</span>;
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">border-bottom</span>: <span style="color:#ae81ff">2</span><span style="color:#66d9ef">px</span> <span style="color:#66d9ef">solid</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>border<span style="color:#f92672">-</span><span style="color:#66d9ef">color</span>);
-</span></span><span style="display:flex;"><span>                }
-</span></span><span style="display:flex;"><span>                .<span style="color:#a6e22e">dataview-table</span> <span style="color:#f92672">td</span> {
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">0.75</span><span style="color:#66d9ef">rem</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">rem</span>;
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">border-bottom</span>: <span style="color:#ae81ff">1</span><span style="color:#66d9ef">px</span> <span style="color:#66d9ef">solid</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>border<span style="color:#f92672">-</span><span style="color:#66d9ef">color</span>);
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">vertical-align</span>: <span style="color:#66d9ef">top</span>;
-</span></span><span style="display:flex;"><span>                }
-</span></span><span style="display:flex;"><span>                .<span style="color:#a6e22e">dataview-table</span> <span style="color:#f92672">tr</span>:<span style="color:#a6e22e">hover</span> {
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">background-color</span>: <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>hover);
-</span></span><span style="display:flex;"><span>                }
-</span></span><span style="display:flex;"><span>                .<span style="color:#a6e22e">dataview-table</span> <span style="color:#f92672">tr</span>:<span style="color:#a6e22e">last-child</span> <span style="color:#f92672">td</span> {
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">border-bottom</span>: <span style="color:#66d9ef">none</span>;
-</span></span><span style="display:flex;"><span>                }
-</span></span><span style="display:flex;"><span>                .<span style="color:#a6e22e">dataview-table</span> <span style="color:#f92672">a</span> {
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">color</span>: <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>accent);
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">text-decoration</span>: <span style="color:#66d9ef">none</span>;
-</span></span><span style="display:flex;"><span>                }
-</span></span><span style="display:flex;"><span>                .<span style="color:#a6e22e">dataview-table</span> <span style="color:#f92672">a</span>:<span style="color:#a6e22e">hover</span> {
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">text-decoration</span>: <span style="color:#66d9ef">underline</span>;
-</span></span><span style="display:flex;"><span>                }
-</span></span><span style="display:flex;"><span>                @media <span style="color:#f92672">(</span><span style="color:#f92672">max-width</span><span style="color:#f92672">:</span> <span style="color:#f92672">768px</span><span style="color:#f92672">)</span> {
-</span></span><span style="display:flex;"><span>                    <span style="color:#960050;background-color:#1e0010">.dataview-table</span> <span style="color:#960050;background-color:#1e0010">{</span>
-</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">margin</span>: <span style="color:#ae81ff">1</span><span style="color:#66d9ef">rem</span> <span style="color:#ae81ff">-1</span><span style="color:#66d9ef">rem</span>;
-</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">width</span>: calc(<span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span><span style="color:#66d9ef">rem</span>);
-</span></span><span style="display:flex;"><span>                    }
-</span></span><span style="display:flex;"><span>                    .<span style="color:#a6e22e">dataview-table</span> <span style="color:#f92672">th</span><span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>                    .<span style="color:#a6e22e">dataview-table</span> <span style="color:#f92672">td</span> {
-</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">0.5</span><span style="color:#66d9ef">rem</span>;
-</span></span><span style="display:flex;"><span>                    }
-</span></span><span style="display:flex;"><span>                <span style="color:#960050;background-color:#1e0010">}</span>
-</span></span><span style="display:flex;"><span>            
-</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">style</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">table</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">thead</span>&gt;&lt;<span style="color:#f92672">tr</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">th</span>&gt;Name&lt;/<span style="color:#f92672">th</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">th</span>&gt;Title&lt;/<span style="color:#f92672">th</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">th</span>&gt;Url&lt;/<span style="color:#f92672">th</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">tr</span>&gt;&lt;/<span style="color:#f92672">thead</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">tbody</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">tr</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">td</span>&gt;Do it Yourself&lt;/<span style="color:#f92672">td</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">td</span>&gt;Create your own blog from Markdown!&lt;/<span style="color:#f92672">td</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">td</span>&gt;&lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/blog/do-it-yourself&#34;</span>&gt;/blog/do-it-yourself&lt;/<span style="color:#f92672">a</span>&gt;&lt;/<span style="color:#f92672">td</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">tr</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">tr</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">td</span>&gt;Test Blog 2&lt;/<span style="color:#f92672">td</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">td</span>&gt;My Test Blog Post #2&lt;/<span style="color:#f92672">td</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">td</span>&gt;&lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/blog/test-blog-2&#34;</span>&gt;/blog/test-blog-2&lt;/<span style="color:#f92672">a</span>&gt;&lt;/<span style="color:#f92672">td</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">tr</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">tr</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">td</span>&gt;Test Blog&lt;/<span style="color:#f92672">td</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">td</span>&gt;My Test Blog Post&lt;/<span style="color:#f92672">td</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">td</span>&gt;&lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/blog/test-blog&#34;</span>&gt;/blog/test-blog&lt;/<span style="color:#f92672">a</span>&gt;&lt;/<span style="color:#f92672">td</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">tr</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">tbody</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">table</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">div</span>&gt;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">### PDF Embedding
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>Create a shortcode for PDF embedding (<span style="color:#e6db74">`layouts/shortcodes/pdf.html`</span>):
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>```html
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pdf-container&#34;</span>&gt;
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>```dataview
+</span></span><span style="display:flex;"><span>TABLE file.name AS &#34;Name&#34;, title AS &#34;Title&#34;, file.path AS &#34;URL&#34;
+</span></span><span style="display:flex;"><span>FROM &#34;Blogs&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="pdf-embedding">PDF Embedding</h3>
+<p>Create a shortcode for PDF embedding (<code>layouts/shortcodes/pdf.html</code>):</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pdf-container&#34;</span>&gt;
 </span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">iframe</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ .Get &#34;</span><span style="color:#a6e22e">src</span><span style="color:#960050;background-color:#1e0010">&#34;</span> <span style="color:#960050;background-color:#1e0010">}}&#34;</span> <span style="color:#a6e22e">style</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;width: 100%; height: 800px;&#34;</span> <span style="color:#a6e22e">frameborder</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;0&#34;</span>&gt;
 </span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">p</span>&gt;It appears your browser doesn&#39;t support iframes.&lt;/<span style="color:#f92672">p</span>&gt;
 </span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">iframe</span>&gt;

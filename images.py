@@ -420,6 +420,10 @@ for filename in os.listdir(posts_dir):
         # Process Dataview blocks first
         content = process_dataview(content)
 
+        # Process Cardlink blocks
+        cardlink_pattern = r'```cardlink\n(.*?)\n```'
+        content = re.sub(cardlink_pattern, lambda m: parse_cardlink(m.group(1)), content, flags=re.DOTALL)
+
         # Handle internal links (links to other posts)
         internal_links = re.findall(r'\[\[([^]\.]*)\]\]', content)
         for link_name in internal_links:
