@@ -70,13 +70,16 @@ lastmod: 2024-02-10
 <table>
 <thead><tr>
 <th>Name</th>
+<th>Title</th>
 </tr></thead>
 <tbody>
 <tr>
 <td>Test Blog 2</td>
+<td></td>
 </tr>
 <tr>
 <td>Test Blog</td>
+<td></td>
 </tr>
 </tbody>
 </table>
