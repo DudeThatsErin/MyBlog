@@ -75,6 +75,11 @@ lastmod: 2024-02-10
 </tr></thead>
 <tbody>
 <tr>
+<td>Do it Yourself</td>
+<td>Create your own blog from Markdown!</td>
+<td><a href="/blog/do-it-yourself">/blog/do-it-yourself</a></td>
+</tr>
+<tr>
 <td>Test Blog 2</td>
 <td>My Test Blog Post #2</td>
 <td><a href="/blog/test-blog-2">/blog/test-blog-2</a></td>

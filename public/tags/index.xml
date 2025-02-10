@@ -38,5 +38,45 @@
       <content></content>
     </item>
     
+    <item>
+      <title>Hugo</title>
+      <link>https://erinskidds.com/blog/tags/hugo/</link>
+      <pubDate>Sat, 10 Feb 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://erinskidds.com/blog/tags/hugo/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>Markdown</title>
+      <link>https://erinskidds.com/blog/tags/markdown/</link>
+      <pubDate>Sat, 10 Feb 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://erinskidds.com/blog/tags/markdown/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>Obsidian</title>
+      <link>https://erinskidds.com/blog/tags/obsidian/</link>
+      <pubDate>Sat, 10 Feb 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://erinskidds.com/blog/tags/obsidian/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>Python</title>
+      <link>https://erinskidds.com/blog/tags/python/</link>
+      <pubDate>Sat, 10 Feb 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://erinskidds.com/blog/tags/python/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
   </channel>
 </rss>

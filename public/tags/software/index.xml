@@ -130,6 +130,11 @@
 &lt;/tr&gt;&lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
+&lt;td&gt;Do it Yourself&lt;/td&gt;
+&lt;td&gt;Create your own blog from Markdown!&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://erinskidds.com/blog/do-it-yourself&#34;&gt;/blog/do-it-yourself&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
 &lt;td&gt;Test Blog 2&lt;/td&gt;
 &lt;td&gt;My Test Blog Post #2&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;https://erinskidds.com/blog/test-blog-2&#34;&gt;/blog/test-blog-2&lt;/a&gt;&lt;/td&gt;
