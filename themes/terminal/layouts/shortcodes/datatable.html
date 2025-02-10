@@ -1,0 +1,127 @@
+{{ $headers := .Get "headers" | split "," }}
+{{ $data := .Inner }}
+
+<!-- Debug output -->
+{{ if hugo.IsServer }}
+<div class="debug-info" style="display: none;">
+  <p>Headers: {{ $headers }}</p>
+  <p>Raw Data: {{ $data }}</p>
+</div>
+{{ end }}
+
+<div class="dataview-table">
+  <table>
+    <thead>
+      <tr>
+        {{ range $headers }}
+        <th>{{ . | strings.TrimSpace | humanize }}</th>
+        {{ end }}
+      </tr>
+    </thead>
+    <tbody>
+      {{ $rows := split (strings.TrimSpace $data) "\n" }}
+      {{ range $rows }}
+        {{ $row := . }}
+        {{ if $row }}
+        <tr>
+          {{ $cells := split $row "|" }}
+          {{ range $cells }}
+          <td>{{ . | strings.TrimSpace | markdownify }}</td>
+          {{ end }}
+        </tr>
+        {{ end }}
+      {{ end }}
+    </tbody>
+  </table>
+</div>
+
+<style>
+.dataview-table {
+  margin: 2rem 0;
+  overflow-x: auto;
+}
+
+.dataview-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+  font-size: 0.95rem;
+  background: var(--background);
+}
+
+.dataview-table th {
+  background-color: var(--accent);
+  color: var(--background);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: bold;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.dataview-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: top;
+}
+
+.dataview-table tr:hover {
+  background-color: var(--hover);
+}
+
+.dataview-table tr:last-child td {
+  border-bottom: none;
+}
+
+.dataview-table a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.dataview-table a:hover {
+  text-decoration: underline;
+}
+
+.debug-info {
+  background: #f0f0f0;
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid #ddd;
+  white-space: pre-wrap;
+}
+
+.toggle-debug {
+  background: #eee;
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  margin: 1rem 0;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .dataview-table {
+    margin: 1rem -1rem;
+    width: calc(100% + 2rem);
+  }
+  
+  .dataview-table th,
+  .dataview-table td {
+    padding: 0.5rem;
+  }
+}
+</style>
+
+{{ if hugo.IsServer }}
+<button class="toggle-debug" onclick="toggleDebug(this)">Show Debug Info</button>
+<script>
+function toggleDebug(btn) {
+  const debug = btn.previousElementSibling.previousElementSibling;
+  if (debug.style.display === 'none') {
+    debug.style.display = 'block';
+    btn.textContent = 'Hide Debug Info';
+  } else {
+    debug.style.display = 'none';
+    btn.textContent = 'Show Debug Info';
+  }
+}
+</script>
+{{ end }} 
