@@ -1652,8 +1652,11 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
 &lt;/div&gt;
 &lt;/div&gt;
 ## Kanban - h2
-&lt;p&gt;![[Untitled Kanban|embed]]&lt;/p&gt;
-</content>
+&lt;div class=&#34;error&#34;&gt;Error parsing Kanban board: while scanning for the next token
+found character &#39;\t&#39; that cannot start any token
+  in &#34;&lt;unicode string&gt;&#34;, line 4, column 1:
+    	Text
+    ^&lt;/div&gt;</content>
     </item>
     
   </channel>
