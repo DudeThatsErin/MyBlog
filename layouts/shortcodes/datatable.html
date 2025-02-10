@@ -1,21 +1,32 @@
 {{ $headers := .Get "headers" | split "," }}
 {{ $data := .Inner }}
 
+<!-- Debug output -->
+{{ if hugo.IsServer }}
+<div class="debug-info" style="display: none;">
+  <p>Headers: {{ $headers }}</p>
+  <p>Raw Data: {{ $data }}</p>
+</div>
+{{ end }}
+
 <div class="dataview-table">
   <table>
     <thead>
       <tr>
         {{ range $headers }}
-        <th>{{ . | humanize }}</th>
+        <th>{{ . | strings.TrimSpace | humanize }}</th>
         {{ end }}
       </tr>
     </thead>
     <tbody>
-      {{ range split $data "\n" }}
-        {{ if . }}
+      {{ $rows := split (strings.TrimSpace $data) "\n" }}
+      {{ range $rows }}
+        {{ $row := . }}
+        {{ if $row }}
         <tr>
-          {{ range split . "|" }}
-          <td>{{ . | markdownify }}</td>
+          {{ $cells := split $row "|" }}
+          {{ range $cells }}
+          <td>{{ . | strings.TrimSpace | markdownify }}</td>
           {{ end }}
         </tr>
         {{ end }}
@@ -35,6 +46,7 @@
   border-collapse: collapse;
   margin: 0;
   font-size: 0.95rem;
+  background: var(--background);
 }
 
 .dataview-table th {
@@ -69,6 +81,22 @@
   text-decoration: underline;
 }
 
+.debug-info {
+  background: #f0f0f0;
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid #ddd;
+  white-space: pre-wrap;
+}
+
+.toggle-debug {
+  background: #eee;
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  margin: 1rem 0;
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
   .dataview-table {
     margin: 1rem -1rem;
@@ -80,4 +108,20 @@
     padding: 0.5rem;
   }
 }
-</style> 
+</style>
+
+{{ if hugo.IsServer }}
+<button class="toggle-debug" onclick="toggleDebug(this)">Show Debug Info</button>
+<script>
+function toggleDebug(btn) {
+  const debug = btn.previousElementSibling.previousElementSibling;
+  if (debug.style.display === 'none') {
+    debug.style.display = 'block';
+    btn.textContent = 'Hide Debug Info';
+  } else {
+    debug.style.display = 'none';
+    btn.textContent = 'Show Debug Info';
+  }
+}
+</script>
+{{ end }} 

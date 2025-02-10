@@ -16,14 +16,19 @@ os.makedirs(static_files_dir, exist_ok=True)
 
 def parse_dataview_query(query_block):
     """Parse a Dataview query block and convert it to Hugo-compatible format."""
+    print("\nProcessing Dataview query block:")
+    print(query_block)
+    
     # Extract the query type and parameters
     lines = [line.strip() for line in query_block.strip().split('\n')]
     query_type = lines[0].lower()
+    print(f"Query type: {query_type}")
     
     # Initialize result
     result = []
     
     if 'table' in query_type:
+        print("Processing TABLE query")
         # Handle TABLE queries
         fields = []
         data = []
@@ -32,21 +37,27 @@ def parse_dataview_query(query_block):
         for line in lines[1:]:
             if not line:  # Skip empty lines
                 continue
+            print(f"Processing line: {line}")
             if 'from' in line.lower():
                 in_data = True
+                print("Found FROM clause")
                 continue
             if 'where' in line.lower() or 'sort' in line.lower():
+                print(f"Skipping {line}")
                 continue
             if not in_data:
                 # Collect fields before 'from'
-                fields.extend(f.strip() for f in line.split(',') if f.strip())
+                new_fields = [f.strip() for f in line.split(',') if f.strip()]
+                fields.extend(new_fields)
+                print(f"Added fields: {new_fields}")
             else:
                 # Format data row
                 row_data = []
+                print(f"Processing data line: {line}")
                 for field in fields:
                     # Extract value for each field from the data
                     if 'file.name' in field:
-                        row_data.append(os.path.splitext(os.path.basename(line))[0])
+                        value = os.path.splitext(os.path.basename(line))[0]
                     elif 'date' in field:
                         # Try to extract date from metadata
                         try:
@@ -55,11 +66,12 @@ def parse_dataview_query(query_block):
                                 front_matter = re.search(r'^---\s*\n(.*?)\n\s*---', content, re.DOTALL)
                                 if front_matter:
                                     metadata = yaml.safe_load(front_matter.group(1))
-                                    row_data.append(metadata.get('date', ''))
+                                    value = metadata.get('date', '')
                                 else:
-                                    row_data.append('')
-                        except:
-                            row_data.append('')
+                                    value = ''
+                        except Exception as e:
+                            print(f"Error getting date: {e}")
+                            value = ''
                     elif 'tags' in field:
                         # Try to extract tags from metadata
                         try:
@@ -69,51 +81,85 @@ def parse_dataview_query(query_block):
                                 if front_matter:
                                     metadata = yaml.safe_load(front_matter.group(1))
                                     tags = metadata.get('tags', [])
-                                    row_data.append(', '.join(tags))
+                                    value = ', '.join(tags)
                                 else:
-                                    row_data.append('')
-                        except:
-                            row_data.append('')
+                                    value = ''
+                        except Exception as e:
+                            print(f"Error getting tags: {e}")
+                            value = ''
                     else:
-                        row_data.append('')
+                        value = ''
+                    row_data.append(value)
+                    print(f"Field {field}: {value}")
                 
                 # Add the formatted row to data
                 if row_data:
-                    data.append('|'.join(row_data))
+                    row_str = '|'.join(row_data)
+                    data.append(row_str)
+                    print(f"Added row: {row_str}")
         
         if fields:
             # Create datatable shortcode
-            result.append(f'{{{{< datatable headers="{",".join(fields)}" >}}')
+            shortcode_start = f'{{{{< datatable headers="{",".join(fields)}" >}}'
+            result.append(shortcode_start)
+            print(f"Created shortcode start: {shortcode_start}")
             for row in data:
                 result.append(row)
+                print(f"Added data row: {row}")
             result.append('{{< /datatable >}}')
+            print("Added shortcode end")
     
     elif 'list' in query_type:
+        print("Processing LIST query")
         # Handle LIST queries
         query = ""
         for line in lines[1:]:
             if line.lower().startswith('where'):
                 query = line[6:].strip()  # Extract the where clause
+                print(f"Found WHERE clause: {query}")
                 break
         
         # Create datalist shortcode with optional query
         if query:
-            result.append(f'{{{{< datalist query="{query}" >}}')
+            shortcode = f'{{{{< datalist query="{query}" >}}'
         else:
-            result.append('{{{{< datalist >}}')
+            shortcode = '{{{{< datalist >}}'
+        result.append(shortcode)
+        print(f"Created shortcode: {shortcode}")
         result.append('{{< /datalist >}}')
+        print("Added shortcode end")
     
-    return '\n'.join(result)
+    final_result = '\n'.join(result)
+    print("\nFinal processed output:")
+    print(final_result)
+    return final_result
 
 def process_dataview(content):
     """Find and process Dataview code blocks."""
-    dataview_pattern = r'```dataview\n(.*?)\n```'
+    print("\nLooking for Dataview blocks in content...")
+    # Updated pattern to be more flexible with whitespace and backticks
+    dataview_pattern = r'(?:^|\n)[ \t]*```+[ \t]*dataview[ \t]*\n(.*?)\n[ \t]*```+[ \t]*(?:\n|$)'
+    matches = re.finditer(dataview_pattern, content, flags=re.DOTALL)
+    match_count = 0
     
     def replace_dataview(match):
-        query_block = match.group(1)
-        return parse_dataview_query(query_block)
+        nonlocal match_count
+        match_count += 1
+        print(f"\nProcessing Dataview block #{match_count}")
+        query_block = match.group(1).strip()
+        result = parse_dataview_query(query_block)
+        print(f"Replacing Dataview block with: {result}")
+        return f"\n{result}\n"
     
-    return re.sub(dataview_pattern, replace_dataview, content, flags=re.DOTALL)
+    processed_content = re.sub(dataview_pattern, replace_dataview, content, flags=re.DOTALL)
+    if match_count == 0:
+        print("No Dataview blocks found in content")
+        print("Content preview:")
+        print(content[:500])  # Print first 500 chars to help debug
+    else:
+        print(f"Processed {match_count} Dataview blocks")
+    
+    return processed_content
 
 def create_filename(title):
     """Convert a title to a filename-friendly format."""
