@@ -5,6 +5,7 @@ import yaml
 import json
 from datetime import datetime
 import traceback
+import math
 
 # Paths
 posts_dir = r"F:\repos\CURRENTBLOG\erinblog-1\content\posts"
@@ -529,13 +530,24 @@ def parse_kanban(kanban_content):
         if not frontmatter.get('kanban-plugin') == 'board':
             raise ValueError("Not a Kanban board")
 
+        # Get content after frontmatter
+        content = kanban_content[frontmatter_match.end():]
+        
         # Split content into sections by headers (##)
-        sections = re.split(r'(?m)^## ', kanban_content[frontmatter_match.end():])
+        sections = re.split(r'(?m)^(## [^\n]+)', content)
         
         # Remove settings section if present
         sections = [s for s in sections if not s.strip().startswith('%%')]
         
-        html = ['<div class="kanban-board">']
+        html = []
+        
+        # Add any header that appears before the Kanban board
+        if sections and not sections[0].startswith('## '):
+            header = sections.pop(0).strip()
+            if header:
+                html.append(f'<h2>{header}</h2>')
+        
+        html.append('<div class="kanban-board">')
         html.append('''<style>
             .kanban-board {
                 display: flex;
@@ -612,17 +624,18 @@ def parse_kanban(kanban_content):
         </style>''')
         
         # Process each section as a lane
-        for section in sections:
-            if not section.strip():
+        for i in range(0, len(sections), 2):
+            header = sections[i].strip('## ').strip() if i < len(sections) else None
+            content = sections[i + 1] if i + 1 < len(sections) else ""
+            
+            if not header:
                 continue
                 
-            # Split section into title and items
-            lines = section.strip().split('\n')
-            title = lines[0].strip()
+            # Split content into items
             items = []
-            
             current_card = None
-            for line in lines[1:]:
+            
+            for line in content.strip().split('\n'):
                 line = line.strip()
                 if not line:
                     continue
@@ -646,7 +659,7 @@ def parse_kanban(kanban_content):
             
             # Generate HTML for lane
             html.append('<div class="kanban-lane">')
-            html.append(f'<div class="kanban-lane-header">{title}</div>')
+            html.append(f'<div class="kanban-lane-header">{header}</div>')
             html.append('<div class="kanban-cards">')
             
             # Generate HTML for cards
@@ -692,10 +705,24 @@ def parse_kanban(kanban_content):
 def parse_canvas(canvas_content):
     """Parse a Canvas file and convert it to HTML."""
     try:
-        data = json.loads(canvas_content)
+        print("\nProcessing Canvas content:")
+        print(f"Content preview: {canvas_content[:200]}...")
+        
+        # Try to parse the JSON content
+        try:
+            data = json.loads(canvas_content)
+        except json.JSONDecodeError as e:
+            print(f"JSON parsing error: {e}")
+            print("Raw canvas content:")
+            print(canvas_content)
+            raise ValueError(f"Failed to parse Canvas content as JSON: {e}")
+        
+        if not data or not isinstance(data, dict):
+            raise ValueError("Invalid Canvas data format")
+        
+        print(f"Found {len(data.get('nodes', []))} nodes and {len(data.get('edges', []))} edges")
         
         html = ['<div class="canvas-container">']
-        # Add styles to head instead of inline
         html.append('''<style>
             .canvas-container {
                 position: relative;
@@ -715,19 +742,43 @@ def parse_canvas(canvas_content):
                 padding: 1rem;
                 max-width: 300px;
                 transition: transform 0.2s;
+                z-index: 1;
             }
             .canvas-node:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                z-index: 2;
             }
             .canvas-node-text {
                 font-size: 0.9rem;
                 color: var(--color);
+                white-space: pre-wrap;
+            }
+            .canvas-node-file {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .canvas-node-file img {
+                max-width: 100%;
+                height: auto;
+                margin-bottom: 0.5rem;
+                border-radius: 4px;
+            }
+            .canvas-node-file a {
+                color: var(--accent);
+                text-decoration: none;
+            }
+            .canvas-node-file a:hover {
+                text-decoration: underline;
             }
             .canvas-edge {
                 position: absolute;
-                border-top: 2px solid var(--accent);
+                height: 2px;
+                background: var(--accent);
                 opacity: 0.5;
+                transform-origin: left center;
+                pointer-events: none;
             }
             @media (max-width: 768px) {
                 .canvas-container {
@@ -735,35 +786,92 @@ def parse_canvas(canvas_content):
                     min-height: 400px;
                 }
                 .canvas-node {
-                    position: relative;
+                    position: relative !important;
                     left: 0 !important;
                     top: 0 !important;
                     margin: 1rem 0;
+                    max-width: none;
+                }
+                .canvas-edge {
+                    display: none;
                 }
             }
         </style>''')
         
         # Process nodes
+        node_positions = {}  # Store node positions for edge calculations
         for node in data.get('nodes', []):
+            node_id = node.get('id', '')
             x = node.get('x', 0)
             y = node.get('y', 0)
-            text = node.get('text', '')
+            node_type = node.get('type', '')
             
-            html.append(f'<div class="canvas-node" style="left: {x}px; top: {y}px;">')
-            html.append(f'<div class="canvas-node-text">{text}</div>')
-            html.append('</div>')
+            # Store node position for edge calculations
+            node_positions[node_id] = {'x': x, 'y': y}
+            
+            # Add node HTML based on type
+            html.append(f'<div class="canvas-node" id="node-{node_id}" style="left: {x}px; top: {y}px;">')
+            
+            if node_type == 'text':
+                text = node.get('text', '')
+                html.append(f'<div class="canvas-node-text">{text}</div>')
+            elif node_type == 'file':
+                file_path = node.get('file', '')
+                file_name = os.path.basename(file_path)
+                file_ext = os.path.splitext(file_name)[1].lower()
+                
+                html.append('<div class="canvas-node-file">')
+                if file_ext in ['.jpg', '.jpeg', '.png', '.gif']:
+                    html.append(f'<img src="/blog/images/{file_name}" alt="{file_name}">')
+                elif file_ext == '.pdf':
+                    html.append(f'<a href="/blog/files/{file_name}" target="_blank">{file_name}</a>')
+                elif file_ext == '.md':
+                    # Convert to blog post link
+                    title = os.path.splitext(file_name)[0]
+                    url = get_file_url(title)
+                    html.append(f'<a href="/blog/{url}">{title}</a>')
+                else:
+                    html.append(f'<div class="canvas-node-text">{file_name}</div>')
+                html.append('</div>')
+            
+            html.append('</div>')  # Close canvas-node
         
         # Process edges/connections
         for edge in data.get('edges', []):
-            from_node = edge.get('from', '')
-            to_node = edge.get('to', '')
-            # Add simple line between nodes
-            html.append(f'<div class="canvas-edge" data-from="{from_node}" data-to="{to_node}"></div>')
+            from_id = edge.get('fromNode', '')
+            to_id = edge.get('toNode', '')
+            
+            if from_id in node_positions and to_id in node_positions:
+                from_pos = node_positions[from_id]
+                to_pos = node_positions[to_id]
+                
+                # Calculate edge position and rotation
+                dx = to_pos['x'] - from_pos['x']
+                dy = to_pos['y'] - from_pos['y']
+                length = (dx * dx + dy * dy) ** 0.5
+                angle = math.atan2(dy, dx) * (180 / math.pi)
+                
+                # Add edge HTML with calculated position and rotation
+                html.append(f'''<div class="canvas-edge" style="
+                    left: {from_pos['x']}px;
+                    top: {from_pos['y']}px;
+                    width: {length}px;
+                    transform: rotate({angle}deg);
+                "></div>''')
         
-        html.append('</div>')
-        return '\n'.join(html)
+        html.append('</div>')  # Close canvas-container
+        
+        result = '\n'.join(html)
+        print("\nGenerated Canvas HTML preview:")
+        print(result[:200])
+        return result
+        
     except Exception as e:
         print(f"Error parsing Canvas: {e}")
+        print("Full traceback:")
+        traceback.print_exc()
+        print("\nCanvas content preview:")
+        print(canvas_content[:500])  # Print first 500 chars to help debug
         return f'<div class="error">Error parsing Canvas: {str(e)}</div>'
 
 def is_kanban_file(content):
@@ -808,7 +916,10 @@ def process_embedded_files(content, base_name):
             os.path.join(attachments_base, "Test Blog", file_name),
             os.path.join(attachments_base, file_name),
             os.path.join(posts_dir, file_name),
-            os.path.join(posts_dir, "attachments", file_name)
+            os.path.join(posts_dir, "attachments", file_name),
+            # Add more specific paths for Canvas files
+            os.path.join(attachments_base, base_name, file_name),
+            os.path.join(attachments_base, "Canvas", file_name)
         ]
         
         file_found = False
@@ -835,6 +946,7 @@ def process_embedded_files(content, base_name):
                         elif file_ext == '.canvas':
                             print(f"Processing Canvas file: {file_name}")
                             html = parse_canvas(file_content)
+                            print(f"Generated Canvas HTML preview: {html[:200]}...")  # Debug: Show generated HTML
                         else:
                             html = f'<div class="error">Unsupported file type for embedding: {file_ext}</div>'
                         
@@ -843,6 +955,8 @@ def process_embedded_files(content, base_name):
                         content = content.replace(match.group(0), html)
                         if content == old_content:
                             print("Warning: Content replacement did not change the content")  # Debug: Check if replacement worked
+                            print("Original match:", match.group(0))
+                            print("Generated HTML preview:", html[:200])
                         else:
                             print("Successfully replaced content with HTML")
                     else:
@@ -878,6 +992,17 @@ type: "{file_ext.replace('.', '')}"
             print(f"Tried paths:")
             for path in possible_sources:
                 print(f"  - {path}")
+            print(f"\nContents of directories:")
+            print(f"Post attachments dir ({post_attachments_dir}):")
+            try:
+                print(os.listdir(post_attachments_dir))
+            except Exception as e:
+                print(f"Error listing post attachments directory: {e}")
+            print(f"\nBase attachments dir ({attachments_base}):")
+            try:
+                print(os.listdir(attachments_base))
+            except Exception as e:
+                print(f"Error listing base attachments directory: {e}")
 
     return content
 

@@ -259,19 +259,43 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
                 padding: 1rem;
                 max-width: 300px;
                 transition: transform 0.2s;
+                z-index: 1;
             }
             .canvas-node:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                z-index: 2;
             }
             .canvas-node-text {
                 font-size: 0.9rem;
                 color: var(--color);
+                white-space: pre-wrap;
+            }
+            .canvas-node-file {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .canvas-node-file img {
+                max-width: 100%;
+                height: auto;
+                margin-bottom: 0.5rem;
+                border-radius: 4px;
+            }
+            .canvas-node-file a {
+                color: var(--accent);
+                text-decoration: none;
+            }
+            .canvas-node-file a:hover {
+                text-decoration: underline;
             }
             .canvas-edge {
                 position: absolute;
-                border-top: 2px solid var(--accent);
+                height: 2px;
+                background: var(--accent);
                 opacity: 0.5;
+                transform-origin: left center;
+                pointer-events: none;
             }
             @media (max-width: 768px) {
                 .canvas-container {
@@ -279,24 +303,34 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
                     min-height: 400px;
                 }
                 .canvas-node {
-                    position: relative;
+                    position: relative !important;
                     left: 0 !important;
                     top: 0 !important;
                     margin: 1rem 0;
+                    max-width: none;
+                }
+                .canvas-edge {
+                    display: none;
                 }
             }
         &lt;/style&gt;
-&lt;div class=&#34;canvas-node&#34; style=&#34;left: -206px; top: -153px;&#34;&gt;
+&lt;div class=&#34;canvas-node&#34; id=&#34;node-d496a4076ca8b6f2&#34; style=&#34;left: -206px; top: -153px;&#34;&gt;
 &lt;div class=&#34;canvas-node-text&#34;&gt;Test Canvas&lt;/div&gt;
 &lt;/div&gt;
-&lt;div class=&#34;canvas-node&#34; style=&#34;left: -281px; top: -60px;&#34;&gt;
-&lt;div class=&#34;canvas-node-text&#34;&gt;&lt;/div&gt;
+&lt;div class=&#34;canvas-node&#34; id=&#34;node-ecd6036b38b97a2b&#34; style=&#34;left: -281px; top: -60px;&#34;&gt;
+&lt;div class=&#34;canvas-node-file&#34;&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/test-blog-2&#34;&gt;Test Blog 2&lt;/a&gt;
 &lt;/div&gt;
-&lt;div class=&#34;canvas-node&#34; style=&#34;left: 161px; top: -125px;&#34;&gt;
-&lt;div class=&#34;canvas-node-text&#34;&gt;&lt;/div&gt;
 &lt;/div&gt;
-&lt;div class=&#34;canvas-node&#34; style=&#34;left: 161px; top: 320px;&#34;&gt;
-&lt;div class=&#34;canvas-node-text&#34;&gt;&lt;/div&gt;
+&lt;div class=&#34;canvas-node&#34; id=&#34;node-eeebaba9464d388d&#34; style=&#34;left: 161px; top: -125px;&#34;&gt;
+&lt;div class=&#34;canvas-node-file&#34;&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/files/IMG-20250210021231508.pdf&#34; target=&#34;_blank&#34;&gt;IMG-20250210021231508.pdf&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;canvas-node&#34; id=&#34;node-fe7b5889183c6889&#34; style=&#34;left: 161px; top: 320px;&#34;&gt;
+&lt;div class=&#34;canvas-node-file&#34;&gt;
+&lt;img src=&#34;https://erinskidds.com/blog/images/IMG-20250210021231096.jpeg&#34; alt=&#34;IMG-20250210021231096.jpeg&#34;&gt;
+&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 ## Kanban - h2
