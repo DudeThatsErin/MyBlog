@@ -21,6 +21,14 @@ def create_filename(title):
     filename = filename.replace('#', '%232')
     return filename
 
+def format_url(title):
+    """Format a title into a URL-friendly string."""
+    # Convert to lowercase and replace spaces with hyphens
+    url = title.lower().replace(' ', '-')
+    # Handle special characters
+    url = url.replace('#', '%232')
+    return url
+
 def clean_filename(filename):
     """Extract the actual filename from Obsidian path and remove alias."""
     # Remove any folder structure
@@ -77,7 +85,8 @@ for filename in os.listdir(posts_dir):
             link_base = link_name.replace('.md', '')
             if link_base in file_metadata:
                 meta = file_metadata[link_base]
-                markdown_link = f"[{meta['title']}](/blog/{meta['filename']})"
+                url = format_url(meta['title'])
+                markdown_link = f"[{meta['title']}](/blog/{url})"
                 print(f"Converting internal link: {link_name} -> {markdown_link}")
                 content = re.sub(r'\[\[' + re.escape(link_name) + r'\]\]', markdown_link, content)
 

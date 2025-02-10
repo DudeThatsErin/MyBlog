@@ -12,4 +12,4 @@ lastmod: 2024-02-10
 
 
 # H1 Title
-[Test Blog](/blog/Test Blog)
+[Test Blog](/blog/test-blog)
