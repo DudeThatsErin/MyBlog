@@ -14,10 +14,8 @@
       <pubDate>Wed, 14 Feb 2024 00:00:00 +0000</pubDate>
       
       <guid>https://erinskidds.com/blog/my-test-blog-post-%232/</guid>
-      <description>&lt;h1 id=&#34;h1-title&#34;&gt;H1 Title&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/blog/posts/test-blog/&#34;&gt;Test Blog&lt;/a&gt;&lt;/p&gt;</description>
+      <description>&lt;h1 id=&#34;h1-title&#34;&gt;H1 Title&lt;/h1&gt;</description>
       <content>&lt;h1 id=&#34;h1-title&#34;&gt;H1 Title&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/blog/posts/test-blog/&#34;&gt;Test Blog&lt;/a&gt;&lt;/p&gt;
 </content>
     </item>
     
@@ -29,7 +27,7 @@
       <guid>https://erinskidds.com/blog/my-test-blog-post/</guid>
       <description>&lt;h1 id=&#34;test-blog&#34;&gt;Test Blog&lt;/h1&gt;
 &lt;p&gt;More Stuff
-&lt;a href=&#34;https://erinskidds.com/blog/blog/posts/test-blog-2/&#34;&gt;Test Blog 2&lt;/a&gt;&lt;/p&gt;
+[[Test Blog 2]]&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;
 &lt;em&gt;italic&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Random Text&lt;/p&gt;
@@ -47,7 +45,7 @@
 &lt;p&gt;![[src6.pdf]]&lt;/p&gt;</description>
       <content>&lt;h1 id=&#34;test-blog&#34;&gt;Test Blog&lt;/h1&gt;
 &lt;p&gt;More Stuff
-&lt;a href=&#34;https://erinskidds.com/blog/blog/posts/test-blog-2/&#34;&gt;Test Blog 2&lt;/a&gt;&lt;/p&gt;
+[[Test Blog 2]]&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;
 &lt;em&gt;italic&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Random Text&lt;/p&gt;

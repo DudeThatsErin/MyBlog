@@ -1,6 +1,7 @@
 import os
 import re
 import shutil
+import yaml
 
 # Paths
 posts_dir = r"F:\repos\CURRENTBLOG\erinblog-1\content\posts"
@@ -14,13 +15,22 @@ os.makedirs(static_files_dir, exist_ok=True)
 
 def slugify(title):
     """Convert a title to a URL-friendly slug."""
-    # Remove the .md extension if present
-    title = title.replace('.md', '')
     # Convert spaces to hyphens and make lowercase
-    return title.lower().replace(' ', '-')
+    return title.lower().replace(' ', '-').replace('#', '')
 
 # Get list of all markdown files for reference
-all_posts = [f.replace('.md', '') for f in os.listdir(posts_dir) if f.endswith('.md')]
+all_posts = {}
+for filename in os.listdir(posts_dir):
+    if filename.endswith(".md"):
+        filepath = os.path.join(posts_dir, filename)
+        with open(filepath, "r", encoding="utf-8") as file:
+            content = file.read()
+            # Extract front matter
+            front_matter = re.search(r'^---\n(.*?)\n---', content, re.DOTALL)
+            if front_matter:
+                metadata = yaml.safe_load(front_matter.group(1))
+                title = metadata.get('title', filename.replace('.md', ''))
+                all_posts[title] = slugify(title)
 
 # Process each markdown file
 for filename in os.listdir(posts_dir):
@@ -35,8 +45,8 @@ for filename in os.listdir(posts_dir):
         internal_links = re.findall(r'\[\[([^]\.]*)\]\]', content)
         for link_title in internal_links:
             if link_title in all_posts:
-                slug = slugify(link_title)
-                markdown_link = f"[{link_title}](/blog/posts/{slug})"
+                slug = all_posts[link_title]
+                markdown_link = f"[{link_title}](/blog/{slug})"
                 print(f"Converting internal link: {link_title} -> {markdown_link}")
                 content = re.sub(r'\[\[' + re.escape(link_title) + r'\]\]', markdown_link, content)
 
