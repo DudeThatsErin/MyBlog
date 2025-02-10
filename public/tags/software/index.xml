@@ -10,26 +10,26 @@
     <lastBuildDate>Wed, 14 Feb 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://erinskidds.com/blog/tags/software/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>My Test Blog Post #2</title>
-      <link>https://erinskidds.com/blog/my-test-blog-post-%232/</link>
+      <link>https://erinskidds.com/blog/test-blog-2/</link>
       <pubDate>Wed, 14 Feb 2024 00:00:00 +0000</pubDate>
       
-      <guid>https://erinskidds.com/blog/my-test-blog-post-%232/</guid>
+      <guid>https://erinskidds.com/blog/test-blog-2/</guid>
       <description>&lt;h1 id=&#34;h1-title&#34;&gt;H1 Title&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/my-test-blog-post&#34;&gt;My Test Blog Post&lt;/a&gt;&lt;/p&gt;</description>
+&lt;p&gt;[Test Blog](/blog/Test Blog)&lt;/p&gt;</description>
       <content>&lt;h1 id=&#34;h1-title&#34;&gt;H1 Title&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/my-test-blog-post&#34;&gt;My Test Blog Post&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[Test Blog](/blog/Test Blog)&lt;/p&gt;
 </content>
     </item>
     
     <item>
       <title>My Test Blog Post</title>
-      <link>https://erinskidds.com/blog/my-test-blog-post/</link>
+      <link>https://erinskidds.com/blog/test-blog/</link>
       <pubDate>Sat, 10 Feb 2024 00:00:00 +0000</pubDate>
       
-      <guid>https://erinskidds.com/blog/my-test-blog-post/</guid>
+      <guid>https://erinskidds.com/blog/test-blog/</guid>
       <description>&lt;h1 id=&#34;test-blog&#34;&gt;Test Blog&lt;/h1&gt;
 &lt;p&gt;More Stuff
-&lt;a href=&#34;https://erinskidds.com/blog/my-test-blog-post-%232&#34;&gt;My Test Blog Post #2&lt;/a&gt;&lt;/p&gt;
+[Test Blog 2](/blog/Test Blog 2)&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;
 &lt;em&gt;italic&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Random Text&lt;/p&gt;
@@ -67,7 +67,7 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
 &lt;/script&gt;</description>
       <content>&lt;h1 id=&#34;test-blog&#34;&gt;Test Blog&lt;/h1&gt;
 &lt;p&gt;More Stuff
-&lt;a href=&#34;https://erinskidds.com/blog/my-test-blog-post-%232&#34;&gt;My Test Blog Post #2&lt;/a&gt;&lt;/p&gt;
+[Test Blog 2](/blog/Test Blog 2)&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;
 &lt;em&gt;italic&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Random Text&lt;/p&gt;

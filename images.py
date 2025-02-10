@@ -2,7 +2,6 @@ import os
 import re
 import shutil
 import yaml
-from urllib.parse import quote
 
 # Paths
 posts_dir = r"F:\repos\CURRENTBLOG\erinblog-1\content\posts"
@@ -14,12 +13,13 @@ static_files_dir = r"F:\repos\CURRENTBLOG\erinblog-1\static\files"
 os.makedirs(static_images_dir, exist_ok=True)
 os.makedirs(static_files_dir, exist_ok=True)
 
-def slugify(title):
-    """Convert a title to a URL-friendly slug."""
-    # First convert spaces to hyphens and make lowercase
-    slug = title.lower().replace(' ', '-')
-    # Then properly URL encode the hash symbol
-    return quote(slug, safe='-')
+def create_filename(title):
+    """Convert a title to a filename-friendly format."""
+    # Replace spaces with hyphens and preserve special characters
+    filename = title.lower().replace(' ', '-')
+    # Ensure special characters are preserved
+    filename = filename.replace('#', '%232')
+    return filename
 
 def clean_filename(filename):
     """Extract the actual filename from Obsidian path and remove alias."""
@@ -43,15 +43,20 @@ for filename in os.listdir(posts_dir):
                 try:
                     metadata = yaml.safe_load(front_matter.group(1))
                     title = metadata.get('title', base_name)
+                    new_filename = create_filename(title)
                     file_metadata[base_name] = {
                         'title': title,
-                        'slug': slugify(title)
+                        'filename': new_filename
                     }
+                    # Rename the file if needed
+                    new_filepath = os.path.join(posts_dir, new_filename + '.md')
+                    if filepath != new_filepath:
+                        os.rename(filepath, new_filepath)
                 except:
                     print(f"Warning: Could not parse front matter for {filename}")
                     file_metadata[base_name] = {
                         'title': base_name,
-                        'slug': slugify(base_name)
+                        'filename': base_name
                     }
 
 print("\nFound posts:", file_metadata)
@@ -72,7 +77,7 @@ for filename in os.listdir(posts_dir):
             link_base = link_name.replace('.md', '')
             if link_base in file_metadata:
                 meta = file_metadata[link_base]
-                markdown_link = f"[{meta['title']}](/blog/{meta['slug']})"
+                markdown_link = f"[{meta['title']}](/blog/{meta['filename']})"
                 print(f"Converting internal link: {link_name} -> {markdown_link}")
                 content = re.sub(r'\[\[' + re.escape(link_name) + r'\]\]', markdown_link, content)
 

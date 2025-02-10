@@ -21,7 +21,7 @@ paginate = 5
   lastmod = ["lastmod", ":fileModTime", ":default"]
 
 [permalinks]
-  posts = "/:slug/"
+  posts = "/:filename/"
 
 [urls]
   # Preserve URL encoding
