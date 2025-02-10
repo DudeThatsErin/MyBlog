@@ -2,29 +2,43 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://erinskidds.com/blog/categories/</loc>
+    <lastmod>2024-02-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://erinskidds.com/blog/tags/engineering/</loc>
+    <lastmod>2024-02-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://erinskidds.com/blog/</loc>
+    <lastmod>2025-02-10T01:26:09-06:00</lastmod>
+  </url><url>
+    <loc>https://erinskidds.com/blog/my-test-blog-post/</loc>
+    <lastmod>2024-02-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://erinskidds.com/blog/posts/</loc>
+    <lastmod>2025-02-10T01:26:09-06:00</lastmod>
+  </url><url>
+    <loc>https://erinskidds.com/blog/tags/software/</loc>
+    <lastmod>2024-02-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://erinskidds.com/blog/tags/</loc>
+    <lastmod>2024-02-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://erinskidds.com/blog/categories/tech/</loc>
+    <lastmod>2024-02-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://erinskidds.com/blog/tags/tutorial/</loc>
+    <lastmod>2024-02-10T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://erinskidds.com/blog/blog/posts/test-blog-2/</loc>
     <lastmod>2025-02-10T00:20:08-06:00</lastmod>
   </url><url>
     <loc>https://erinskidds.com/blog/blog/posts/test-blog/</loc>
     <lastmod>2025-02-10T00:21:56-06:00</lastmod>
   </url><url>
-    <loc>https://erinskidds.com/blog/posts/</loc>
-    <lastmod>2025-02-10T01:20:36-06:00</lastmod>
-  </url><url>
-    <loc>https://erinskidds.com/blog/posts/</loc>
-    <lastmod>2025-02-10T01:20:36-06:00</lastmod>
+    <loc>https://erinskidds.com/blog/</loc>
+    <lastmod>2025-02-10T01:26:09-06:00</lastmod>
   </url><url>
     <loc>https://erinskidds.com/blog/blog/</loc>
     <lastmod>2025-02-10T00:21:56-06:00</lastmod>
-  </url><url>
-    <loc>https://erinskidds.com/blog/categories/</loc>
-  </url><url>
-    <loc>https://erinskidds.com/blog/</loc>
-    <lastmod>2025-02-10T01:20:36-06:00</lastmod>
-  </url><url>
-    <loc>https://erinskidds.com/blog/posts/</loc>
-    <lastmod>2025-02-10T01:20:36-06:00</lastmod>
-  </url><url>
-    <loc>https://erinskidds.com/blog/tags/</loc>
   </url>
 </urlset>
