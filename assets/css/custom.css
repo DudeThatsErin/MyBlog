@@ -1,8 +1,71 @@
 :root {
-  --background: #1a170f;
-  --foreground: #eceae5;
-  --accent: #ee82cf;
+  --background: #2a1f24;
+  --foreground: #fff;
+  --accent: #ff6188;
   --font-size: 1rem;
-  --line-height: 1.2rem;
-  --radius: 8rem;
+  --line-height: 1.54rem;
+  --radius: 0;
+}
+
+/* Override any theme-specific colors */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+a {
+  color: var(--accent);
+}
+
+/* Ensure headers use the accent color */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--accent);
+}
+
+/* Style buttons and interactive elements */
+button, 
+.button,
+input[type="submit"] {
+  background-color: var(--accent);
+  color: var(--background);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+/* Style navigation and menu items */
+nav a {
+  color: var(--foreground);
+}
+
+nav a:hover {
+  color: var(--accent);
+}
+
+/* Style code blocks and inline code */
+pre, code {
+  background: var(--background);
+  border: 1px solid var(--accent);
+}
+
+/* Style blockquotes */
+blockquote {
+  border-left: 3px solid var(--accent);
+  color: var(--foreground);
+}
+
+/* Style tables */
+table {
+  border-color: var(--accent);
+}
+
+th {
+  background-color: var(--accent);
+  color: var(--background);
+}
+
+/* Style horizontal rules */
+hr {
+  border-color: var(--accent);
 } 
