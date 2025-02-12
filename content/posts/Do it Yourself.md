@@ -351,85 +351,13 @@ To support Obsidian's Dataview plugin in Hugo, create shortcodes in `layouts/sho
 1. `datatable.html` for tables
 2. `datalist.html` for lists
 
-Example Dataview query that works with this setup:
+Example Dataview query that works with this setup (replace ~ with backticks):
 ```markdown
-<div class="dataview-table">
-<style>
-
-                .dataview-table {
-                    margin: 2rem 0;
-                    overflow-x: auto;
-                }
-                .dataview-table table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin: 0;
-                    font-size: 0.95rem;
-                    background: var(--background);
-                }
-                .dataview-table th {
-                    background-color: var(--accent);
-                    color: var(--background);
-                    padding: 0.75rem 1rem;
-                    text-align: left;
-                    font-weight: bold;
-                    border-bottom: 2px solid var(--border-color);
-                }
-                .dataview-table td {
-                    padding: 0.75rem 1rem;
-                    border-bottom: 1px solid var(--border-color);
-                    vertical-align: top;
-                }
-                .dataview-table tr:hover {
-                    background-color: var(--hover);
-                }
-                .dataview-table tr:last-child td {
-                    border-bottom: none;
-                }
-                .dataview-table a {
-                    color: var(--accent);
-                    text-decoration: none;
-                }
-                .dataview-table a:hover {
-                    text-decoration: underline;
-                }
-                @media (max-width: 768px) {
-                    .dataview-table {
-                        margin: 1rem -1rem;
-                        width: calc(100% + 2rem);
-                    }
-                    .dataview-table th,
-                    .dataview-table td {
-                        padding: 0.5rem;
-                    }
-                }
-            
-</style>
-<table>
-<thead><tr>
-<th>Name</th>
-<th>Title</th>
-<th>Url</th>
-</tr></thead>
-<tbody>
-<tr>
-<td>Do it Yourself</td>
-<td>Create your own blog from Markdown!</td>
-<td><a href="/blog/do-it-yourself">/blog/do-it-yourself</a></td>
-</tr>
-<tr>
-<td>Test Blog 2</td>
-<td>My Test Blog Post #2</td>
-<td><a href="/blog/test-blog-2">/blog/test-blog-2</a></td>
-</tr>
-<tr>
-<td>Test Blog</td>
-<td>My Test Blog Post</td>
-<td><a href="/blog/test-blog">/blog/test-blog</a></td>
-</tr>
-</tbody>
-</table>
-</div>
+~~~dataview
+	TABLE file.name AS "Name", title AS "Title", file.path AS "URL"
+	FROM "Blogs"
+~~~
+```
 
 ### PDF Embedding
 
@@ -457,6 +385,7 @@ Create a shortcode for PDF embedding (`layouts/shortcodes/pdf.html`):
    categories: ["category"]
    draft: false
    toc: true
+3. lastmod: 2024-02-11
    ---
    ```
 

@@ -184,9 +184,11 @@
     <li><a href="#step-4-adding-special-features">Step 4: Adding Special Features</a>
       <ul>
         <li><a href="#dataview-support">Dataview Support</a></li>
+        <li><a href="#pdf-embedding">PDF Embedding</a></li>
       </ul>
     </li>
     <li><a href="#step-5-writing-blog-posts">Step 5: Writing Blog Posts</a></li>
+    <li><a href="#lastmod-2024-02-11">lastmod: 2024-02-11</a></li>
     <li><a href="#step-6-deployment">Step 6: Deployment</a></li>
     <li><a href="#customization-tips">Customization Tips</a></li>
     <li><a href="#common-issues-and-solutions">Common Issues and Solutions</a></li>
@@ -517,91 +519,14 @@
 <li><code>datatable.html</code> for tables</li>
 <li><code>datalist.html</code> for lists</li>
 </ol>
-<p>Example Dataview query that works with this setup:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-markdown" data-lang="markdown"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;dataview-table&#34;</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                <span class="p">.</span><span class="nc">dataview-table</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">margin</span><span class="p">:</span> <span class="mi">2</span><span class="kt">rem</span> <span class="mi">0</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">overflow-x</span><span class="p">:</span> <span class="kc">auto</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">                <span class="p">}</span>
-</span></span><span class="line"><span class="cl">                <span class="p">.</span><span class="nc">dataview-table</span> <span class="nt">table</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">width</span><span class="p">:</span> <span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">border-collapse</span><span class="p">:</span> <span class="kc">collapse</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">margin</span><span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">font-size</span><span class="p">:</span> <span class="mf">0.95</span><span class="kt">rem</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">background</span><span class="p">:</span> <span class="nf">var</span><span class="p">(</span><span class="o">--</span><span class="n">background</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">                <span class="p">}</span>
-</span></span><span class="line"><span class="cl">                <span class="p">.</span><span class="nc">dataview-table</span> <span class="nt">th</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">background-color</span><span class="p">:</span> <span class="nf">var</span><span class="p">(</span><span class="o">--</span><span class="n">accent</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">color</span><span class="p">:</span> <span class="nf">var</span><span class="p">(</span><span class="o">--</span><span class="n">background</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">padding</span><span class="p">:</span> <span class="mf">0.75</span><span class="kt">rem</span> <span class="mi">1</span><span class="kt">rem</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">text-align</span><span class="p">:</span> <span class="kc">left</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">font-weight</span><span class="p">:</span> <span class="kc">bold</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">border-bottom</span><span class="p">:</span> <span class="mi">2</span><span class="kt">px</span> <span class="kc">solid</span> <span class="nf">var</span><span class="p">(</span><span class="o">--</span><span class="n">border</span><span class="o">-</span><span class="kc">color</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">                <span class="p">}</span>
-</span></span><span class="line"><span class="cl">                <span class="p">.</span><span class="nc">dataview-table</span> <span class="nt">td</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">padding</span><span class="p">:</span> <span class="mf">0.75</span><span class="kt">rem</span> <span class="mi">1</span><span class="kt">rem</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">border-bottom</span><span class="p">:</span> <span class="mi">1</span><span class="kt">px</span> <span class="kc">solid</span> <span class="nf">var</span><span class="p">(</span><span class="o">--</span><span class="n">border</span><span class="o">-</span><span class="kc">color</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">vertical-align</span><span class="p">:</span> <span class="kc">top</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">                <span class="p">}</span>
-</span></span><span class="line"><span class="cl">                <span class="p">.</span><span class="nc">dataview-table</span> <span class="nt">tr</span><span class="p">:</span><span class="nd">hover</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">background-color</span><span class="p">:</span> <span class="nf">var</span><span class="p">(</span><span class="o">--</span><span class="n">hover</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">                <span class="p">}</span>
-</span></span><span class="line"><span class="cl">                <span class="p">.</span><span class="nc">dataview-table</span> <span class="nt">tr</span><span class="p">:</span><span class="nd">last-child</span> <span class="nt">td</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">border-bottom</span><span class="p">:</span> <span class="kc">none</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">                <span class="p">}</span>
-</span></span><span class="line"><span class="cl">                <span class="p">.</span><span class="nc">dataview-table</span> <span class="nt">a</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">color</span><span class="p">:</span> <span class="nf">var</span><span class="p">(</span><span class="o">--</span><span class="n">accent</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">text-decoration</span><span class="p">:</span> <span class="kc">none</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">                <span class="p">}</span>
-</span></span><span class="line"><span class="cl">                <span class="p">.</span><span class="nc">dataview-table</span> <span class="nt">a</span><span class="p">:</span><span class="nd">hover</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">text-decoration</span><span class="p">:</span> <span class="kc">underline</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">                <span class="p">}</span>
-</span></span><span class="line"><span class="cl">                <span class="ni">@media</span> <span class="o">(</span><span class="nt">max-width</span><span class="o">:</span> <span class="nt">768px</span><span class="o">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="err">.dataview-table</span> <span class="err">{</span>
-</span></span><span class="line"><span class="cl">                        <span class="k">margin</span><span class="p">:</span> <span class="mi">1</span><span class="kt">rem</span> <span class="mi">-1</span><span class="kt">rem</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">                        <span class="k">width</span><span class="p">:</span> <span class="nb">calc</span><span class="p">(</span><span class="mi">100</span><span class="kt">%</span> <span class="o">+</span> <span class="mi">2</span><span class="kt">rem</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">                    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">                    <span class="p">.</span><span class="nc">dataview-table</span> <span class="nt">th</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">                    <span class="p">.</span><span class="nc">dataview-table</span> <span class="nt">td</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                        <span class="k">padding</span><span class="p">:</span> <span class="mf">0.5</span><span class="kt">rem</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">                    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">                <span class="err">}</span>
-</span></span><span class="line"><span class="cl">            
-</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">table</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">thead</span><span class="p">&gt;&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Name<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Title<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Url<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;&lt;/</span><span class="nt">thead</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">tbody</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>Do it Yourself<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>Create your own blog from Markdown!<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;/blog/do-it-yourself&#34;</span><span class="p">&gt;</span>/blog/do-it-yourself<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>Test Blog 2<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>My Test Blog Post <span class="ni">#2</span><span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;/blog/test-blog-2&#34;</span><span class="p">&gt;</span>/blog/test-blog-2<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>Test Blog<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>My Test Blog Post<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;/blog/test-blog&#34;</span><span class="p">&gt;</span>/blog/test-blog<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">tbody</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="gu">### PDF Embedding
-</span></span></span><span class="line"><span class="cl"><span class="gu"></span>
-</span></span><span class="line"><span class="cl">Create a shortcode for PDF embedding (<span class="sb">`layouts/shortcodes/pdf.html`</span>):
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">```html
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;pdf-container&#34;</span><span class="p">&gt;</span>
+<p>Example Dataview query that works with this setup (replace ~ with backticks):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-markdown" data-lang="markdown"><span class="line"><span class="cl">~~~dataview
+</span></span><span class="line"><span class="cl">	TABLE file.name AS &#34;Name&#34;, title AS &#34;Title&#34;, file.path AS &#34;URL&#34;
+</span></span><span class="line"><span class="cl">	FROM &#34;Blogs&#34;
+</span></span><span class="line"><span class="cl">~~~
+</span></span></code></pre></div><h3 id="pdf-embedding">PDF Embedding</h3>
+<p>Create a shortcode for PDF embedding (<code>layouts/shortcodes/pdf.html</code>):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;pdf-container&#34;</span><span class="p">&gt;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">iframe</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;{{ .Get &#34;</span><span class="na">src</span><span class="err">&#34;</span> <span class="err">}}&#34;</span> <span class="na">style</span><span class="o">=</span><span class="s">&#34;width: 100%; height: 800px;&#34;</span> <span class="na">frameborder</span><span class="o">=</span><span class="s">&#34;0&#34;</span><span class="p">&gt;</span>
 </span></span><span class="line"><span class="cl">        <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>It appears your browser doesn&#39;t support iframes.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">iframe</span><span class="p">&gt;</span>
@@ -622,8 +547,10 @@
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">categories</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;category&#34;</span><span class="p">]</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">draft</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">toc</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nn">---</span><span class="w">
 </span></span></span></code></pre></div></li>
+<li>
+<h2 id="lastmod-2024-02-11">lastmod: 2024-02-11</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"></code></pre></div></li>
 <li>
 <p>Use Dataview queries as needed</p>
 </li>
