@@ -13,8 +13,10 @@ pagination.pagerSize = 5
   [markup.highlight]
     codeFences = true
     guessSyntax = true
-    lineNos = true
+    lineNos = false  # Disable line numbers
     style = "monokai"
+    lineNumbersInTable = false
+    noClasses = false
 
 [params]
   # Terminal theme specific settings
