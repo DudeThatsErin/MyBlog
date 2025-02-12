@@ -511,6 +511,9 @@ def parse_cardlink(cardlink_block):
 def parse_kanban(kanban_content):
     """Parse a Kanban board and convert it to HTML."""
     try:
+        # Remove kanban settings metadata
+        kanban_content = re.sub(r'%%\s*kanban:settings\s*```.*?```\s*%%', '', kanban_content, flags=re.DOTALL)
+        
         # Split content into sections by headers
         sections = re.split(r'(?m)^## ', kanban_content)
         
@@ -581,7 +584,26 @@ def parse_kanban(kanban_content):
             }
             .kanban-card-checkbox {
                 margin-right: 0.5rem;
-                opacity: 0.6;
+                appearance: none;
+                width: 16px;
+                height: 16px;
+                border: 1px solid var(--border-color);
+                border-radius: 3px;
+                cursor: not-allowed;
+                position: relative;
+                top: 2px;
+            }
+            .kanban-card-checkbox:checked {
+                background-color: var(--accent);
+                border-color: var(--accent);
+            }
+            .kanban-card-checkbox:checked::after {
+                content: "✓";
+                position: absolute;
+                color: var(--background);
+                font-size: 12px;
+                left: 2px;
+                top: -2px;
             }
             @media (max-width: 768px) {
                 .kanban-board {
@@ -627,7 +649,9 @@ def parse_kanban(kanban_content):
                     for line in card_lines[1:]:
                         line = line.strip()
                         if line.startswith('- [ ]'):
-                            checklist.append(line[5:].strip())
+                            checklist.append((False, line[5:].strip()))
+                        elif line.startswith('- [x]'):
+                            checklist.append((True, line[5:].strip()))
                         elif line:
                             description.append(line)
                     
@@ -638,9 +662,11 @@ def parse_kanban(kanban_content):
                     # Add checklist if any
                     if checklist:
                         html.append('<ul class="kanban-card-checklist">')
-                        for item in checklist:
+                        for is_checked, item in checklist:
                             html.append('<li class="kanban-card-checklist-item">')
-                            html.append(f'<span class="kanban-card-checkbox">☐</span>{item}')
+                            checked_attr = 'checked' if is_checked else ''
+                            html.append(f'<input type="checkbox" class="kanban-card-checkbox" disabled {checked_attr}>')
+                            html.append(f'<span>{item}</span>')
                             html.append('</li>')
                         html.append('</ul>')
                 

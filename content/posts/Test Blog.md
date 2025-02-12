@@ -110,7 +110,26 @@ Random Text
             }
             .kanban-card-checkbox {
                 margin-right: 0.5rem;
-                opacity: 0.6;
+                appearance: none;
+                width: 16px;
+                height: 16px;
+                border: 1px solid var(--border-color);
+                border-radius: 3px;
+                cursor: not-allowed;
+                position: relative;
+                top: 2px;
+            }
+            .kanban-card-checkbox:checked {
+                background-color: var(--accent);
+                border-color: var(--accent);
+            }
+            .kanban-card-checkbox:checked::after {
+                content: "✓";
+                position: absolute;
+                color: var(--background);
+                font-size: 12px;
+                left: 2px;
+                top: -2px;
             }
             @media (max-width: 768px) {
                 .kanban-board {
@@ -137,7 +156,8 @@ Random Text
 <div class="kanban-card-text">Another One</div>
 <ul class="kanban-card-checklist">
 <li class="kanban-card-checklist-item">
-<span class="kanban-card-checkbox">☐</span>Checklist
+<input type="checkbox" class="kanban-card-checkbox" disabled >
+<span>Checklist</span>
 </li>
 </ul>
 </div>
@@ -148,7 +168,6 @@ Random Text
 <div class="kanban-cards">
 <div class="kanban-card">
 <div class="kanban-card-text">Test</div>
-<div class="kanban-card-text">%% kanban:settings<br>```<br>{"kanban-plugin":"board","list-collapse":[false,false,false]}<br>```<br>%%</div>
 </div>
 </div>
 </div>

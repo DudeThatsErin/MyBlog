@@ -754,7 +754,26 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
             }
             .kanban-card-checkbox {
                 margin-right: 0.5rem;
-                opacity: 0.6;
+                appearance: none;
+                width: 16px;
+                height: 16px;
+                border: 1px solid var(--border-color);
+                border-radius: 3px;
+                cursor: not-allowed;
+                position: relative;
+                top: 2px;
+            }
+            .kanban-card-checkbox:checked {
+                background-color: var(--accent);
+                border-color: var(--accent);
+            }
+            .kanban-card-checkbox:checked::after {
+                content: &#34;✓&#34;;
+                position: absolute;
+                color: var(--background);
+                font-size: 12px;
+                left: 2px;
+                top: -2px;
             }
             @media (max-width: 768px) {
                 .kanban-board {
@@ -781,7 +800,8 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
 &lt;div class=&#34;kanban-card-text&#34;&gt;Another One&lt;/div&gt;
 &lt;ul class=&#34;kanban-card-checklist&#34;&gt;
 &lt;li class=&#34;kanban-card-checklist-item&#34;&gt;
-&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Checklist
+&lt;input type=&#34;checkbox&#34; class=&#34;kanban-card-checkbox&#34; disabled &gt;
+&lt;span&gt;Checklist&lt;/span&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
@@ -792,7 +812,6 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
 &lt;div class=&#34;kanban-cards&#34;&gt;
 &lt;div class=&#34;kanban-card&#34;&gt;
 &lt;div class=&#34;kanban-card-text&#34;&gt;Test&lt;/div&gt;
-&lt;div class=&#34;kanban-card-text&#34;&gt;%% kanban:settings&lt;br&gt;```&lt;br&gt;{&#34;kanban-plugin&#34;:&#34;board&#34;,&#34;list-collapse&#34;:[false,false,false]}&lt;br&gt;```&lt;br&gt;%%&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
