@@ -52,7 +52,7 @@ pagination.pagerSize = 5
 
 [languages]
   [languages.en]
-    title = "Erin's blog"
+    title = "Erin's Blog"
     subtitle = "Where a Software Engineer posts ideas."
     keywords = "blog, software engineer, full stack, front end, back end"
     copyright = "© 2025 Erin Skidds"
