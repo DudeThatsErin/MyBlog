@@ -368,11 +368,6 @@ def get_file_url(filename):
     # Remove .md extension if present
     base_name = filename.replace('.md', '')
     # For Test Blog 2, return test-blog-2
-    if base_name == 'Test Blog 2':
-        return 'test-blog-2'
-    # For Test Blog, return test-blog
-    if base_name == 'Test Blog':
-        return 'test-blog'
     return base_name.lower().replace(' ', '-')
 
 def get_post_attachments_dir(post_name):
@@ -742,7 +737,6 @@ def process_embedded_files(content, base_name):
         # Try multiple possible locations for the file
         possible_sources = [
             os.path.join(post_attachments_dir, file_name),
-            os.path.join(attachments_base, "Test Blog", file_name),
             os.path.join(attachments_base, file_name),
             os.path.join(posts_dir, file_name),
             os.path.join(posts_dir, "attachments", file_name),
