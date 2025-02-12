@@ -1,6 +1,6 @@
 baseURL = "https://erinskidds.com/blog"
 languageCode = "en-us"
-title = "Erin's blog"
+title = "Erin's Blog"
 theme = "terminal"
 
 # Update paginate to use the new syntax
@@ -24,10 +24,12 @@ pagination.pagerSize = 5
   fullWidthTheme = false
   centerTheme = true
   autoCover = true
+  updatedDatePrefix = "Updated"
   showLastUpdated = true
-  # Show post summaries on the homepage
+  readingTime = true
   showReadMore = true
   readMore = "Read post"
+  dateFormat = "2006-01-02 3:04:06 PM CST"
 
 [frontmatter]
   lastmod = ["lastmod", ":fileModTime", ":default"]
@@ -57,6 +59,12 @@ pagination.pagerSize = 5
     menuMore = "Show more"
     readMore = "Read more"
     readOtherPosts = "Read other posts"
+    newerPosts = "Newer posts"
+    olderPosts = "Older posts"
+    missingContentMessage = "Page not found..."
+    missingBackButtonLabel = "Back to home page"
+    minuteReadingTime = "min read"
+    words = "words"
 
     [languages.en.params.logo]
       logoText = "Erin's Blog"
