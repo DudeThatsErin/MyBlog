@@ -9,6 +9,8 @@
   --radius: 8px;
 }
 
+body > div > div > article > div.post-meta > span.post-author:before { display: none;}
+
 /* Override any theme-specific colors */
 body {
   background-color: var(--background);
