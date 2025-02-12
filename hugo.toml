@@ -69,13 +69,3 @@ pagination.pagerSize = 5
     [languages.en.params.logo]
       logoText = "Erin's Blog"
       logoHomeLink = "/blog"
-
-    [languages.en.menu]
-      [[languages.en.menu.main]]
-        identifier = "about"
-        name = "Portfolio"
-        url = "https://erinskidds.com"
-      [[languages.en.menu.main]]
-        identifier = "posts"
-        name = "Posts"
-        url = "/posts"
