@@ -1,3 +1,7 @@
+<!-- Custom CSS -->
+{{ $customCSS := resources.Get "css/custom.css" | minify }}
+<link rel="stylesheet" href="{{ $customCSS.RelPermalink }}">
+
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="/blog/favicon.png">
 <link rel="shortcut icon" type="image/png" href="/blog/favicon.png"> 
