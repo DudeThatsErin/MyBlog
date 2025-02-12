@@ -14,7 +14,7 @@
         {{ $.Site.Params.updatedDatePrefix | default "Updated" }}: {{ .Lastmod.Format "2006-01-02" }}
       </span>
     {{ end }}
-    <!-- <span class="post-separator">::</span> -->
+    <span class="post-separator">::</span>
     {{ with .Params.Author }}
       <span class="post-author">{{ . }}</span>
     {{ end }}
