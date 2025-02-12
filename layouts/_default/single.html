@@ -9,13 +9,13 @@
         {{ .Date.Format "2006-01-02" }} ::
       </time>
     {{ end }}
-    {{ with .Params.Author }}
-      <span class="post-author">{{ . }}</span>
-    {{ end }}
     {{ if and (.Lastmod) (ne .Lastmod .Date) }}
       <span class="post-lastmod">
-        {{ $.Site.Params.updatedDatePrefix | default "Updated" }}: {{ .Lastmod.Format "2006-01-02" }}
+        {{ $.Site.Params.updatedDatePrefix | default "Updated" }}: {{ .Lastmod.Format "2006-01-02" }} ::
       </span>
+    {{ end }}
+    {{ with .Params.Author }}
+      <span class="post-author">{{ . }}</span>
     {{ end }}
   </div>
 
