@@ -726,13 +726,31 @@ def copy_file_to_static(source_file, is_image=True):
         print(f"Error copying file {source_file}: {e}")
         return None
 
+def process_embedded_files(content, base_name):
+    """Process embedded files including Kanban boards, images, and PDFs."""
+    print("\nChecking content for embedded files...")
+    
+    # Process PDFs - handle the format ![[filename.pdf|src3]]
+    pdf_pattern = r'!\[\[(.*?\.pdf)\|src3\]\]'
+    content = re.sub(pdf_pattern, lambda m: process_pdf_link(m, base_name), content)
+    
+    # Process Kanban files - handle the format ![[filename.md|embed]]
+    kanban_pattern = r'!\[\[(.*?\.md)\|embed\]\]'
+    content = re.sub(kanban_pattern, lambda m: process_kanban_link(m, base_name), content)
+    
+    # Process images - handle the format ![[filename.jpg]]
+    image_pattern = r'!\[\[(.*?(?:\.jpg|\.jpeg|\.png|\.gif|\.webp))\]\]'
+    content = re.sub(image_pattern, lambda m: process_image_link(m, base_name), content)
+    
+    return content
+
 def process_image_link(match, post_name):
     """Process an image link and return the updated markdown."""
     image_path = match.group(1)
-    alt_text = match.group(2) if match.group(2) else ""
     
     # Clean up the image path
     image_path = clean_filename(image_path)
+    print(f"Processing image: {image_path}")
     
     # Try multiple possible locations for the image
     possible_sources = [
@@ -742,24 +760,24 @@ def process_image_link(match, post_name):
     ]
     
     for source in possible_sources:
+        print(f"Trying source: {source}")
         if os.path.exists(source):
+            print(f"Found image at: {source}")
             # Copy the image to static directory and get new path
             new_path = copy_file_to_static(source, is_image=True)
             if new_path:
-                return f"![{alt_text}]({new_path})"
+                return f"![{image_path}]({new_path})"
     
     print(f"Warning: Image not found: {image_path}")
-    return match.group(0)  # Return original if image not found
+    return match.group(0)
 
 def process_pdf_link(match, post_name):
     """Process a PDF link and return the updated markdown."""
-    if '|' in match.group(0):  # Wiki-link format
-        pdf_path = match.group(1)
-    else:  # Standard markdown format
-        pdf_path = match.group(2) if len(match.groups()) > 1 else match.group(1)
+    pdf_path = match.group(1)
     
     # Clean up the PDF path
     pdf_path = clean_filename(pdf_path)
+    print(f"Processing PDF: {pdf_path}")
     
     # Try multiple possible locations for the PDF
     possible_sources = [
@@ -769,7 +787,9 @@ def process_pdf_link(match, post_name):
     ]
     
     for source in possible_sources:
+        print(f"Trying source: {source}")
         if os.path.exists(source):
+            print(f"Found PDF at: {source}")
             # Copy the PDF to static directory and get new path
             new_path = copy_file_to_static(source, is_image=False)
             if new_path:
@@ -778,54 +798,29 @@ def process_pdf_link(match, post_name):
     print(f"Warning: PDF not found: {pdf_path}")
     return match.group(0)
 
-def process_embedded_files(content, base_name):
-    """Process embedded files including Kanban boards, images, and PDFs."""
-    print("\nChecking content for embedded files...")
-    
-    # Process PDFs first
-    pdf_patterns = [
-        r'\[\[(.*?\.pdf)(?:\|(.*?))?\]\]',  # Wiki-link format [[file.pdf]]
-        r'!\[(.*?)\]\((.*?\.pdf)\)'         # Standard markdown format ![alt](file.pdf)
-    ]
-    
-    for pattern in pdf_patterns:
-        content = re.sub(pattern, lambda m: process_pdf_link(m, base_name), content)
-    
-    # Process Kanban files
-    kanban_patterns = [
-        r'!\[embed\]\((.*?\.md)\)',         # ![embed](file.md)
-        r'!\[\[(.*?\.md)(?:\|embed)?\]\]'   # ![[file.md]] or ![[file.md|embed]]
-    ]
-    
-    for pattern in kanban_patterns:
-        content = re.sub(pattern, lambda m: process_kanban_link(m, base_name), content)
-    
-    # Process regular images last
-    image_pattern = r'!\[\[(.*?)(?:\|(.*?))?\]\]|!\[(.*?)\]\((.*?)\)'
-    content = re.sub(image_pattern, lambda m: process_image_link(m, base_name), content)
-    
-    return content
-
-def process_kanban_link(match, base_name):
+def process_kanban_link(match, post_name):
     """Process a Kanban link and return the HTML content."""
     file_path = match.group(1)
     file_name = clean_filename(file_path)
+    print(f"Processing Kanban: {file_name}")
     
     # Try multiple possible locations for the file
     possible_sources = [
-        os.path.join(get_post_attachments_dir(base_name), file_name),
+        os.path.join(get_post_attachments_dir(post_name), file_name),
         os.path.join(attachments_base, file_name),
         os.path.join(posts_dir, file_name),
-        os.path.join(attachments_base, base_name, file_name)
+        os.path.join(attachments_base, post_name, file_name)
     ]
     
     for file_source in possible_sources:
+        print(f"Trying source: {file_source}")
         if os.path.exists(file_source):
             try:
                 with open(file_source, 'r', encoding='utf-8') as f:
                     file_content = f.read()
                 
                 if is_kanban_file(file_content):
+                    print(f"Found valid Kanban at: {file_source}")
                     return parse_kanban(file_content)
                 else:
                     print(f"Warning: File {file_name} exists but is not a Kanban board")

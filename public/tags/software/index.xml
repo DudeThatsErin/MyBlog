@@ -15,17 +15,139 @@
       
       <guid>https://erinskidds.com/blog/test-blog-2/</guid>
       <description>&lt;h1 id=&#34;h1-title&#34;&gt;H1 Title&lt;/h1&gt;
-&lt;p&gt;[[Test Blog]]&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/test-blog&#34;&gt;My Test Blog Post&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;sample-dataview&#34;&gt;Sample Dataview&lt;/h2&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;TABLE file.name AS &amp;#34;Name&amp;#34;, title AS &amp;#34;Title&amp;#34;, file.path AS &amp;#34;URL&amp;#34;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;FROM &amp;#34;Blogs&amp;#34;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+&lt;div class=&#34;dataview-table&#34;&gt;
+&lt;style&gt;
+&lt;pre&gt;&lt;code&gt;            .dataview-table {
+                margin: 2rem 0;
+                overflow-x: auto;
+            }
+            .dataview-table table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 0;
+                font-size: 0.95rem;
+                background: var(--background);
+            }
+            .dataview-table th {
+                background-color: var(--accent);
+                color: var(--background);
+                padding: 0.75rem 1rem;
+                text-align: left;
+                font-weight: bold;
+                border-bottom: 2px solid var(--border-color);
+            }
+            .dataview-table td {
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid var(--border-color);
+                vertical-align: top;
+            }
+            .dataview-table tr:hover {
+                background-color: var(--hover);
+            }
+            .dataview-table tr:last-child td {
+                border-bottom: none;
+            }
+            .dataview-table a {
+                color: var(--accent);
+                text-decoration: none;
+            }
+            .dataview-table a:hover {
+                text-decoration: underline;
+            }
+            @media (max-width: 768px) {
+                .dataview-table {
+                    margin: 1rem -1rem;
+                    width: calc(100% + 2rem);
+                }
+                .dataview-table th,
+                .dataview-table td {
+                    padding: 0.5rem;
+                }
+            }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;</description>
       <content>&lt;h1 id=&#34;h1-title&#34;&gt;H1 Title&lt;/h1&gt;
-&lt;p&gt;[[Test Blog]]&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/test-blog&#34;&gt;My Test Blog Post&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;sample-dataview&#34;&gt;Sample Dataview&lt;/h2&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;TABLE file.name AS &amp;#34;Name&amp;#34;, title AS &amp;#34;Title&amp;#34;, file.path AS &amp;#34;URL&amp;#34;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;FROM &amp;#34;Blogs&amp;#34;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+&lt;div class=&#34;dataview-table&#34;&gt;
+&lt;style&gt;
+&lt;pre&gt;&lt;code&gt;            .dataview-table {
+                margin: 2rem 0;
+                overflow-x: auto;
+            }
+            .dataview-table table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 0;
+                font-size: 0.95rem;
+                background: var(--background);
+            }
+            .dataview-table th {
+                background-color: var(--accent);
+                color: var(--background);
+                padding: 0.75rem 1rem;
+                text-align: left;
+                font-weight: bold;
+                border-bottom: 2px solid var(--border-color);
+            }
+            .dataview-table td {
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid var(--border-color);
+                vertical-align: top;
+            }
+            .dataview-table tr:hover {
+                background-color: var(--hover);
+            }
+            .dataview-table tr:last-child td {
+                border-bottom: none;
+            }
+            .dataview-table a {
+                color: var(--accent);
+                text-decoration: none;
+            }
+            .dataview-table a:hover {
+                text-decoration: underline;
+            }
+            @media (max-width: 768px) {
+                .dataview-table {
+                    margin: 1rem -1rem;
+                    width: calc(100% + 2rem);
+                }
+                .dataview-table th,
+                .dataview-table td {
+                    padding: 0.5rem;
+                }
+            }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;&lt;tr&gt;
+&lt;th&gt;Name&lt;/th&gt;
+&lt;th&gt;Title&lt;/th&gt;
+&lt;th&gt;Url&lt;/th&gt;
+&lt;/tr&gt;&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Do it Yourself&lt;/td&gt;
+&lt;td&gt;Create your own blog from Markdown!&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://erinskidds.com/blog/do-it-yourself&#34;&gt;/blog/do-it-yourself&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Test Blog 2&lt;/td&gt;
+&lt;td&gt;My Test Blog Post #2&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://erinskidds.com/blog/test-blog-2&#34;&gt;/blog/test-blog-2&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Test Blog&lt;/td&gt;
+&lt;td&gt;My Test Blog Post&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://erinskidds.com/blog/test-blog&#34;&gt;/blog/test-blog&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+</content>
     </item>
     
     <item>
@@ -36,7 +158,7 @@
       <guid>https://erinskidds.com/blog/test-blog/</guid>
       <description>&lt;h1 id=&#34;test-blog&#34;&gt;Test Blog&lt;/h1&gt;
 &lt;p&gt;More Stuff
-[[Test Blog 2]]&lt;/p&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/test-blog-2&#34;&gt;My Test Blog Post #2&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;
 &lt;em&gt;italic&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Random Text&lt;/p&gt;
@@ -49,14 +171,41 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;inline code&lt;/code&gt; random text here next to it.&lt;/p&gt;
 &lt;h2 id=&#34;image---h2&#34;&gt;Image - h2&lt;/h2&gt;
-&lt;p&gt;![[IMG-20250210021231096.jpeg]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://erinskidds.com/blog/images/IMG-20250210021231096.jpeg&#34; alt=&#34;IMG-20250210021231096.jpeg&#34;&gt;&lt;/p&gt;
 &lt;h3 id=&#34;pdf---h3&#34;&gt;PDF - h3&lt;/h3&gt;
-&lt;p&gt;![[IMG-20250210021231508.pdf|src3]]&lt;/p&gt;
-&lt;h2 id=&#34;kanban---h2&#34;&gt;Kanban - h2&lt;/h2&gt;
-&lt;p&gt;![[Untitled Kanban.md|embed]]&lt;/p&gt;</description>
+
+&lt;div class=&#34;pdf-container&#34;&gt;
+    &lt;style&gt;
+        .pdf-container {
+            width: 100%;
+            margin: 2rem 0;
+            background: var(--background);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .pdf-container iframe {
+            width: 100%;
+            height: 800px;
+            border: 1px solid var(--border-color);
+        }
+        .pdf-fallback {
+            padding: 1rem;
+            text-align: center;
+            background: var(--background);
+        }
+        .pdf-fallback a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .pdf-fallback a:hover {
+            text-decoration: underline;
+        }
+    &lt;/style&gt;
+    &lt;iframe src=&#34;https://erinskidds.com/blog/files/IMG-20250210021231508.pdf&#34; type=&#34;application/pdf&#34;&gt;
+        &lt;p&gt;It appears your browser doesn&#39;t support iframes.&lt;/p&gt;</description>
       <content>&lt;h1 id=&#34;test-blog&#34;&gt;Test Blog&lt;/h1&gt;
 &lt;p&gt;More Stuff
-[[Test Blog 2]]&lt;/p&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/test-blog-2&#34;&gt;My Test Blog Post #2&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;
 &lt;em&gt;italic&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Random Text&lt;/p&gt;
@@ -69,12 +218,224 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;inline code&lt;/code&gt; random text here next to it.&lt;/p&gt;
 &lt;h2 id=&#34;image---h2&#34;&gt;Image - h2&lt;/h2&gt;
-&lt;p&gt;![[IMG-20250210021231096.jpeg]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://erinskidds.com/blog/images/IMG-20250210021231096.jpeg&#34; alt=&#34;IMG-20250210021231096.jpeg&#34;&gt;&lt;/p&gt;
 &lt;h3 id=&#34;pdf---h3&#34;&gt;PDF - h3&lt;/h3&gt;
-&lt;p&gt;![[IMG-20250210021231508.pdf|src3]]&lt;/p&gt;
+
+&lt;div class=&#34;pdf-container&#34;&gt;
+    &lt;style&gt;
+        .pdf-container {
+            width: 100%;
+            margin: 2rem 0;
+            background: var(--background);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .pdf-container iframe {
+            width: 100%;
+            height: 800px;
+            border: 1px solid var(--border-color);
+        }
+        .pdf-fallback {
+            padding: 1rem;
+            text-align: center;
+            background: var(--background);
+        }
+        .pdf-fallback a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .pdf-fallback a:hover {
+            text-decoration: underline;
+        }
+    &lt;/style&gt;
+    &lt;iframe src=&#34;https://erinskidds.com/blog/files/IMG-20250210021231508.pdf&#34; type=&#34;application/pdf&#34;&gt;
+        &lt;p&gt;It appears your browser doesn&#39;t support iframes.&lt;/p&gt;
+    &lt;/iframe&gt;
+    &lt;div class=&#34;pdf-fallback&#34; style=&#34;display: none;&#34;&gt;
+        &lt;p&gt;If the PDF is not displaying correctly, you can 
+        &lt;a href=&#34;https://erinskidds.com/blog/files/IMG-20250210021231508.pdf&#34; target=&#34;_blank&#34;&gt;open it in a new tab&lt;/a&gt;.&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+    var iframe = document.querySelector(&#39;.pdf-container iframe&#39;);
+    var fallback = document.querySelector(&#39;.pdf-fallback&#39;);
+    
+    iframe.onload = function() {
+        if (iframe.contentDocument === null) {
+            fallback.style.display = &#39;block&#39;;
+        }
+    };
+});
+&lt;/script&gt; 
 &lt;h2 id=&#34;kanban---h2&#34;&gt;Kanban - h2&lt;/h2&gt;
-&lt;p&gt;![[Untitled Kanban.md|embed]]&lt;/p&gt;
-</content>
+&lt;h2&gt;1&lt;/h2&gt;
+&lt;div class=&#34;kanban-board&#34;&gt;
+&lt;style&gt;
+            .kanban-board {
+                display: flex;
+                gap: 1rem;
+                overflow-x: auto;
+                padding: 1rem 0;
+                min-height: 400px;
+                margin: 1rem 0;
+                background: var(--background);
+            }
+            .kanban-lane {
+                min-width: 300px;
+                flex: 1;
+                background: var(--background);
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                padding: 1rem;
+                display: flex;
+                flex-direction: column;
+            }
+            .kanban-lane-header {
+                font-weight: bold;
+                margin-bottom: 1rem;
+                padding-bottom: 0.5rem;
+                border-bottom: 2px solid var(--accent);
+                color: var(--color);
+            }
+            .kanban-cards {
+                flex: 1;
+                min-height: 100px;
+            }
+            .kanban-card {
+                background: var(--background);
+                border: 1px solid var(--border-color);
+                border-radius: 4px;
+                padding: 0.75rem;
+                margin-bottom: 0.75rem;
+                transition: transform 0.2s;
+            }
+            .kanban-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .kanban-card-text {
+                color: var(--color);
+                font-size: 0.9rem;
+                white-space: pre-wrap;
+            }
+            .kanban-card-checkbox {
+                margin-right: 0.5rem;
+                opacity: 0.6;
+            }
+            .kanban-card-title {
+                font-weight: bold;
+                margin-bottom: 0.5rem;
+            }
+            .kanban-card-checklist {
+                margin-left: 1.5rem;
+                margin-top: 0.5rem;
+            }
+            .kanban-card-checklist-item {
+                display: flex;
+                align-items: flex-start;
+                margin-bottom: 0.25rem;
+            }
+            @media (max-width: 768px) {
+                .kanban-board {
+                    flex-direction: column;
+                }
+                .kanban-lane {
+                    min-width: 100%;
+                }
+            }
+        &lt;/style&gt;
+&lt;div class=&#34;kanban-lane&#34;&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;-&lt;/div&gt;
+&lt;div class=&#34;kanban-cards&#34;&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Another One&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Checklist&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Test&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-lane&#34;&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;]&lt;/div&gt;
+&lt;div class=&#34;kanban-cards&#34;&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Another One&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Checklist&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Test&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-lane&#34;&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;rs&lt;/div&gt;
+&lt;div class=&#34;kanban-cards&#34;&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Another One&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Checklist&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Test&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-lane&#34;&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;#&lt;/div&gt;
+&lt;div class=&#34;kanban-cards&#34;&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Another One&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Checklist&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Test&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-lane&#34;&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;no&lt;/div&gt;
+&lt;div class=&#34;kanban-cards&#34;&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Checklist&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Test&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-lane&#34;&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;-&lt;/div&gt;
+&lt;div class=&#34;kanban-cards&#34;&gt;
+&lt;div class=&#34;kanban-card&#34;&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Test&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-lane&#34;&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;`&lt;/div&gt;
+&lt;div class=&#34;kanban-cards&#34;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-lane&#34;&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;&#34;b&lt;/div&gt;
+&lt;div class=&#34;kanban-cards&#34;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;kanban-lane&#34;&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;[f&lt;/div&gt;
+&lt;div class=&#34;kanban-cards&#34;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content>
     </item>
     
   </channel>
