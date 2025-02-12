@@ -1369,135 +1369,141 @@
       <description>&lt;h1 id=&#34;h1-title&#34;&gt;H1 Title&lt;/h1&gt;
 &lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/test-blog&#34;&gt;My Test Blog Post&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;dataview&#34;&gt;Dataview&lt;/h2&gt;
-&lt;div class=&#34;dataview-table&#34;&gt;
+&lt;div class=&#34;dataview-list&#34;&gt;
 &lt;style&gt;
-&lt;pre&gt;&lt;code&gt;            .dataview-table {
-                margin: 2rem 0;
-                overflow-x: auto;
-            }
-            .dataview-table table {
-                width: 100%;
-                border-collapse: collapse;
-                margin: 0;
-                font-size: 0.95rem;
-                background: var(--background);
-            }
-            .dataview-table th {
-                background-color: var(--accent);
-                color: var(--background);
-                padding: 0.75rem 1rem;
-                text-align: left;
-                font-weight: bold;
-                border-bottom: 2px solid var(--border-color);
-            }
-            .dataview-table td {
-                padding: 0.75rem 1rem;
-                border-bottom: 1px solid var(--border-color);
-                vertical-align: top;
-            }
-            .dataview-table tr:hover {
-                background-color: var(--hover);
-            }
-            .dataview-table tr:last-child td {
-                border-bottom: none;
-            }
-            .dataview-table a {
-                color: var(--accent);
-                text-decoration: none;
-            }
-            .dataview-table a:hover {
-                text-decoration: underline;
-            }
-            @media (max-width: 768px) {
-                .dataview-table {
-                    margin: 1rem -1rem;
-                    width: calc(100% + 2rem);
-                }
-                .dataview-table th,
-                .dataview-table td {
-                    padding: 0.5rem;
-                }
-            }
+&lt;pre&gt;&lt;code&gt;        .dataview-list {
+            margin: 2rem 0;
+        }
+        .dataview-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .dataview-list li {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .dataview-list li:last-child {
+            border-bottom: none;
+        }
+        .dataview-list h4 {
+            margin: 0 0 0.5rem 0;
+        }
+        .dataview-list .metadata {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        .dataview-list .tags {
+            margin-left: 1rem;
+        }
+        .dataview-list .tags a {
+            margin-right: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .dataview-list .tags a:hover {
+            text-decoration: underline;
+        }
+        .dataview-list .description {
+            margin: 0.5rem 0 0 0;
+            color: #444;
+        }
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;/style&gt;&lt;/p&gt;</description>
       <content>&lt;h1 id=&#34;h1-title&#34;&gt;H1 Title&lt;/h1&gt;
 &lt;p&gt;&lt;a href=&#34;https://erinskidds.com/blog/test-blog&#34;&gt;My Test Blog Post&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;dataview&#34;&gt;Dataview&lt;/h2&gt;
-&lt;div class=&#34;dataview-table&#34;&gt;
+&lt;div class=&#34;dataview-list&#34;&gt;
 &lt;style&gt;
-&lt;pre&gt;&lt;code&gt;            .dataview-table {
-                margin: 2rem 0;
-                overflow-x: auto;
-            }
-            .dataview-table table {
-                width: 100%;
-                border-collapse: collapse;
-                margin: 0;
-                font-size: 0.95rem;
-                background: var(--background);
-            }
-            .dataview-table th {
-                background-color: var(--accent);
-                color: var(--background);
-                padding: 0.75rem 1rem;
-                text-align: left;
-                font-weight: bold;
-                border-bottom: 2px solid var(--border-color);
-            }
-            .dataview-table td {
-                padding: 0.75rem 1rem;
-                border-bottom: 1px solid var(--border-color);
-                vertical-align: top;
-            }
-            .dataview-table tr:hover {
-                background-color: var(--hover);
-            }
-            .dataview-table tr:last-child td {
-                border-bottom: none;
-            }
-            .dataview-table a {
-                color: var(--accent);
-                text-decoration: none;
-            }
-            .dataview-table a:hover {
-                text-decoration: underline;
-            }
-            @media (max-width: 768px) {
-                .dataview-table {
-                    margin: 1rem -1rem;
-                    width: calc(100% + 2rem);
-                }
-                .dataview-table th,
-                .dataview-table td {
-                    padding: 0.5rem;
-                }
-            }
+&lt;pre&gt;&lt;code&gt;        .dataview-list {
+            margin: 2rem 0;
+        }
+        .dataview-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .dataview-list li {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .dataview-list li:last-child {
+            border-bottom: none;
+        }
+        .dataview-list h4 {
+            margin: 0 0 0.5rem 0;
+        }
+        .dataview-list .metadata {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        .dataview-list .tags {
+            margin-left: 1rem;
+        }
+        .dataview-list .tags a {
+            margin-right: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .dataview-list .tags a:hover {
+            text-decoration: underline;
+        }
+        .dataview-list .description {
+            margin: 0.5rem 0 0 0;
+            color: #444;
+        }
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;/style&gt;&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;&lt;tr&gt;
-&lt;th&gt;Name&lt;/th&gt;
-&lt;th&gt;Title&lt;/th&gt;
-&lt;th&gt;Url&lt;/th&gt;
-&lt;/tr&gt;&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;Do it Yourself&lt;/td&gt;
-&lt;td&gt;Create your own blog from Markdown!&lt;/td&gt;
-&lt;td&gt;&lt;a href=&#34;https://erinskidds.com/blog/do-it-yourself&#34;&gt;/blog/do-it-yourself&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Test Blog 2&lt;/td&gt;
-&lt;td&gt;My Test Blog Post #2&lt;/td&gt;
-&lt;td&gt;&lt;a href=&#34;https://erinskidds.com/blog/test-blog-2&#34;&gt;/blog/test-blog-2&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Test Blog&lt;/td&gt;
-&lt;td&gt;My Test Blog Post&lt;/td&gt;
-&lt;td&gt;&lt;a href=&#34;https://erinskidds.com/blog/test-blog&#34;&gt;/blog/test-blog&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;div class=&#34;list-item&#34;&gt;
+&lt;h4&gt;&lt;a href=&#34;https://erinskidds.com/blog/do-it-yourself&#34;&gt;Create your own blog from Markdown!&lt;/a&gt;&lt;/h4&gt;
+&lt;div class=&#34;metadata&#34;&gt;
+&lt;span class=&#34;date&#34;&gt;2025-02-10&lt;/span&gt;
+&lt;span class=&#34;tags&#34;&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/tags/tutorial&#34;&gt;tutorial&lt;/a&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/tags/hugo&#34;&gt;hugo&lt;/a&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/tags/python&#34;&gt;python&lt;/a&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/tags/obsidian&#34;&gt;obsidian&lt;/a&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/tags/markdown&#34;&gt;markdown&lt;/a&gt;
+&lt;/span&gt;
+&lt;/div&gt;
+&lt;p class=&#34;description&#34;&gt;A comprehensive guide on creating a blog using Hugo, Python, and Obsidian with automatic deployment&lt;/p&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;div class=&#34;list-item&#34;&gt;
+&lt;h4&gt;&lt;a href=&#34;https://erinskidds.com/blog/test-blog-2&#34;&gt;My Test Blog Post #2&lt;/a&gt;&lt;/h4&gt;
+&lt;div class=&#34;metadata&#34;&gt;
+&lt;span class=&#34;date&#34;&gt;2024-02-14&lt;/span&gt;
+&lt;span class=&#34;tags&#34;&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/tags/software&#34;&gt;software&lt;/a&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/tags/engineering&#34;&gt;engineering&lt;/a&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/tags/tutorial&#34;&gt;tutorial&lt;/a&gt;
+&lt;/span&gt;
+&lt;/div&gt;
+&lt;p class=&#34;description&#34;&gt;This is a test blog post about software engineering&lt;/p&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;div class=&#34;list-item&#34;&gt;
+&lt;h4&gt;&lt;a href=&#34;https://erinskidds.com/blog/test-blog&#34;&gt;My Test Blog Post&lt;/a&gt;&lt;/h4&gt;
+&lt;div class=&#34;metadata&#34;&gt;
+&lt;span class=&#34;date&#34;&gt;2024-02-10&lt;/span&gt;
+&lt;span class=&#34;tags&#34;&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/tags/software&#34;&gt;software&lt;/a&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/tags/engineering&#34;&gt;engineering&lt;/a&gt;
+&lt;a href=&#34;https://erinskidds.com/blog/tags/tutorial&#34;&gt;tutorial&lt;/a&gt;
+&lt;/span&gt;
+&lt;/div&gt;
+&lt;p class=&#34;description&#34;&gt;This is a test blog post about software engineering&lt;/p&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
 &lt;/div&gt;
 </content>
     </item>
@@ -1590,165 +1596,7 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
     };
 });
 &lt;/script&gt; 
-&lt;h3 id=&#34;canvas---h3&#34;&gt;Canvas - h3&lt;/h3&gt;
-&lt;div class=&#34;canvas-container&#34;&gt;
-&lt;style&gt;
-            .canvas-container {
-                position: relative;
-                width: 100%;
-                height: 800px;
-                background-color: var(--background);
-                background-image: radial-gradient(circle, var(--border-color) 1px, transparent 1px);
-                background-size: 20px 20px;
-                border: 1px solid var(--border-color);
-                border-radius: 8px;
-                overflow: hidden;
-                margin: 1rem 0;
-                cursor: grab;
-            }
-            .canvas-container:active {
-                cursor: grabbing;
-            }
-            .canvas-node {
-                position: absolute;
-                background: var(--background);
-                border: 2px solid var(--border-color);
-                border-radius: 4px;
-                padding: 1rem;
-                max-width: 300px;
-                transition: all 0.2s ease;
-                z-index: 1;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            .canvas-node:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-                z-index: 2;
-            }
-            .canvas-node-text {
-                font-size: 0.9rem;
-                color: var(--color);
-                white-space: pre-wrap;
-            }
-            .canvas-node-file {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                background: var(--background);
-                padding: 1rem;
-                border-radius: 4px;
-            }
-            .canvas-node-file img {
-                max-width: 100%;
-                height: auto;
-                margin-bottom: 0.5rem;
-                border-radius: 4px;
-                border: 1px solid var(--border-color);
-            }
-            .canvas-node-file a {
-                color: var(--accent);
-                text-decoration: none;
-                font-weight: bold;
-                padding: 0.5rem 1rem;
-                background: var(--background);
-                border: 1px solid var(--accent);
-                border-radius: 4px;
-                transition: all 0.2s ease;
-            }
-            .canvas-node-file a:hover {
-                background: var(--accent);
-                color: var(--background);
-            }
-            .canvas-edge {
-                position: absolute;
-                height: 2px;
-                background: var(--accent);
-                opacity: 0.5;
-                transform-origin: left center;
-                pointer-events: none;
-                transition: opacity 0.2s ease;
-            }
-            .canvas-edge:hover {
-                opacity: 1;
-            }
-            @media (max-width: 768px) {
-                .canvas-container {
-                    height: auto;
-                    min-height: 600px;
-                    background-image: none;
-                }
-                .canvas-node {
-                    position: relative !important;
-                    left: 0 !important;
-                    top: 0 !important;
-                    margin: 1rem 0;
-                    max-width: none;
-                }
-                .canvas-edge {
-                    display: none;
-                }
-            }
-        &lt;/style&gt;
-&lt;script&gt;
-            document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
-                const container = document.querySelector(&#39;.canvas-container&#39;);
-                let isPanning = false;
-                let startX, startY, scrollLeft, scrollTop;
-&lt;pre&gt;&lt;code&gt;            container.addEventListener(&#39;mousedown&#39;, function(e) {
-                isPanning = true;
-                startX = e.pageX - container.offsetLeft;
-                startY = e.pageY - container.offsetTop;
-                scrollLeft = container.scrollLeft;
-                scrollTop = container.scrollTop;
-            });
-
-            container.addEventListener(&#39;mousemove&#39;, function(e) {
-                if (!isPanning) return;
-                e.preventDefault();
-                const x = e.pageX - container.offsetLeft;
-                const y = e.pageY - container.offsetTop;
-                const dx = x - startX;
-                const dy = y - startY;
-                container.scrollLeft = scrollLeft - dx;
-                container.scrollTop = scrollTop - dy;
-            });
-
-            container.addEventListener(&#39;mouseup&#39;, function() {
-                isPanning = false;
-            });
-
-            container.addEventListener(&#39;mouseleave&#39;, function() {
-                isPanning = false;
-            });
-
-            // Prevent dragging on nodes
-            container.querySelectorAll(&#39;.canvas-node&#39;).forEach(node =&amp;gt; {
-                node.addEventListener(&#39;mousedown&#39;, e =&amp;gt; e.stopPropagation());
-            });
-        });
-    &amp;lt;/script&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;div class=&#34;canvas-node&#34; id=&#34;node-d496a4076ca8b6f2&#34; style=&#34;left: -206px; top: -153px; width: 250px; height: 60px;&#34;&gt;
-&lt;div class=&#34;canvas-node-text&#34;&gt;Test Canvas&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;canvas-node&#34; id=&#34;node-ecd6036b38b97a2b&#34; style=&#34;left: -281px; top: -60px; width: 400px; height: 400px;&#34;&gt;
-&lt;div class=&#34;canvas-node-file&#34;&gt;
-&lt;a href=&#34;https://erinskidds.com/blog/test-blog-2&#34;&gt;View Post: Test Blog 2&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;canvas-node&#34; id=&#34;node-eeebaba9464d388d&#34; style=&#34;left: 161px; top: -125px; width: 400px; height: 400px;&#34;&gt;
-&lt;div class=&#34;canvas-node-file&#34;&gt;
-&lt;a href=&#34;https://erinskidds.com/blog/files/IMG-20250210021231508.pdf&#34; target=&#34;_blank&#34;&gt;Open PDF: IMG-20250210021231508.pdf&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;canvas-node&#34; id=&#34;node-fe7b5889183c6889&#34; style=&#34;left: 161px; top: 320px; width: 400px; height: 246px;&#34;&gt;
-&lt;div class=&#34;canvas-node-file&#34;&gt;
-&lt;img src=&#34;https://erinskidds.com/blog/images/IMG-20250210021231096.jpeg&#34; alt=&#34;IMG-20250210021231096.jpeg&#34;&gt;
-&lt;a href=&#34;https://erinskidds.com/blog/images/IMG-20250210021231096.jpeg&#34; target=&#34;_blank&#34;&gt;View Image&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-## Kanban - h2
+&lt;h2 id=&#34;kanban---h2&#34;&gt;Kanban - h2&lt;/h2&gt;
 &lt;h2&gt;1&lt;/h2&gt;
 &lt;div class=&#34;kanban-board&#34;&gt;
 &lt;style&gt;
