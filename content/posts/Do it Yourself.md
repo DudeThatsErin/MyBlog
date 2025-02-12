@@ -387,7 +387,7 @@ Create a shortcode for PDF embedding (`layouts/shortcodes/pdf.html`):
    categories: ["category"]
    draft: false
    toc: true
-3. lastmod: 2024-02-11
+   lastmod: 2024-02-11
    ---
    ```
 
