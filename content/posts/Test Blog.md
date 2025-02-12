@@ -1,10 +1,15 @@
 ---
-title: "My Test Blog Post"
+title: My Test Blog Post
 date: 2024-02-10
-author: "Erin"
-description: "This is a test blog post about software engineering"
-tags: ["software", "engineering", "tutorial"]
-categories: ["tech"]
+author: Erin
+description: This is a test blog post about software engineering
+tags:
+  - software
+  - engineering
+  - tutorial
+  - blog
+categories:
+  - tech
 draft: false
 toc: true
 lastmod: 2024-02-10

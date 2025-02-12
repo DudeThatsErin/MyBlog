@@ -1,11 +1,8 @@
 import os
 import re
-import shutil
 import yaml
-import json
 from datetime import datetime
 import traceback
-import math
 
 # Paths
 posts_dir = r"F:\repos\CURRENTBLOG\erinblog-1\content\posts"

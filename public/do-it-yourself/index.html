@@ -60,9 +60,9 @@
   <link rel="stylesheet" href="https://erinskidds.com/blog/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
 
 
-<link rel="stylesheet" href="https://erinskidds.com/blog/terminal.css">
 
-<link rel="stylesheet" href="https://erinskidds.com/blog/style.css">
+
+
 
 
 <link rel="shortcut icon" href="https://erinskidds.com/blog/favicon.png">
@@ -155,6 +155,8 @@
       
       #<a href="https://erinskidds.com/blog/tags/markdown/">markdown</a>&nbsp;
       
+      #<a href="https://erinskidds.com/blog/tags/blog/">blog</a>&nbsp;
+      
     </span>
   
 
@@ -173,7 +175,12 @@
     <li><a href="#prerequisites">Prerequisites</a></li>
     <li><a href="#step-1-setting-up-hugo">Step 1: Setting Up Hugo</a></li>
     <li><a href="#step-2-setting-up-the-python-script">Step 2: Setting Up the Python Script</a></li>
-    <li><a href="#step-3-setting-up-automatic-deployment">Step 3: Setting Up Automatic Deployment</a></li>
+    <li><a href="#step-3-setting-up-automatic-deployment">Step 3: Setting Up Automatic Deployment</a>
+      <ul>
+        <li><a href="#windows">Windows</a></li>
+        <li><a href="#maclinux">Mac/Linux</a></li>
+      </ul>
+    </li>
     <li><a href="#step-4-adding-special-features">Step 4: Adding Special Features</a>
       <ul>
         <li><a href="#dataview-support">Dataview Support</a></li>
@@ -273,10 +280,9 @@
 <h3 id="works-with-several-obsidian-plugins">Works with several Obsidian Plugins</h3>
 <p>I have set up the <code>files.py</code> file to work with several plugins&hellip;</p>
 <ul>
-<li>Dataview</li>
-<li>Card Link</li>
+<li>Dataview Obsidian Plugin</li>
+<li>Auto Card Link Obsidian Plugin</li>
 <li>Handwritten Notes - it displays PDFs inline via the browser&rsquo;s PDF viewer.</li>
-<li>Obsidian Canvas - Can display an embedded canvas on the page.</li>
 <li>Obsidian Kanban - Can display an embedded Kanban on the page.</li>
 </ul>
 <h2 id="prerequisites">Prerequisites</h2>
@@ -346,420 +352,165 @@
 </span></span></code></pre></div></li>
 </ol>
 <h2 id="step-2-setting-up-the-python-script">Step 2: Setting Up the Python Script</h2>
-<p>Use the following code to create a Python script (<code>files.py</code>) that will handle the conversion of Obsidian-style links and Dataview blocks to Hugo-compatible HTML:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">os</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">re</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">shutil</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">yaml</span>
-</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Paths</span>
-</span></span><span class="line"><span class="cl"><span class="n">posts_dir</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&#34;YOUR OBSIDIAN VAULT AND BLOG FOLDER&#34;</span>  <span class="c1"># Update this path</span>
-</span></span><span class="line"><span class="cl"><span class="n">attachments_base</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&#34;THE ATTACHMENTS FOLDER THERE&#34;</span>    <span class="c1"># Update this path</span>
-</span></span><span class="line"><span class="cl"><span class="n">static_images_dir</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&#34;IMAGE FOLDER INSIDE YOUR BLOG usually static\images&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="n">static_files_dir</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&#34;PDF and Other Files folder usually static\files&#34;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Ensure the target directories exist</span>
-</span></span><span class="line"><span class="cl"><span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">static_images_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">static_files_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">parse_dataview_query</span><span class="p">(</span><span class="n">query_block</span><span class="p">):</span>
-</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;Parse a Dataview query block and convert it to Hugo-compatible format.&#34;&#34;&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">Processing Dataview query block:&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">query_block</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    <span class="c1"># Extract the query type and parameters</span>
-</span></span><span class="line"><span class="cl">    <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">query_block</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)]</span>
-</span></span><span class="line"><span class="cl">    <span class="n">query_type</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Query type: </span><span class="si">{</span><span class="n">query_type</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    <span class="c1"># Initialize result</span>
-</span></span><span class="line"><span class="cl">    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="s1">&#39;table&#39;</span> <span class="ow">in</span> <span class="n">query_type</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Processing TABLE query&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="c1"># Handle TABLE queries</span>
-</span></span><span class="line"><span class="cl">        <span class="n">fields</span> <span class="o">=</span> <span class="p">[]</span>
-</span></span><span class="line"><span class="cl">        <span class="n">field_aliases</span> <span class="o">=</span> <span class="p">{}</span>
-</span></span><span class="line"><span class="cl">        <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
-</span></span><span class="line"><span class="cl">        <span class="n">in_data</span> <span class="o">=</span> <span class="kc">False</span>
-</span></span><span class="line"><span class="cl">        
-</span></span><span class="line"><span class="cl">        <span class="c1"># First line might contain field definitions</span>
-</span></span><span class="line"><span class="cl">        <span class="n">field_line</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;table&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">field_line</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="c1"># Parse fields and their aliases</span>
-</span></span><span class="line"><span class="cl">            <span class="n">field_parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">field_line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
-</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">field_parts</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="s1">&#39; as &#39;</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
-</span></span><span class="line"><span class="cl">                    <span class="n">field</span><span class="p">,</span> <span class="n">alias</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&#34;&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">part</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; as &#39;</span><span class="p">)]</span>
-</span></span><span class="line"><span class="cl">                    <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                    <span class="n">field_aliases</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">alias</span>
-</span></span><span class="line"><span class="cl">                <span class="k">else</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                    <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                    <span class="n">field_aliases</span><span class="p">[</span><span class="n">part</span><span class="p">]</span> <span class="o">=</span> <span class="n">part</span>
-</span></span><span class="line"><span class="cl">        
-</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Fields: </span><span class="si">{</span><span class="n">fields</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Aliases: </span><span class="si">{</span><span class="n">field_aliases</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        
-</span></span><span class="line"><span class="cl">        <span class="c1"># Process the remaining lines</span>
-</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>  <span class="c1"># Skip empty lines</span>
-</span></span><span class="line"><span class="cl">                <span class="k">continue</span>
-</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Processing line: </span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="s1">&#39;from&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
-</span></span><span class="line"><span class="cl">                <span class="n">in_data</span> <span class="o">=</span> <span class="kc">True</span>
-</span></span><span class="line"><span class="cl">                <span class="n">source_folder</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&#34;&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;&#34;&#39;</span> <span class="ow">in</span> <span class="n">line</span> <span class="k">else</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Found FROM clause, source: </span><span class="si">{</span><span class="n">source_folder</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                <span class="c1"># Get all markdown files in the posts directory</span>
-</span></span><span class="line"><span class="cl">                <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">posts_dir</span><span class="p">):</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.md&#39;</span><span class="p">):</span>
-</span></span><span class="line"><span class="cl">                        <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">posts_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                        <span class="n">row_data</span> <span class="o">=</span> <span class="p">[]</span>
-</span></span><span class="line"><span class="cl">                        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                            <span class="k">if</span> <span class="s1">&#39;file.name&#39;</span> <span class="ow">in</span> <span class="n">field</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                                <span class="n">value</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">                            <span class="k">elif</span> <span class="s1">&#39;title&#39;</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
-</span></span><span class="line"><span class="cl">                                <span class="k">try</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                                        <span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">                                        <span class="n">front_matter</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^---\s*\n(.*?)\n\s*---&#39;</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                                        <span class="k">if</span> <span class="n">front_matter</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                                            <span class="n">metadata</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">front_matter</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl">                                            <span class="n">value</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
-</span></span><span class="line"><span class="cl">                                        <span class="k">else</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                                            <span class="n">value</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">                                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Error getting title: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                                    <span class="n">value</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">                            <span class="k">elif</span> <span class="s1">&#39;url&#39;</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="s1">&#39;file.path&#39;</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
-</span></span><span class="line"><span class="cl">                                <span class="n">value</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;/blog/</span><span class="si">{</span><span class="n">get_file_url</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">&#34;</span>
-</span></span><span class="line"><span class="cl">                            <span class="k">elif</span> <span class="s1">&#39;date&#39;</span> <span class="ow">in</span> <span class="n">field</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                                <span class="k">try</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                                        <span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">                                        <span class="n">front_matter</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^---\s*\n(.*?)\n\s*---&#39;</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                                        <span class="k">if</span> <span class="n">front_matter</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                                            <span class="n">metadata</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">front_matter</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl">                                            <span class="n">value</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                                        <span class="k">else</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                                            <span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-</span></span><span class="line"><span class="cl">                                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Error getting date: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                                    <span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-</span></span><span class="line"><span class="cl">                            <span class="k">elif</span> <span class="s1">&#39;tags&#39;</span> <span class="ow">in</span> <span class="n">field</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                                <span class="k">try</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                                        <span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">                                        <span class="n">front_matter</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^---\s*\n(.*?)\n\s*---&#39;</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                                        <span class="k">if</span> <span class="n">front_matter</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                                            <span class="n">metadata</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">front_matter</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl">                                            <span class="n">tags</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tags&#39;</span><span class="p">,</span> <span class="p">[])</span>
-</span></span><span class="line"><span class="cl">                                            <span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                                        <span class="k">else</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                                            <span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-</span></span><span class="line"><span class="cl">                                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Error getting tags: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                                    <span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-</span></span><span class="line"><span class="cl">                            <span class="k">else</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                                <span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-</span></span><span class="line"><span class="cl">                            <span class="n">row_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Field </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                        
-</span></span><span class="line"><span class="cl">                        <span class="k">if</span> <span class="n">row_data</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                            <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row_data</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Added row: </span><span class="si">{</span><span class="n">row_data</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                <span class="k">continue</span>
-</span></span><span class="line"><span class="cl">            
-</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="s1">&#39;where&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="s1">&#39;sort&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
-</span></span><span class="line"><span class="cl">                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Skipping </span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                <span class="k">continue</span>
-</span></span><span class="line"><span class="cl">        
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">fields</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="c1"># Generate HTML table with styling</span>
-</span></span><span class="line"><span class="cl">            <span class="n">html</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&lt;div class=&#34;dataview-table&#34;&gt;&#39;</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">            <span class="n">html</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&lt;style&gt;&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="n">html</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;
-</span></span></span><span class="line"><span class="cl"><span class="s1">                .dataview-table {
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    margin: 2rem 0;
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    overflow-x: auto;
-</span></span></span><span class="line"><span class="cl"><span class="s1">                }
-</span></span></span><span class="line"><span class="cl"><span class="s1">                .dataview-table table {
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    width: 100%;
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    border-collapse: collapse;
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    margin: 0;
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    font-size: 0.95rem;
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    background: var(--background);
-</span></span></span><span class="line"><span class="cl"><span class="s1">                }
-</span></span></span><span class="line"><span class="cl"><span class="s1">                .dataview-table th {
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    background-color: var(--accent);
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    color: var(--background);
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    padding: 0.75rem 1rem;
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    text-align: left;
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    font-weight: bold;
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    border-bottom: 2px solid var(--border-color);
-</span></span></span><span class="line"><span class="cl"><span class="s1">                }
-</span></span></span><span class="line"><span class="cl"><span class="s1">                .dataview-table td {
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    padding: 0.75rem 1rem;
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    border-bottom: 1px solid var(--border-color);
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    vertical-align: top;
-</span></span></span><span class="line"><span class="cl"><span class="s1">                }
-</span></span></span><span class="line"><span class="cl"><span class="s1">                .dataview-table tr:hover {
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    background-color: var(--hover);
-</span></span></span><span class="line"><span class="cl"><span class="s1">                }
-</span></span></span><span class="line"><span class="cl"><span class="s1">                .dataview-table tr:last-child td {
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    border-bottom: none;
-</span></span></span><span class="line"><span class="cl"><span class="s1">                }
-</span></span></span><span class="line"><span class="cl"><span class="s1">                .dataview-table a {
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    color: var(--accent);
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    text-decoration: none;
-</span></span></span><span class="line"><span class="cl"><span class="s1">                }
-</span></span></span><span class="line"><span class="cl"><span class="s1">                .dataview-table a:hover {
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    text-decoration: underline;
-</span></span></span><span class="line"><span class="cl"><span class="s1">                }
-</span></span></span><span class="line"><span class="cl"><span class="s1">                @media (max-width: 768px) {
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    .dataview-table {
-</span></span></span><span class="line"><span class="cl"><span class="s1">                        margin: 1rem -1rem;
-</span></span></span><span class="line"><span class="cl"><span class="s1">                        width: calc(100</span><span class="si">% + 2r</span><span class="s1">em);
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    }
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    .dataview-table th,
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    .dataview-table td {
-</span></span></span><span class="line"><span class="cl"><span class="s1">                        padding: 0.5rem;
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    }
-</span></span></span><span class="line"><span class="cl"><span class="s1">                }
-</span></span></span><span class="line"><span class="cl"><span class="s1">            &#39;&#39;&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="n">html</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&lt;/style&gt;&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="n">html</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&lt;table&gt;&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            
-</span></span><span class="line"><span class="cl">            <span class="c1"># Add headers</span>
-</span></span><span class="line"><span class="cl">            <span class="n">header_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">field_aliases</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">            <span class="n">html</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&lt;thead&gt;&lt;tr&gt;&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">header_names</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                <span class="n">html</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&lt;th&gt;</span><span class="si">{</span><span class="n">header</span><span class="si">}</span><span class="s1">&lt;/th&gt;&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="n">html</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&lt;/tr&gt;&lt;/thead&gt;&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            
-</span></span><span class="line"><span class="cl">            <span class="c1"># Add data rows</span>
-</span></span><span class="line"><span class="cl">            <span class="n">html</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&lt;tbody&gt;&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                <span class="n">html</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&lt;tr&gt;&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cell</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">if</span> <span class="s1">&#39;url&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="s1">&#39;file.path&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
-</span></span><span class="line"><span class="cl">                        <span class="n">html</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&lt;td&gt;&lt;a href=&#34;</span><span class="si">{</span><span class="n">cell</span><span class="si">}</span><span class="s1">&#34;&gt;</span><span class="si">{</span><span class="n">cell</span><span class="si">}</span><span class="s1">&lt;/a&gt;&lt;/td&gt;&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                    <span class="k">else</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                        <span class="n">html</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&lt;td&gt;</span><span class="si">{</span><span class="n">cell</span><span class="si">}</span><span class="s1">&lt;/td&gt;&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                <span class="n">html</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&lt;/tr&gt;&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="n">html</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&lt;/tbody&gt;&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            
-</span></span><span class="line"><span class="cl">            <span class="n">html</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&lt;/table&gt;&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="n">html</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&lt;/div&gt;&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            
-</span></span><span class="line"><span class="cl">            <span class="n">result</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">Generated HTML table:&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    <span class="k">elif</span> <span class="s1">&#39;list&#39;</span> <span class="ow">in</span> <span class="n">query_type</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">        <span class="c1"># List processing code here (similar structure to table)</span>
-</span></span><span class="line"><span class="cl">        <span class="k">pass</span>
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">result</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">process_dataview</span><span class="p">(</span><span class="n">content</span><span class="p">):</span>
-</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;Find and process Dataview code blocks.&#34;&#34;&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">Looking for Dataview blocks in content...&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="n">dataview_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;(?:^|\n)[ \t]*```+[ \t]*dataview[ \t]*\n(.*?)\n[ \t]*```+[ \t]*(?:\n|$)&#39;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">dataview_pattern</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="n">match_count</span> <span class="o">=</span> <span class="mi">0</span>
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">replace_dataview</span><span class="p">(</span><span class="k">match</span><span class="p">):</span>
-</span></span><span class="line"><span class="cl">        <span class="k">nonlocal</span> <span class="n">match_count</span>
-</span></span><span class="line"><span class="cl">        <span class="n">match_count</span> <span class="o">+=</span> <span class="mi">1</span>
-</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">Processing Dataview block #</span><span class="si">{</span><span class="n">match_count</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="n">query_block</span> <span class="o">=</span> <span class="k">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">        <span class="n">result</span> <span class="o">=</span> <span class="n">parse_dataview_query</span><span class="p">(</span><span class="n">query_block</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Replacing Dataview block with: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="sa">f</span><span class="s2">&#34;</span><span class="se">\n</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="se">\n</span><span class="s2">&#34;</span>
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    <span class="n">processed_content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">dataview_pattern</span><span class="p">,</span> <span class="n">replace_dataview</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">match_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;No Dataview blocks found in content&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Content preview:&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="n">content</span><span class="p">[:</span><span class="mi">500</span><span class="p">])</span>
-</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Processed </span><span class="si">{</span><span class="n">match_count</span><span class="si">}</span><span class="s2"> Dataview blocks&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">processed_content</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">get_file_url</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;Get the URL-friendly version of a filename.&#34;&#34;&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">base_name</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.md&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">base_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">clean_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;Extract the actual filename from Obsidian path and remove alias.&#34;&#34;&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">    <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">filename</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Process each markdown file</span>
-</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">posts_dir</span><span class="p">):</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&#34;.md&#34;</span><span class="p">):</span>
-</span></span><span class="line"><span class="cl">        <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">posts_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">Processing file: </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&#34;r&#34;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="n">content</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="c1"># Process Dataview blocks</span>
-</span></span><span class="line"><span class="cl">        <span class="n">content</span> <span class="o">=</span> <span class="n">process_dataview</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="c1"># Handle internal links and media files</span>
-</span></span><span class="line"><span class="cl">        <span class="c1"># ... (additional processing code)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&#34;w&#34;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">All files processed successfully!&#34;</span><span class="p">)</span>
-</span></span></code></pre></div><h2 id="step-3-setting-up-automatic-deployment">Step 3: Setting Up Automatic Deployment</h2>
-<p>Create a PowerShell script (<code>updateblog.ps1</code>) for automated deployment:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="c"># PowerShell Script for Windows</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c"># Set variables for Obsidian to Hugo copy</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$sourcePath</span> <span class="p">=</span> <span class="s2">&#34;YOUR OBSIDIAN VAULT BLOG FOLDER&#34;</span>  <span class="c"># Update this path</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$destinationPath</span> <span class="p">=</span> <span class="s2">&#34;Your blog folder usually \content\posts&#34;</span>  <span class="c"># Update this path</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c"># Set Github repo</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$myrepo</span> <span class="p">=</span> <span class="s2">&#34;git@github.com:YOURUSERNAME\YOURREPO.git&#34;</span>  <span class="c"># Update this to your repo</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c"># Set error handling</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$ErrorActionPreference</span> <span class="p">=</span> <span class="s2">&#34;Stop&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="nb">Set-StrictMode</span> <span class="n">-Version</span> <span class="n">Latest</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c"># Change to the script&#39;s directory</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$ScriptDir</span> <span class="p">=</span> <span class="nb">Split-Path</span> <span class="n">-Parent</span> <span class="nv">$MyInvocation</span><span class="p">.</span><span class="py">MyCommand</span><span class="p">.</span><span class="py">Definition</span>
-</span></span><span class="line"><span class="cl"><span class="nb">Set-Location</span> <span class="nv">$ScriptDir</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c"># Check for required commands</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$requiredCommands</span> <span class="p">=</span> <span class="vm">@</span><span class="p">(</span><span class="s1">&#39;git&#39;</span><span class="p">,</span> <span class="s1">&#39;hugo&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c"># Check for Python command</span>
-</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="nb">Get-Command</span> <span class="s1">&#39;python&#39;</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nv">$pythonCommand</span> <span class="p">=</span> <span class="s1">&#39;python&#39;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nb">Get-Command</span> <span class="s1">&#39;python3&#39;</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nv">$pythonCommand</span> <span class="p">=</span> <span class="s1">&#39;python3&#39;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">Write-Error</span> <span class="s2">&#34;Python is not installed or not in PATH.&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exit</span> <span class="mf">1</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">foreach</span> <span class="p">(</span><span class="nv">$cmd</span> <span class="k">in</span> <span class="nv">$requiredCommands</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">-not</span> <span class="p">(</span><span class="nb">Get-Command</span> <span class="nv">$cmd</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span><span class="p">))</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nb">Write-Error</span> <span class="s2">&#34;</span><span class="nv">$cmd</span><span class="s2"> is not installed or not in PATH.&#34;</span>
-</span></span><span class="line"><span class="cl">        <span class="n">exit</span> <span class="mf">1</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c"># Initialize Git if needed</span>
-</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="o">-not</span> <span class="p">(</span><span class="nb">Test-Path</span> <span class="s2">&#34;.git&#34;</span><span class="p">))</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">Write-Host</span> <span class="s2">&#34;Initializing Git repository...&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">git</span> <span class="n">init</span>
-</span></span><span class="line"><span class="cl">    <span class="n">git</span> <span class="n">remote</span> <span class="n">add</span> <span class="n">origin</span> <span class="nv">$myrepo</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">Write-Host</span> <span class="s2">&#34;Git repository already initialized.&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="nv">$remotes</span> <span class="p">=</span> <span class="n">git</span> <span class="n">remote</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">-not</span> <span class="p">(</span><span class="nv">$remotes</span> <span class="o">-contains</span> <span class="s1">&#39;origin&#39;</span><span class="p">))</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nb">Write-Host</span> <span class="s2">&#34;Adding remote origin...&#34;</span>
-</span></span><span class="line"><span class="cl">        <span class="n">git</span> <span class="n">remote</span> <span class="n">add</span> <span class="n">origin</span> <span class="nv">$myrepo</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c"># Sync posts from Obsidian</span>
-</span></span><span class="line"><span class="cl"><span class="nb">Write-Host</span> <span class="s2">&#34;Syncing posts from Obsidian...&#34;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="o">-not</span> <span class="p">(</span><span class="nb">Test-Path</span> <span class="nv">$sourcePath</span><span class="p">))</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">Write-Error</span> <span class="s2">&#34;Source path does not exist: </span><span class="nv">$sourcePath</span><span class="s2">&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exit</span> <span class="mf">1</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="o">-not</span> <span class="p">(</span><span class="nb">Test-Path</span> <span class="nv">$destinationPath</span><span class="p">))</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">Write-Error</span> <span class="s2">&#34;Destination path does not exist: </span><span class="nv">$destinationPath</span><span class="s2">&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exit</span> <span class="mf">1</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c"># Use Robocopy to mirror the directories</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$robocopyOptions</span> <span class="p">=</span> <span class="vm">@</span><span class="p">(</span><span class="s1">&#39;/MIR&#39;</span><span class="p">,</span> <span class="s1">&#39;/Z&#39;</span><span class="p">,</span> <span class="s1">&#39;/W:5&#39;</span><span class="p">,</span> <span class="s1">&#39;/R:3&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$robocopyResult</span> <span class="p">=</span> <span class="n">robocopy</span> <span class="nv">$sourcePath</span> <span class="nv">$destinationPath</span> <span class="nv">@robocopyOptions</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="nv">$LASTEXITCODE</span> <span class="o">-ge</span> <span class="mf">8</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">Write-Error</span> <span class="s2">&#34;Robocopy failed with exit code </span><span class="nv">$LASTEXITCODE</span><span class="s2">&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exit</span> <span class="mf">1</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c"># Process Markdown files</span>
-</span></span><span class="line"><span class="cl"><span class="nb">Write-Host</span> <span class="s2">&#34;Processing image links in Markdown files...&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="o">-not</span> <span class="p">(</span><span class="nb">Test-Path</span> <span class="s2">&#34;images.py&#34;</span><span class="p">))</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">Write-Error</span> <span class="s2">&#34;Python script images.py not found.&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exit</span> <span class="mf">1</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c"># Execute the Python script</span>
-</span></span><span class="line"><span class="cl"><span class="k">try</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="p">&amp;</span> <span class="nv">$pythonCommand</span> <span class="n">images</span><span class="p">.</span><span class="py">py</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">Write-Error</span> <span class="s2">&#34;Failed to process image links.&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exit</span> <span class="mf">1</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c"># Build the Hugo site</span>
-</span></span><span class="line"><span class="cl"><span class="nb">Write-Host</span> <span class="s2">&#34;Building the Hugo site...&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="k">try</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">hugo</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">Write-Error</span> <span class="s2">&#34;Hugo build failed.&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exit</span> <span class="mf">1</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c"># Git operations</span>
-</span></span><span class="line"><span class="cl"><span class="nb">Write-Host</span> <span class="s2">&#34;Staging changes for Git...&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="n">git</span> <span class="n">add</span> <span class="p">.</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c"># Commit changes with timestamp</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$commitMessage</span> <span class="p">=</span> <span class="s2">&#34;New Blog Post on </span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyy-MM-dd HH:mm:ss&#39;</span><span class="p">)</span><span class="s2">&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="n">git</span> <span class="n">commit</span> <span class="n">-m</span> <span class="s2">&#34;</span><span class="nv">$commitMessage</span><span class="s2">&#34;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c"># Push to master branch</span>
-</span></span><span class="line"><span class="cl"><span class="nb">Write-Host</span> <span class="s2">&#34;Deploying to GitHub Master...&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="k">try</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="n">master</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">Write-Error</span> <span class="s2">&#34;Failed to push to Master branch.&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exit</span> <span class="mf">1</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c"># Deploy to Hostinger branch</span>
-</span></span><span class="line"><span class="cl"><span class="nb">Write-Host</span> <span class="s2">&#34;Deploying to GitHub Hostinger...&#34;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c"># Check if the temporary branch exists and delete it</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$branchExists</span> <span class="p">=</span> <span class="n">git</span> <span class="n">branch</span> <span class="p">-</span><span class="n">-list</span> <span class="s2">&#34;hostinger-deploy&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="nv">$branchExists</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">git</span> <span class="n">branch</span> <span class="n">-D</span> <span class="nb">hostinger-deploy</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c"># Perform subtree split</span>
-</span></span><span class="line"><span class="cl"><span class="k">try</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">git</span> <span class="n">subtree</span> <span class="n">split</span> <span class="p">-</span><span class="n">-prefix</span> <span class="n">public</span> <span class="n">-b</span> <span class="nb">hostinger-deploy</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">Write-Error</span> <span class="s2">&#34;Subtree split failed.&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exit</span> <span class="mf">1</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c"># Push to hostinger branch with force</span>
-</span></span><span class="line"><span class="cl"><span class="k">try</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="nb">hostinger-deploy</span><span class="err">:</span><span class="n">hostinger</span> <span class="p">-</span><span class="n">-force</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">Write-Error</span> <span class="s2">&#34;Failed to push to hostinger branch.&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">git</span> <span class="n">branch</span> <span class="n">-D</span> <span class="nb">hostinger-deploy</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exit</span> <span class="mf">1</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><h2 id="step-4-adding-special-features">Step 4: Adding Special Features</h2>
+<p>Use the following code to create a Python script (<code>files.py</code>) that will handle the conversion of Obsidian-style links and Dataview blocks to Hugo-compatible HTML.</p>
+<p>You will want to visit the following link and download and utilize the <code>files.py</code> there.</p>
+<div class="cardlink">
+<style>
+<pre><code>    .cardlink {
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+        background: var(--background);
+        transition: transform 0.2s;
+        display: block;
+    }
+    .cardlink:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .cardlink a {
+        text-decoration: none;
+        color: inherit;
+    }
+    .cardlink-content {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    .cardlink-text {
+        flex: 1;
+    }
+    .cardlink-title {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: var(--accent);
+        margin: 0 0 0.5rem 0;
+    }
+    .cardlink-description {
+        font-size: 0.9rem;
+        color: var(--color);
+        margin: 0;
+        opacity: 0.8;
+    }
+    .cardlink-host {
+        font-size: 0.8rem;
+        color: var(--color);
+        opacity: 0.6;
+        margin-top: 0.5rem;
+    }
+    .cardlink-image {
+        width: 160px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin: 0;
+    }
+    @media (max-width: 600px) {
+        .cardlink-content {
+            flex-direction: column;
+        }
+        .cardlink-image {
+            width: 100%;
+            height: 160px;
+            margin-top: 1rem;
+        }
+    }
+</code></pre>
+<p></style>
+<a href="https://gist.github.com/DudeThatsErin/95bd33ca27a3c169d4a90622bafbcc8a" target="_blank" rel="noopener noreferrer"></p>
+<div class="cardlink-content">
+<div class="cardlink-text">
+<h3 class="cardlink-title">Everything you need to create your own blog with Hugo!</h3>
+<p class="cardlink-description">Everything you need to create your own blog with Hugo! - files.py</p>
+<div class="cardlink-host">gist.github.com</div>
+</div>
+<img class="cardlink-image" src="https://github.githubassets.com/assets/gist-og-image-54fd7dc0713e.png" alt="Everything you need to create your own blog with Hugo!">
+</div>
+</a>
+</div>
+<h2 id="step-3-setting-up-automatic-deployment">Step 3: Setting Up Automatic Deployment</h2>
+<p>Visit this link to get the version that you need:</p>
+<div class="cardlink">
+<style>
+<pre><code>    .cardlink {
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+        background: var(--background);
+        transition: transform 0.2s;
+        display: block;
+    }
+    .cardlink:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .cardlink a {
+        text-decoration: none;
+        color: inherit;
+    }
+    .cardlink-content {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    .cardlink-text {
+        flex: 1;
+    }
+    .cardlink-title {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: var(--accent);
+        margin: 0 0 0.5rem 0;
+    }
+    .cardlink-description {
+        font-size: 0.9rem;
+        color: var(--color);
+        margin: 0;
+        opacity: 0.8;
+    }
+    .cardlink-host {
+        font-size: 0.8rem;
+        color: var(--color);
+        opacity: 0.6;
+        margin-top: 0.5rem;
+    }
+    .cardlink-image {
+        width: 160px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin: 0;
+    }
+    @media (max-width: 600px) {
+        .cardlink-content {
+            flex-direction: column;
+        }
+        .cardlink-image {
+            width: 100%;
+            height: 160px;
+            margin-top: 1rem;
+        }
+    }
+</code></pre>
+<p></style>
+<a href="https://gist.github.com/DudeThatsErin/95bd33ca27a3c169d4a90622bafbcc8a" target="_blank" rel="noopener noreferrer"></p>
+<div class="cardlink-content">
+<div class="cardlink-text">
+<h3 class="cardlink-title">Everything you need to create your own blog with Hugo!</h3>
+<p class="cardlink-description">Everything you need to create your own blog with Hugo! - files.py</p>
+<div class="cardlink-host">gist.github.com</div>
+</div>
+<img class="cardlink-image" src="https://github.githubassets.com/assets/gist-og-image-54fd7dc0713e.png" alt="Everything you need to create your own blog with Hugo!">
+</div>
+</a>
+</div>
+<h3 id="windows">Windows</h3>
+<p>Create a PowerShell script (<code>updateblog.ps1</code>) for automated deployment.</p>
+<h3 id="maclinux">Mac/Linux</h3>
+<p>Create a bash script (<code>updateblog.sh</code>) for automated deployment.</p>
+<h2 id="step-4-adding-special-features">Step 4: Adding Special Features</h2>
 <h3 id="dataview-support">Dataview Support</h3>
 <p>To support Obsidian&rsquo;s Dataview plugin in Hugo, create shortcodes in <code>layouts/shortcodes/</code>:</p>
 <ol>
@@ -881,13 +632,17 @@
 </li>
 </ol>
 <h2 id="step-6-deployment">Step 6: Deployment</h2>
+<p>Make sure the update script is placed in the root of your blog. So you if your blog is at <code>C:\user\hugo\blog</code> it will be in the <code>blog</code> folder.</p>
 <ol>
-<li>
-<p>Run the update script:</p>
+<li>Run the update script:
+<strong>Windows</strong>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="p">.\</span><span class="n">updateblog</span><span class="p">.</span><span class="py">ps1</span>
 </span></span></code></pre></div></li>
-<li>
-<p>The script will:</p>
+</ol>
+<p><strong>Mac/Linux</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">./updateblog.sh
+</span></span></code></pre></div><ol start="2">
+<li>The script will:
 <ul>
 <li>Sync your Obsidian posts</li>
 <li>Process all markdown files</li>

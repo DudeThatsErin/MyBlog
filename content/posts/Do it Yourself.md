@@ -9,6 +9,7 @@ tags:
   - python
   - obsidian
   - markdown
+  - blog
 categories:
   - tech
 draft: false
@@ -102,10 +103,9 @@ You can use this to pull from the `hostinger-deploy` branch that gets created. T
 
 ### Works with several Obsidian Plugins
 I have set up the `files.py` file to work with several plugins...
-- Dataview
-- Card Link
+- Dataview Obsidian Plugin
+- Auto Card Link Obsidian Plugin
 - Handwritten Notes - it displays PDFs inline via the browser's PDF viewer.
-- Obsidian Canvas - Can display an embedded canvas on the page.
 - Obsidian Kanban - Can display an embedded Kanban on the page.
 
 ## Prerequisites
@@ -178,427 +178,169 @@ You'll need:
 
 ## Step 2: Setting Up the Python Script
 
-Use the following code to create a Python script (`files.py`) that will handle the conversion of Obsidian-style links and Dataview blocks to Hugo-compatible HTML:
+Use the following code to create a Python script (`files.py`) that will handle the conversion of Obsidian-style links and Dataview blocks to Hugo-compatible HTML.
 
-```python
-import os
-import re
-import shutil
-import yaml
-from datetime import datetime
+You will want to visit the following link and download and utilize the `files.py` there.
+<div class="cardlink">
+<style>
 
-# Paths
-posts_dir = r"YOUR OBSIDIAN VAULT AND BLOG FOLDER"  # Update this path
-attachments_base = r"THE ATTACHMENTS FOLDER THERE"    # Update this path
-static_images_dir = r"IMAGE FOLDER INSIDE YOUR BLOG usually static\images"
-static_files_dir = r"PDF and Other Files folder usually static\files"
-
-# Ensure the target directories exist
-os.makedirs(static_images_dir, exist_ok=True)
-os.makedirs(static_files_dir, exist_ok=True)
-
-def parse_dataview_query(query_block):
-    """Parse a Dataview query block and convert it to Hugo-compatible format."""
-    print("\nProcessing Dataview query block:")
-    print(query_block)
+        .cardlink {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: var(--background);
+            transition: transform 0.2s;
+            display: block;
+        }
+        .cardlink:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .cardlink a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .cardlink-content {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+        .cardlink-text {
+            flex: 1;
+        }
+        .cardlink-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin: 0 0 0.5rem 0;
+        }
+        .cardlink-description {
+            font-size: 0.9rem;
+            color: var(--color);
+            margin: 0;
+            opacity: 0.8;
+        }
+        .cardlink-host {
+            font-size: 0.8rem;
+            color: var(--color);
+            opacity: 0.6;
+            margin-top: 0.5rem;
+        }
+        .cardlink-image {
+            width: 160px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin: 0;
+        }
+        @media (max-width: 600px) {
+            .cardlink-content {
+                flex-direction: column;
+            }
+            .cardlink-image {
+                width: 100%;
+                height: 160px;
+                margin-top: 1rem;
+            }
+        }
     
-    # Extract the query type and parameters
-    lines = [line.strip() for line in query_block.strip().split('\n')]
-    query_type = lines[0].lower()
-    print(f"Query type: {query_type}")
-    
-    # Initialize result
-    result = []
-    
-    if 'table' in query_type:
-        print("Processing TABLE query")
-        # Handle TABLE queries
-        fields = []
-        field_aliases = {}
-        data = []
-        in_data = False
-        
-        # First line might contain field definitions
-        field_line = lines[0].lower().replace('table', '').strip()
-        if field_line:
-            # Parse fields and their aliases
-            field_parts = [f.strip() for f in field_line.split(',')]
-            for part in field_parts:
-                if ' as ' in part.lower():
-                    field, alias = [p.strip().strip('"') for p in part.lower().split(' as ')]
-                    fields.append(field)
-                    field_aliases[field] = alias
-                else:
-                    fields.append(part)
-                    field_aliases[part] = part
-        
-        print(f"Fields: {fields}")
-        print(f"Aliases: {field_aliases}")
-        
-        # Process the remaining lines
-        for line in lines[1:]:
-            if not line:  # Skip empty lines
-                continue
-            print(f"Processing line: {line}")
-            if 'from' in line.lower():
-                in_data = True
-                source_folder = line.split('"')[1] if '"' in line else line.split(' ')[1]
-                print(f"Found FROM clause, source: {source_folder}")
-                # Get all markdown files in the posts directory
-                for filename in os.listdir(posts_dir):
-                    if filename.endswith('.md'):
-                        file_path = os.path.join(posts_dir, filename)
-                        row_data = []
-                        for field in fields:
-                            if 'file.name' in field:
-                                value = os.path.splitext(filename)[0]
-                            elif 'title' in field.lower():
-                                try:
-                                    with open(file_path, 'r', encoding='utf-8') as f:
-                                        content = f.read()
-                                        front_matter = re.search(r'^---\s*\n(.*?)\n\s*---', content, re.DOTALL)
-                                        if front_matter:
-                                            metadata = yaml.safe_load(front_matter.group(1))
-                                            value = metadata.get('title', os.path.splitext(filename)[0])
-                                        else:
-                                            value = os.path.splitext(filename)[0]
-                                except Exception as e:
-                                    print(f"Error getting title: {e}")
-                                    value = os.path.splitext(filename)[0]
-                            elif 'url' in field.lower() or 'file.path' in field.lower():
-                                value = f"/blog/{get_file_url(os.path.splitext(filename)[0])}"
-                            elif 'date' in field:
-                                try:
-                                    with open(file_path, 'r', encoding='utf-8') as f:
-                                        content = f.read()
-                                        front_matter = re.search(r'^---\s*\n(.*?)\n\s*---', content, re.DOTALL)
-                                        if front_matter:
-                                            metadata = yaml.safe_load(front_matter.group(1))
-                                            value = metadata.get('date', '')
-                                        else:
-                                            value = ''
-                                except Exception as e:
-                                    print(f"Error getting date: {e}")
-                                    value = ''
-                            elif 'tags' in field:
-                                try:
-                                    with open(file_path, 'r', encoding='utf-8') as f:
-                                        content = f.read()
-                                        front_matter = re.search(r'^---\s*\n(.*?)\n\s*---', content, re.DOTALL)
-                                        if front_matter:
-                                            metadata = yaml.safe_load(front_matter.group(1))
-                                            tags = metadata.get('tags', [])
-                                            value = ', '.join(tags)
-                                        else:
-                                            value = ''
-                                except Exception as e:
-                                    print(f"Error getting tags: {e}")
-                                    value = ''
-                            else:
-                                value = ''
-                            row_data.append(value)
-                            print(f"Field {field}: {value}")
-                        
-                        if row_data:
-                            data.append(row_data)
-                            print(f"Added row: {row_data}")
-                continue
-            
-            if 'where' in line.lower() or 'sort' in line.lower():
-                print(f"Skipping {line}")
-                continue
-        
-        if fields:
-            # Generate HTML table with styling
-            html = ['<div class="dataview-table">']
-            html.append('<style>')
-            html.append('''
-                .dataview-table {
-                    margin: 2rem 0;
-                    overflow-x: auto;
-                }
-                .dataview-table table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin: 0;
-                    font-size: 0.95rem;
-                    background: var(--background);
-                }
-                .dataview-table th {
-                    background-color: var(--accent);
-                    color: var(--background);
-                    padding: 0.75rem 1rem;
-                    text-align: left;
-                    font-weight: bold;
-                    border-bottom: 2px solid var(--border-color);
-                }
-                .dataview-table td {
-                    padding: 0.75rem 1rem;
-                    border-bottom: 1px solid var(--border-color);
-                    vertical-align: top;
-                }
-                .dataview-table tr:hover {
-                    background-color: var(--hover);
-                }
-                .dataview-table tr:last-child td {
-                    border-bottom: none;
-                }
-                .dataview-table a {
-                    color: var(--accent);
-                    text-decoration: none;
-                }
-                .dataview-table a:hover {
-                    text-decoration: underline;
-                }
-                @media (max-width: 768px) {
-                    .dataview-table {
-                        margin: 1rem -1rem;
-                        width: calc(100% + 2rem);
-                    }
-                    .dataview-table th,
-                    .dataview-table td {
-                        padding: 0.5rem;
-                    }
-                }
-            ''')
-            html.append('</style>')
-            html.append('<table>')
-            
-            # Add headers
-            header_names = [field_aliases.get(field, field).title() for field in fields]
-            html.append('<thead><tr>')
-            for header in header_names:
-                html.append(f'<th>{header}</th>')
-            html.append('</tr></thead>')
-            
-            # Add data rows
-            html.append('<tbody>')
-            for row in data:
-                html.append('<tr>')
-                for i, cell in enumerate(row):
-                    if 'url' in fields[i].lower() or 'file.path' in fields[i].lower():
-                        html.append(f'<td><a href="{cell}">{cell}</a></td>')
-                    else:
-                        html.append(f'<td>{cell}</td>')
-                html.append('</tr>')
-            html.append('</tbody>')
-            
-            html.append('</table>')
-            html.append('</div>')
-            
-            result = '\n'.join(html)
-            print("\nGenerated HTML table:")
-            print(result)
-    
-    elif 'list' in query_type:
-        # List processing code here (similar structure to table)
-        pass
-    
-    return result
-
-def process_dataview(content):
-    """Find and process Dataview code blocks."""
-    print("\nLooking for Dataview blocks in content...")
-    dataview_pattern = r'(?:^|\n)[ \t]*```+[ \t]*dataview[ \t]*\n(.*?)\n[ \t]*```+[ \t]*(?:\n|$)'
-    matches = re.finditer(dataview_pattern, content, flags=re.DOTALL)
-    match_count = 0
-    
-    def replace_dataview(match):
-        nonlocal match_count
-        match_count += 1
-        print(f"\nProcessing Dataview block #{match_count}")
-        query_block = match.group(1).strip()
-        result = parse_dataview_query(query_block)
-        print(f"Replacing Dataview block with: {result}")
-        return f"\n{result}\n"
-    
-    processed_content = re.sub(dataview_pattern, replace_dataview, content, flags=re.DOTALL)
-    if match_count == 0:
-        print("No Dataview blocks found in content")
-        print("Content preview:")
-        print(content[:500])
-    else:
-        print(f"Processed {match_count} Dataview blocks")
-    
-    return processed_content
-
-def get_file_url(filename):
-    """Get the URL-friendly version of a filename."""
-    base_name = filename.replace('.md', '')
-    return base_name.lower().replace(' ', '-')
-
-def clean_filename(filename):
-    """Extract the actual filename from Obsidian path and remove alias."""
-    filename = filename.split('/')[-1]
-    filename = filename.split('|')[0]
-    return filename
-
-# Process each markdown file
-for filename in os.listdir(posts_dir):
-    if filename.endswith(".md"):
-        filepath = os.path.join(posts_dir, filename)
-        print(f"\nProcessing file: {filename}")
-
-        with open(filepath, "r", encoding="utf-8") as file:
-            content = file.read()
-
-        # Process Dataview blocks
-        content = process_dataview(content)
-
-        # Handle internal links and media files
-        # ... (additional processing code)
-
-        with open(filepath, "w", encoding="utf-8") as file:
-            file.write(content)
-
-print("\nAll files processed successfully!")
-```
+</style>
+<a href="https://gist.github.com/DudeThatsErin/95bd33ca27a3c169d4a90622bafbcc8a" target="_blank" rel="noopener noreferrer">
+<div class="cardlink-content">
+<div class="cardlink-text">
+<h3 class="cardlink-title">Everything you need to create your own blog with Hugo!</h3>
+<p class="cardlink-description">Everything you need to create your own blog with Hugo! - files.py</p>
+<div class="cardlink-host">gist.github.com</div>
+</div>
+<img class="cardlink-image" src="https://github.githubassets.com/assets/gist-og-image-54fd7dc0713e.png" alt="Everything you need to create your own blog with Hugo!">
+</div>
+</a>
+</div>
 
 ## Step 3: Setting Up Automatic Deployment
+Visit this link to get the version that you need:
+<div class="cardlink">
+<style>
 
-Create a PowerShell script (`updateblog.ps1`) for automated deployment:
+        .cardlink {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: var(--background);
+            transition: transform 0.2s;
+            display: block;
+        }
+        .cardlink:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .cardlink a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .cardlink-content {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+        .cardlink-text {
+            flex: 1;
+        }
+        .cardlink-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin: 0 0 0.5rem 0;
+        }
+        .cardlink-description {
+            font-size: 0.9rem;
+            color: var(--color);
+            margin: 0;
+            opacity: 0.8;
+        }
+        .cardlink-host {
+            font-size: 0.8rem;
+            color: var(--color);
+            opacity: 0.6;
+            margin-top: 0.5rem;
+        }
+        .cardlink-image {
+            width: 160px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin: 0;
+        }
+        @media (max-width: 600px) {
+            .cardlink-content {
+                flex-direction: column;
+            }
+            .cardlink-image {
+                width: 100%;
+                height: 160px;
+                margin-top: 1rem;
+            }
+        }
+    
+</style>
+<a href="https://gist.github.com/DudeThatsErin/95bd33ca27a3c169d4a90622bafbcc8a" target="_blank" rel="noopener noreferrer">
+<div class="cardlink-content">
+<div class="cardlink-text">
+<h3 class="cardlink-title">Everything you need to create your own blog with Hugo!</h3>
+<p class="cardlink-description">Everything you need to create your own blog with Hugo! - files.py</p>
+<div class="cardlink-host">gist.github.com</div>
+</div>
+<img class="cardlink-image" src="https://github.githubassets.com/assets/gist-og-image-54fd7dc0713e.png" alt="Everything you need to create your own blog with Hugo!">
+</div>
+</a>
+</div>
 
-```powershell
-# PowerShell Script for Windows
-
-# Set variables for Obsidian to Hugo copy
-$sourcePath = "YOUR OBSIDIAN VAULT BLOG FOLDER"  # Update this path
-$destinationPath = "Your blog folder usually \content\posts"  # Update this path
-
-# Set Github repo
-$myrepo = "git@github.com:YOURUSERNAME\YOURREPO.git"  # Update this to your repo
-
-# Set error handling
-$ErrorActionPreference = "Stop"
-Set-StrictMode -Version Latest
-
-# Change to the script's directory
-$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
-Set-Location $ScriptDir
-
-# Check for required commands
-$requiredCommands = @('git', 'hugo')
-
-# Check for Python command
-if (Get-Command 'python' -ErrorAction SilentlyContinue) {
-    $pythonCommand = 'python'
-} elseif (Get-Command 'python3' -ErrorAction SilentlyContinue) {
-    $pythonCommand = 'python3'
-} else {
-    Write-Error "Python is not installed or not in PATH."
-    exit 1
-}
-
-foreach ($cmd in $requiredCommands) {
-    if (-not (Get-Command $cmd -ErrorAction SilentlyContinue)) {
-        Write-Error "$cmd is not installed or not in PATH."
-        exit 1
-    }
-}
-
-# Initialize Git if needed
-if (-not (Test-Path ".git")) {
-    Write-Host "Initializing Git repository..."
-    git init
-    git remote add origin $myrepo
-} else {
-    Write-Host "Git repository already initialized."
-    $remotes = git remote
-    if (-not ($remotes -contains 'origin')) {
-        Write-Host "Adding remote origin..."
-        git remote add origin $myrepo
-    }
-}
-
-# Sync posts from Obsidian
-Write-Host "Syncing posts from Obsidian..."
-
-if (-not (Test-Path $sourcePath)) {
-    Write-Error "Source path does not exist: $sourcePath"
-    exit 1
-}
-
-if (-not (Test-Path $destinationPath)) {
-    Write-Error "Destination path does not exist: $destinationPath"
-    exit 1
-}
-
-# Use Robocopy to mirror the directories
-$robocopyOptions = @('/MIR', '/Z', '/W:5', '/R:3')
-$robocopyResult = robocopy $sourcePath $destinationPath @robocopyOptions
-
-if ($LASTEXITCODE -ge 8) {
-    Write-Error "Robocopy failed with exit code $LASTEXITCODE"
-    exit 1
-}
-
-# Process Markdown files
-Write-Host "Processing image links in Markdown files..."
-if (-not (Test-Path "images.py")) {
-    Write-Error "Python script images.py not found."
-    exit 1
-}
-
-# Execute the Python script
-try {
-    & $pythonCommand images.py
-} catch {
-    Write-Error "Failed to process image links."
-    exit 1
-}
-
-# Build the Hugo site
-Write-Host "Building the Hugo site..."
-try {
-    hugo
-} catch {
-    Write-Error "Hugo build failed."
-    exit 1
-}
-
-# Git operations
-Write-Host "Staging changes for Git..."
-git add .
-
-# Commit changes with timestamp
-$commitMessage = "New Blog Post on $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
-git commit -m "$commitMessage"
-
-# Push to master branch
-Write-Host "Deploying to GitHub Master..."
-try {
-    git push origin master
-} catch {
-    Write-Error "Failed to push to Master branch."
-    exit 1
-}
-
-# Deploy to Hostinger branch
-Write-Host "Deploying to GitHub Hostinger..."
-
-# Check if the temporary branch exists and delete it
-$branchExists = git branch --list "hostinger-deploy"
-if ($branchExists) {
-    git branch -D hostinger-deploy
-}
-
-# Perform subtree split
-try {
-    git subtree split --prefix public -b hostinger-deploy
-} catch {
-    Write-Error "Subtree split failed."
-    exit 1
-}
-
-# Push to hostinger branch with force
-try {
-    git push origin hostinger-deploy:hostinger --force
-} catch {
-    Write-Error "Failed to push to hostinger branch."
-    git branch -D hostinger-deploy
-    exit 1
-}
-```
+### Windows
+Create a PowerShell script (`updateblog.ps1`) for automated deployment.
+### Mac/Linux
+Create a bash script (`updateblog.sh`) for automated deployment.
 ## Step 4: Adding Special Features
 
 ### Dataview Support
@@ -721,12 +463,17 @@ Create a shortcode for PDF embedding (`layouts/shortcodes/pdf.html`):
 4. Add images and PDFs using Obsidian's syntax: `![[image.jpg]]` or `![[document.pdf]]`
 
 ## Step 6: Deployment
+Make sure the update script is placed in the root of your blog. So you if your blog is at `C:\user\hugo\blog` it will be in the `blog` folder.
 
 1. Run the update script:
+**Windows**
    ```powershell
    .\updateblog.ps1
    ```
-
+**Mac/Linux**
+```bash
+./updateblog.sh
+```
 2. The script will:
    - Sync your Obsidian posts
    - Process all markdown files
