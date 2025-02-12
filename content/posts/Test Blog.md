@@ -16,7 +16,7 @@ permalink: posts/test-blog
 ---
 # Test Blog
 More Stuff
-[My Test Blog Post #2](/blog/test-blog-2)
+[[Test Blog 2]]
 
 **Bold**
 *italic*
@@ -37,10 +37,10 @@ Random Text
 `inline code` random text here next to it.
 
 ## Image - h2
-![](/blog/images/IMG-20250210021231096.jpeg)
+![[IMG-20250210021231096.jpeg]]
 ### PDF - h3
-![src3](/blog/images/IMG-20250210021231508.pdf)
+![[IMG-20250210021231508.pdf|src3]]
 
 ## Kanban - h2
 
-![embed](/blog/images/Untitled Kanban.md)
+![[Untitled Kanban.md|embed]]

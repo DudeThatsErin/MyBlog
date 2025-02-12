@@ -753,7 +753,10 @@ def process_image_link(match, post_name):
 
 def process_pdf_link(match, post_name):
     """Process a PDF link and return the updated markdown."""
-    pdf_path = match.group(1)
+    if '|' in match.group(0):  # Wiki-link format
+        pdf_path = match.group(1)
+    else:  # Standard markdown format
+        pdf_path = match.group(2) if len(match.groups()) > 1 else match.group(1)
     
     # Clean up the PDF path
     pdf_path = clean_filename(pdf_path)
@@ -773,64 +776,65 @@ def process_pdf_link(match, post_name):
                 return f'{{{{< pdf src="{new_path}" >}}}}'
     
     print(f"Warning: PDF not found: {pdf_path}")
-    return match.group(0)  # Return original if PDF not found
+    return match.group(0)
 
 def process_embedded_files(content, base_name):
     """Process embedded files including Kanban boards, images, and PDFs."""
     print("\nChecking content for embedded files...")
     
-    # Process images
+    # Process PDFs first
+    pdf_patterns = [
+        r'\[\[(.*?\.pdf)(?:\|(.*?))?\]\]',  # Wiki-link format [[file.pdf]]
+        r'!\[(.*?)\]\((.*?\.pdf)\)'         # Standard markdown format ![alt](file.pdf)
+    ]
+    
+    for pattern in pdf_patterns:
+        content = re.sub(pattern, lambda m: process_pdf_link(m, base_name), content)
+    
+    # Process Kanban files
+    kanban_patterns = [
+        r'!\[embed\]\((.*?\.md)\)',         # ![embed](file.md)
+        r'!\[\[(.*?\.md)(?:\|embed)?\]\]'   # ![[file.md]] or ![[file.md|embed]]
+    ]
+    
+    for pattern in kanban_patterns:
+        content = re.sub(pattern, lambda m: process_kanban_link(m, base_name), content)
+    
+    # Process regular images last
     image_pattern = r'!\[\[(.*?)(?:\|(.*?))?\]\]|!\[(.*?)\]\((.*?)\)'
     content = re.sub(image_pattern, lambda m: process_image_link(m, base_name), content)
     
-    # Process PDFs
-    pdf_pattern = r'\[\[(.*?\.pdf)(?:\|.*?)?\]\]'
-    content = re.sub(pdf_pattern, lambda m: process_pdf_link(m, base_name), content)
-    
-    # Process Kanban files
-    embed_pattern = r'!\[\[(.*?\.md)(?:\|([^]]*)?)?\]\]'
-    matches = list(re.finditer(embed_pattern, content, re.IGNORECASE))
-    
-    for match in matches:
-        file_path = match.group(1)
-        is_embed = match.group(2) == 'embed' if match.group(2) else True
-        file_name = clean_filename(file_path)
-        
-        # Try multiple possible locations for the file
-        possible_sources = [
-            os.path.join(get_post_attachments_dir(base_name), file_name),
-            os.path.join(attachments_base, file_name),
-            os.path.join(posts_dir, file_name),
-            os.path.join(attachments_base, base_name, file_name)
-        ]
-        
-        file_found = False
-        for file_source in possible_sources:
-            if os.path.exists(file_source):
-                try:
-                    with open(file_source, 'r', encoding='utf-8') as f:
-                        file_content = f.read()
-                    
-                    if is_embed and is_kanban_file(file_content):
-                        html = parse_kanban(file_content)
-                        content = content.replace(match.group(0), html)
-                    elif not is_embed:
-                        # Generate link to separate note
-                        title = os.path.splitext(file_name)[0]
-                        url = get_file_url(title)
-                        markdown_link = f'[{title}](/blog/{url})'
-                        content = content.replace(match.group(0), markdown_link)
-                    
-                    file_found = True
-                    break
-                except Exception as e:
-                    print(f"Error processing file {file_name}: {e}")
-                    traceback.print_exc()
-        
-        if not file_found:
-            print(f"Warning: File not found: {file_name}")
-    
     return content
+
+def process_kanban_link(match, base_name):
+    """Process a Kanban link and return the HTML content."""
+    file_path = match.group(1)
+    file_name = clean_filename(file_path)
+    
+    # Try multiple possible locations for the file
+    possible_sources = [
+        os.path.join(get_post_attachments_dir(base_name), file_name),
+        os.path.join(attachments_base, file_name),
+        os.path.join(posts_dir, file_name),
+        os.path.join(attachments_base, base_name, file_name)
+    ]
+    
+    for file_source in possible_sources:
+        if os.path.exists(file_source):
+            try:
+                with open(file_source, 'r', encoding='utf-8') as f:
+                    file_content = f.read()
+                
+                if is_kanban_file(file_content):
+                    return parse_kanban(file_content)
+                else:
+                    print(f"Warning: File {file_name} exists but is not a Kanban board")
+            except Exception as e:
+                print(f"Error processing Kanban file {file_name}: {e}")
+                traceback.print_exc()
+    
+    print(f"Warning: Kanban file not found: {file_name}")
+    return match.group(0)
 
 # Update the main file processing loop
 for filename in os.listdir(posts_dir):

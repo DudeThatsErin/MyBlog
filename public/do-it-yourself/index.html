@@ -220,82 +220,13 @@
     <h1 id="create-your-own-blog-from-markdown">Create your own blog from Markdown!</h1>
 <p>Want to create a blog that seamlessly integrates with Obsidian and automatically deploys your content? In this tutorial, I&rsquo;ll show you how I built my blog using Hugo, Python, and Obsidian, complete with automatic deployment and special features like Dataview table conversion.</p>
 <p>I am hosting this on <a href="https://www.hostinger.com/cart?product=hosting%3Ahostinger_premium&amp;period=48&amp;referral_type=cart_link&amp;REFERRALCODE=2HCANGELIPNL&amp;referral_id=0194ef35-616c-70e9-afcf-90b7e3f6463b">Hostinger</a> to host my blog and portfolio online and I highly recommend it for the price and convenience. I utilize their Git Deployments to automatically pull the necessary files from my private repo so I can publish them on this website seamlessly and make quick edits from anywhere.</p>
-<div class="cardlink">
-<style>
-<pre><code>    .cardlink {
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 1rem;
-        margin: 1rem 0;
-        background: var(--background);
-        transition: transform 0.2s;
-        display: block;
-    }
-    .cardlink:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .cardlink a {
-        text-decoration: none;
-        color: inherit;
-    }
-    .cardlink-content {
-        display: flex;
-        gap: 1rem;
-        align-items: flex-start;
-    }
-    .cardlink-text {
-        flex: 1;
-    }
-    .cardlink-title {
-        font-size: 1.1rem;
-        font-weight: bold;
-        color: var(--accent);
-        margin: 0 0 0.5rem 0;
-    }
-    .cardlink-description {
-        font-size: 0.9rem;
-        color: var(--color);
-        margin: 0;
-        opacity: 0.8;
-    }
-    .cardlink-host {
-        font-size: 0.8rem;
-        color: var(--color);
-        opacity: 0.6;
-        margin-top: 0.5rem;
-    }
-    .cardlink-image {
-        width: 160px;
-        height: 120px;
-        object-fit: cover;
-        border-radius: 4px;
-        margin: 0;
-    }
-    @media (max-width: 600px) {
-        .cardlink-content {
-            flex-direction: column;
-        }
-        .cardlink-image {
-            width: 100%;
-            height: 160px;
-            margin-top: 1rem;
-        }
-    }
-</code></pre>
-<p></style>
-<a href="https://support.hostinger.com/en/articles/1583302-how-to-deploy-a-git-repository" target="_blank" rel="noopener noreferrer"></p>
-<div class="cardlink-content">
-<div class="cardlink-text">
-<h3 class="cardlink-title">How to Deploy a Git Repository | Hostinger Help Center</h3>
-<p class="cardlink-description">Deploying and managing git repositories using Hostinger’s hPanel</p>
-<div class="cardlink-host">support.hostinger.com</div>
-</div>
-<img class="cardlink-image" src="https://downloads.intercomcdn.com/i/o/288430/865baa10d93939db2c24769a/a0572934395627b730f28e221c3901a2.jpg" alt="How to Deploy a Git Repository | Hostinger Help Center">
-</div>
-</a>
-</div>
-<p>You can use this to pull from the <code>hostinger-deploy</code> branch that gets created. That is the branch you will want to push to whatever web hosting you use to display your site online similar to this one.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">url</span><span class="p">:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">support</span><span class="o">.</span><span class="n">hostinger</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">en</span><span class="o">/</span><span class="n">articles</span><span class="o">/</span><span class="mi">1583302</span><span class="o">-</span><span class="n">how</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">deploy</span><span class="o">-</span><span class="n">a</span><span class="o">-</span><span class="n">git</span><span class="o">-</span><span class="n">repository</span>
+</span></span><span class="line"><span class="cl"><span class="n">title</span><span class="p">:</span> <span class="s2">&#34;How to Deploy a Git Repository | Hostinger Help Center&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">description</span><span class="p">:</span> <span class="s2">&#34;Deploying and managing git repositories using Hostinger’s hPanel&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">host</span><span class="p">:</span> <span class="n">support</span><span class="o">.</span><span class="n">hostinger</span><span class="o">.</span><span class="n">com</span>
+</span></span><span class="line"><span class="cl"><span class="n">favicon</span><span class="p">:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">intercom</span><span class="o">.</span><span class="n">help</span><span class="o">/</span><span class="n">hostinger</span><span class="o">-</span><span class="n">global</span><span class="o">/</span><span class="n">assets</span><span class="o">/</span><span class="n">favicon</span>
+</span></span><span class="line"><span class="cl"><span class="n">image</span><span class="p">:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">downloads</span><span class="o">.</span><span class="n">intercomcdn</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">i</span><span class="o">/</span><span class="n">o</span><span class="o">/</span><span class="mi">288430</span><span class="o">/</span><span class="mi">865</span><span class="n">baa10d93939db2c24769a</span><span class="o">/</span><span class="n">a0572934395627b730f28e221c3901a2</span><span class="o">.</span><span class="n">jpg</span>
+</span></span></code></pre></div><p>You can use this to pull from the <code>hostinger-deploy</code> branch that gets created. That is the branch you will want to push to whatever web hosting you use to display your site online similar to this one.</p>
 <h3 id="works-with-several-obsidian-plugins">Works with several Obsidian Plugins</h3>
 <p>I have set up the <code>files.py</code> file to work with several plugins&hellip;</p>
 <ul>
@@ -373,159 +304,21 @@
 <h2 id="step-2-setting-up-the-python-script">Step 2: Setting Up the Python Script</h2>
 <p>Use the following code to create a Python script (<code>files.py</code>) that will handle the conversion of Obsidian-style links and Dataview blocks to Hugo-compatible HTML.</p>
 <p>You will want to visit the following link and download and utilize the <code>files.py</code> there.</p>
-<div class="cardlink">
-<style>
-<pre><code>    .cardlink {
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 1rem;
-        margin: 1rem 0;
-        background: var(--background);
-        transition: transform 0.2s;
-        display: block;
-    }
-    .cardlink:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .cardlink a {
-        text-decoration: none;
-        color: inherit;
-    }
-    .cardlink-content {
-        display: flex;
-        gap: 1rem;
-        align-items: flex-start;
-    }
-    .cardlink-text {
-        flex: 1;
-    }
-    .cardlink-title {
-        font-size: 1.1rem;
-        font-weight: bold;
-        color: var(--accent);
-        margin: 0 0 0.5rem 0;
-    }
-    .cardlink-description {
-        font-size: 0.9rem;
-        color: var(--color);
-        margin: 0;
-        opacity: 0.8;
-    }
-    .cardlink-host {
-        font-size: 0.8rem;
-        color: var(--color);
-        opacity: 0.6;
-        margin-top: 0.5rem;
-    }
-    .cardlink-image {
-        width: 160px;
-        height: 120px;
-        object-fit: cover;
-        border-radius: 4px;
-        margin: 0;
-    }
-    @media (max-width: 600px) {
-        .cardlink-content {
-            flex-direction: column;
-        }
-        .cardlink-image {
-            width: 100%;
-            height: 160px;
-            margin-top: 1rem;
-        }
-    }
-</code></pre>
-<p></style>
-<a href="https://gist.github.com/DudeThatsErin/95bd33ca27a3c169d4a90622bafbcc8a" target="_blank" rel="noopener noreferrer"></p>
-<div class="cardlink-content">
-<div class="cardlink-text">
-<h3 class="cardlink-title">Everything you need to create your own blog with Hugo!</h3>
-<p class="cardlink-description">Everything you need to create your own blog with Hugo! - files.py</p>
-<div class="cardlink-host">gist.github.com</div>
-</div>
-<img class="cardlink-image" src="https://github.githubassets.com/assets/gist-og-image-54fd7dc0713e.png" alt="Everything you need to create your own blog with Hugo!">
-</div>
-</a>
-</div>
-<h2 id="step-3-setting-up-automatic-deployment">Step 3: Setting Up Automatic Deployment</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">url: https://gist.github.com/DudeThatsErin/95bd33ca27a3c169d4a90622bafbcc8a
+</span></span><span class="line"><span class="cl">title: &#34;Everything you need to create your own blog with Hugo!&#34;
+</span></span><span class="line"><span class="cl">description: &#34;Everything you need to create your own blog with Hugo! - files.py&#34;
+</span></span><span class="line"><span class="cl">host: gist.github.com
+</span></span><span class="line"><span class="cl">favicon: https://github.githubassets.com/favicons/favicon.svg
+</span></span><span class="line"><span class="cl">image: https://github.githubassets.com/assets/gist-og-image-54fd7dc0713e.png
+</span></span></code></pre></div><h2 id="step-3-setting-up-automatic-deployment">Step 3: Setting Up Automatic Deployment</h2>
 <p>Visit this link to get the version that you need:</p>
-<div class="cardlink">
-<style>
-<pre><code>    .cardlink {
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 1rem;
-        margin: 1rem 0;
-        background: var(--background);
-        transition: transform 0.2s;
-        display: block;
-    }
-    .cardlink:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .cardlink a {
-        text-decoration: none;
-        color: inherit;
-    }
-    .cardlink-content {
-        display: flex;
-        gap: 1rem;
-        align-items: flex-start;
-    }
-    .cardlink-text {
-        flex: 1;
-    }
-    .cardlink-title {
-        font-size: 1.1rem;
-        font-weight: bold;
-        color: var(--accent);
-        margin: 0 0 0.5rem 0;
-    }
-    .cardlink-description {
-        font-size: 0.9rem;
-        color: var(--color);
-        margin: 0;
-        opacity: 0.8;
-    }
-    .cardlink-host {
-        font-size: 0.8rem;
-        color: var(--color);
-        opacity: 0.6;
-        margin-top: 0.5rem;
-    }
-    .cardlink-image {
-        width: 160px;
-        height: 120px;
-        object-fit: cover;
-        border-radius: 4px;
-        margin: 0;
-    }
-    @media (max-width: 600px) {
-        .cardlink-content {
-            flex-direction: column;
-        }
-        .cardlink-image {
-            width: 100%;
-            height: 160px;
-            margin-top: 1rem;
-        }
-    }
-</code></pre>
-<p></style>
-<a href="https://gist.github.com/DudeThatsErin/95bd33ca27a3c169d4a90622bafbcc8a" target="_blank" rel="noopener noreferrer"></p>
-<div class="cardlink-content">
-<div class="cardlink-text">
-<h3 class="cardlink-title">Everything you need to create your own blog with Hugo!</h3>
-<p class="cardlink-description">Everything you need to create your own blog with Hugo! - files.py</p>
-<div class="cardlink-host">gist.github.com</div>
-</div>
-<img class="cardlink-image" src="https://github.githubassets.com/assets/gist-og-image-54fd7dc0713e.png" alt="Everything you need to create your own blog with Hugo!">
-</div>
-</a>
-</div>
-<h3 id="windows">Windows</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">url: https://gist.github.com/DudeThatsErin/95bd33ca27a3c169d4a90622bafbcc8a
+</span></span><span class="line"><span class="cl">title: &#34;Everything you need to create your own blog with Hugo!&#34;
+</span></span><span class="line"><span class="cl">description: &#34;Everything you need to create your own blog with Hugo! - files.py&#34;
+</span></span><span class="line"><span class="cl">host: gist.github.com
+</span></span><span class="line"><span class="cl">favicon: https://github.githubassets.com/favicons/favicon.svg
+</span></span><span class="line"><span class="cl">image: https://github.githubassets.com/assets/gist-og-image-54fd7dc0713e.png
+</span></span></code></pre></div><h3 id="windows">Windows</h3>
 <p>Create a PowerShell script (<code>updateblog.ps1</code>) for automated deployment.</p>
 <h3 id="maclinux">Mac/Linux</h3>
 <p>Create a bash script (<code>updateblog.sh</code>) for automated deployment.</p>
