@@ -6,6 +6,9 @@ set -e
 # Set variables for Obsidian to Hugo copy
 SOURCE_PATH="$HOME/Obsidian/MyVault/Blogs"  # Update this path to match your Obsidian vault location
 DESTINATION_PATH="$PWD/content/posts"
+ATTACHMENTS_BASE="$HOME/Obsidian/MyVault/90-Attachments/Blogs"  # Path to attachments
+STATIC_IMAGES_DIR="$PWD/static/images"
+STATIC_FILES_DIR="$PWD/static/files"
 MYREPO="git@github.com:DudeThatsErin/MyBlog.git"
 
 # Change to the script's directory
@@ -32,7 +35,12 @@ else
     fi
 fi
 
-# Step 2: Sync posts from Obsidian to Hugo content folder
+# Step 2: Ensure static directories exist
+echo "Creating static directories if they don't exist..."
+mkdir -p "$STATIC_IMAGES_DIR"
+mkdir -p "$STATIC_FILES_DIR"
+
+# Step 3: Sync posts from Obsidian to Hugo content folder
 echo "Syncing posts from Obsidian..."
 
 if [ ! -d "$SOURCE_PATH" ]; then
@@ -48,7 +56,7 @@ fi
 # Use rsync for directory synchronization
 rsync -av --delete "$SOURCE_PATH/" "$DESTINATION_PATH/"
 
-# Step 3: Process Markdown files with Python script
+# Step 4: Process Markdown files with Python script
 echo "Processing image links in Markdown files..."
 if [ ! -f "images.py" ]; then
     echo "Error: Python script images.py not found."
@@ -56,13 +64,14 @@ if [ ! -f "images.py" ]; then
 fi
 
 # Execute the Python script
+export ATTACHMENTS_BASE
 python3 images.py
 
-# Step 4: Build the Hugo site
+# Step 5: Build the Hugo site
 echo "Building the Hugo site..."
 hugo
 
-# Step 5: Add changes to Git
+# Step 6: Add changes to Git
 echo "Staging changes for Git..."
 if [ -n "$(git status --porcelain)" ]; then
     git add .
@@ -70,7 +79,7 @@ else
     echo "No changes to stage."
 fi
 
-# Step 6: Commit changes with a dynamic message
+# Step 7: Commit changes with a dynamic message
 COMMIT_MESSAGE="New Blog Post on $(date '+%Y-%m-%d %H:%M:%S')"
 if [ -n "$(git diff --cached --name-only)" ]; then
     echo "Committing changes..."
@@ -79,14 +88,14 @@ else
     echo "No changes to commit."
 fi
 
-# Step 7: Push all changes to the main branch
+# Step 8: Push all changes to the main branch
 echo "Deploying to GitHub Master..."
 git push origin master || {
     echo "Failed to push to Master branch."
     exit 1
 }
 
-# Step 8: Push the public folder to the hostinger branch
+# Step 9: Push the public folder to the hostinger branch
 echo "Deploying to GitHub Hostinger..."
 
 # Check if the temporary branch exists and delete it

@@ -1,12 +1,13 @@
 import os
 import re
 import yaml
+import shutil
 from datetime import datetime
 import traceback
 
 # Paths
 posts_dir = r"F:\repos\CURRENTBLOG\erinblog-1\content\posts"
-attachments_base = r"E:\Obs\MyVault\90-Attachments\Blogs"  # Updated base attachments path
+attachments_base = os.getenv('ATTACHMENTS_BASE', r"E:\Obs\MyVault\90-Attachments\Blogs")  # Get from environment or use default
 static_images_dir = r"F:\repos\CURRENTBLOG\erinblog-1\static\images"
 static_files_dir = r"F:\repos\CURRENTBLOG\erinblog-1\static\files"
 
@@ -706,92 +707,117 @@ def is_kanban_file(content):
         pass
     return False
 
-def process_embedded_files(content, base_name):
-    """Process embedded Kanban files."""
-    print("\nChecking content for embedded files...")
-    print(f"Content preview: {content[:200]}...")  # Debug: Show content preview
+def copy_file_to_static(source_file, is_image=True):
+    """Copy a file to the appropriate static directory and return the new path."""
+    try:
+        # Determine target directory based on file type
+        target_dir = static_images_dir if is_image else static_files_dir
+        
+        # Get the filename and create target path
+        filename = os.path.basename(source_file)
+        target_path = os.path.join(target_dir, filename)
+        
+        # Copy the file
+        shutil.copy2(source_file, target_path)
+        
+        # Return the path relative to the static directory
+        return f"/blog/{'images' if is_image else 'files'}/{filename}"
+    except Exception as e:
+        print(f"Error copying file {source_file}: {e}")
+        return None
+
+def process_image_link(match, post_name):
+    """Process an image link and return the updated markdown."""
+    image_path = match.group(1)
+    alt_text = match.group(2) if match.group(2) else ""
     
-    # Pattern for embedded files: ![[filename.extension|embed]] or ![[filename.extension]]
-    embed_pattern = r'!\[\[(.*?(?:\.md))(?:\|([^]]*)?)?\]\]'
+    # Clean up the image path
+    image_path = clean_filename(image_path)
+    
+    # Try multiple possible locations for the image
+    possible_sources = [
+        os.path.join(get_post_attachments_dir(post_name), image_path),
+        os.path.join(attachments_base, image_path),
+        os.path.join(attachments_base, post_name, image_path)
+    ]
+    
+    for source in possible_sources:
+        if os.path.exists(source):
+            # Copy the image to static directory and get new path
+            new_path = copy_file_to_static(source, is_image=True)
+            if new_path:
+                return f"![{alt_text}]({new_path})"
+    
+    print(f"Warning: Image not found: {image_path}")
+    return match.group(0)  # Return original if image not found
+
+def process_pdf_link(match, post_name):
+    """Process a PDF link and return the updated markdown."""
+    pdf_path = match.group(1)
+    
+    # Clean up the PDF path
+    pdf_path = clean_filename(pdf_path)
+    
+    # Try multiple possible locations for the PDF
+    possible_sources = [
+        os.path.join(get_post_attachments_dir(post_name), pdf_path),
+        os.path.join(attachments_base, pdf_path),
+        os.path.join(attachments_base, post_name, pdf_path)
+    ]
+    
+    for source in possible_sources:
+        if os.path.exists(source):
+            # Copy the PDF to static directory and get new path
+            new_path = copy_file_to_static(source, is_image=False)
+            if new_path:
+                return f'{{{{< pdf src="{new_path}" >}}}}'
+    
+    print(f"Warning: PDF not found: {pdf_path}")
+    return match.group(0)  # Return original if PDF not found
+
+def process_embedded_files(content, base_name):
+    """Process embedded files including Kanban boards, images, and PDFs."""
+    print("\nChecking content for embedded files...")
+    
+    # Process images
+    image_pattern = r'!\[\[(.*?)(?:\|(.*?))?\]\]|!\[(.*?)\]\((.*?)\)'
+    content = re.sub(image_pattern, lambda m: process_image_link(m, base_name), content)
+    
+    # Process PDFs
+    pdf_pattern = r'\[\[(.*?\.pdf)(?:\|.*?)?\]\]'
+    content = re.sub(pdf_pattern, lambda m: process_pdf_link(m, base_name), content)
+    
+    # Process Kanban files
+    embed_pattern = r'!\[\[(.*?\.md)(?:\|([^]]*)?)?\]\]'
     matches = list(re.finditer(embed_pattern, content, re.IGNORECASE))
-    print(f"Found {len(matches)} potential embedded files")  # Debug: Show number of matches
     
     for match in matches:
         file_path = match.group(1)
-        is_embed = match.group(2) == 'embed' if match.group(2) else True  # Default to embed if not specified
+        is_embed = match.group(2) == 'embed' if match.group(2) else True
         file_name = clean_filename(file_path)
-        file_ext = os.path.splitext(file_name)[1].lower()
-        
-        print(f"\nProcessing embedded file:")  # Debug info
-        print(f"  File path: {file_path}")
-        print(f"  Is embed: {is_embed}")
-        print(f"  File name: {file_name}")
-        print(f"  Extension: {file_ext}")
-        
-        # Get the post-specific attachments directory
-        post_attachments_dir = get_post_attachments_dir(base_name)
         
         # Try multiple possible locations for the file
         possible_sources = [
-            os.path.join(post_attachments_dir, file_name),
+            os.path.join(get_post_attachments_dir(base_name), file_name),
             os.path.join(attachments_base, file_name),
             os.path.join(posts_dir, file_name),
-            os.path.join(posts_dir, "attachments", file_name),
             os.path.join(attachments_base, base_name, file_name)
         ]
         
         file_found = False
         for file_source in possible_sources:
-            print(f"Checking for file at: {file_source}")
             if os.path.exists(file_source):
-                print(f"Found file at: {file_source}")
                 try:
                     with open(file_source, 'r', encoding='utf-8') as f:
                         file_content = f.read()
-                        print(f"File content preview: {file_content[:200]}...")  # Debug: Show file content
                     
-                    if is_embed:
-                        if file_ext == '.md':
-                            # Check if it's a Kanban file
-                            is_kanban = is_kanban_file(file_content)
-                            print(f"Is Kanban file: {is_kanban}")  # Debug: Show Kanban detection result
-                            if is_kanban:
-                                print(f"Processing Kanban file: {file_name}")
-                                html = parse_kanban(file_content)
-                                print(f"Generated HTML preview: {html[:200]}...")  # Debug: Show generated HTML
-                            else:
-                                html = f'<div class="error">Not a Kanban board: {file_name}</div>'
-                        else:
-                            html = f'<div class="error">Unsupported file type for embedding: {file_ext}</div>'
-                        
-                        # Replace the match with the generated HTML
-                        old_content = content
+                    if is_embed and is_kanban_file(file_content):
+                        html = parse_kanban(file_content)
                         content = content.replace(match.group(0), html)
-                        if content == old_content:
-                            print("Warning: Content replacement did not change the content")  # Debug: Check if replacement worked
-                            print("Original match:", match.group(0))
-                            print("Generated HTML preview:", html[:200])
-                        else:
-                            print("Successfully replaced content with HTML")
-                    else:
+                    elif not is_embed:
                         # Generate link to separate note
                         title = os.path.splitext(file_name)[0]
                         url = get_file_url(title)
-                        
-                        # Copy file to posts directory if it's not already there
-                        target_path = os.path.join(posts_dir, f"{title}.md")
-                        if not os.path.exists(target_path):
-                            with open(target_path, 'w', encoding='utf-8') as f:
-                                f.write(f'''---
-title: "{title}"
-date: {datetime.now().strftime('%Y-%m-%d')}
-type: "{file_ext.replace('.', '')}"
----
-
-{file_content}
-''')
-                        
-                        # Replace with markdown link
                         markdown_link = f'[{title}](/blog/{url})'
                         content = content.replace(match.group(0), markdown_link)
                     
@@ -802,22 +828,8 @@ type: "{file_ext.replace('.', '')}"
                     traceback.print_exc()
         
         if not file_found:
-            print(f"Warning: File not found in any location: {file_name}")
-            print(f"Tried paths:")
-            for path in possible_sources:
-                print(f"  - {path}")
-            print(f"\nContents of directories:")
-            print(f"Post attachments dir ({post_attachments_dir}):")
-            try:
-                print(os.listdir(post_attachments_dir))
-            except Exception as e:
-                print(f"Error listing post attachments directory: {e}")
-            print(f"\nBase attachments dir ({attachments_base}):")
-            try:
-                print(os.listdir(attachments_base))
-            except Exception as e:
-                print(f"Error listing base attachments directory: {e}")
-
+            print(f"Warning: File not found: {file_name}")
+    
     return content
 
 # Update the main file processing loop
@@ -837,7 +849,7 @@ for filename in os.listdir(posts_dir):
         cardlink_pattern = r'```cardlink\n(.*?)\n```'
         content = re.sub(cardlink_pattern, lambda m: parse_cardlink(m.group(1)), content, flags=re.DOTALL)
 
-        # Process embedded Kanban files
+        # Process embedded files
         content = process_embedded_files(content, base_name)
 
         # Handle internal links

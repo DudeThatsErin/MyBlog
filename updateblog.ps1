@@ -7,6 +7,9 @@ Set-StrictMode -Version Latest
 # Set variables for Obsidian to Hugo copy
 $sourcePath = "E:\Obs\MyVault\Blogs"  # Update this path to match your Obsidian vault location
 $destinationPath = Join-Path $PSScriptRoot "content\posts"
+$attachments_base = "E:\Obs\MyVault\90-Attachments\Blogs"  # Path to attachments
+$staticImagesPath = Join-Path $PSScriptRoot "static\images"
+$staticFilesPath = Join-Path $PSScriptRoot "static\files"
 $myrepo = "git@github.com:DudeThatsErin/MyBlog.git"
 
 # Change to the script's directory
@@ -50,7 +53,12 @@ if (-not (Test-Path ".git")) {
     }
 }
 
-# Step 2: Sync posts from Obsidian to Hugo content folder
+# Step 2: Ensure static directories exist
+Write-Host "Creating static directories if they don't exist..."
+New-Item -ItemType Directory -Force -Path $staticImagesPath | Out-Null
+New-Item -ItemType Directory -Force -Path $staticFilesPath | Out-Null
+
+# Step 3: Sync posts from Obsidian to Hugo content folder
 Write-Host "Syncing posts from Obsidian..."
 
 if (-not (Test-Path $sourcePath)) {
@@ -72,7 +80,7 @@ if ($LASTEXITCODE -ge 8) {
     exit 1
 }
 
-# Step 3: Process Markdown files with Python script
+# Step 4: Process Markdown files with Python script
 Write-Host "Processing image links in Markdown files..."
 if (-not (Test-Path "images.py")) {
     Write-Error "Python script images.py not found."
@@ -81,13 +89,15 @@ if (-not (Test-Path "images.py")) {
 
 # Execute the Python script
 try {
+    $env:ATTACHMENTS_BASE = $attachments_base
     & $pythonCommand images.py
+    Remove-Item env:ATTACHMENTS_BASE
 } catch {
     Write-Error "Failed to process image links: $_"
     exit 1
 }
 
-# Step 4: Build the Hugo site
+# Step 5: Build the Hugo site
 Write-Host "Building the Hugo site..."
 try {
     hugo
@@ -96,7 +106,7 @@ try {
     exit 1
 }
 
-# Step 5: Add changes to Git
+# Step 6: Add changes to Git
 Write-Host "Staging changes for Git..."
 $hasChanges = (git status --porcelain) -ne $null
 if (-not $hasChanges) {
@@ -105,7 +115,7 @@ if (-not $hasChanges) {
     git add .
 }
 
-# Step 6: Commit changes with a dynamic message
+# Step 7: Commit changes with a dynamic message
 $commitMessage = "New Blog Post on $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 $hasStagedChanges = (git diff --cached --name-only) -ne $null
 if (-not $hasStagedChanges) {
@@ -115,7 +125,7 @@ if (-not $hasStagedChanges) {
     git commit -m "$commitMessage"
 }
 
-# Step 7: Push all changes to the main branch
+# Step 8: Push all changes to the main branch
 Write-Host "Deploying to GitHub Master..."
 try {
     git push origin master
@@ -124,7 +134,7 @@ try {
     exit 1
 }
 
-# Step 8: Push the public folder to the hostinger branch
+# Step 9: Push the public folder to the hostinger branch
 Write-Host "Deploying to GitHub Hostinger..."
 
 # Check if the temporary branch exists and delete it
