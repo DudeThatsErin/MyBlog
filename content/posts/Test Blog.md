@@ -7,7 +7,6 @@ tags:
   - software
   - engineering
   - tutorial
-  - blog
 categories:
   - tech
 draft: false

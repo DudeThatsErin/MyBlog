@@ -9,7 +9,6 @@ tags:
   - python
   - obsidian
   - markdown
-  - blog
 categories:
   - tech
 draft: false
@@ -351,6 +350,8 @@ To support Obsidian's Dataview plugin in Hugo, create shortcodes in `layouts/sho
 1. `datatable.html` for tables
 2. `datalist.html` for lists
 
+These are in my Gist linked above.
+
 Example Dataview query that works with this setup (replace ~ with backticks):
 ```markdown
 ~~~dataview
@@ -360,6 +361,7 @@ Example Dataview query that works with this setup (replace ~ with backticks):
 ```
 
 ### PDF Embedding
+This is in my Gist linked above.
 
 Create a shortcode for PDF embedding (`layouts/shortcodes/pdf.html`):
 

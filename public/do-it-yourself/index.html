@@ -162,8 +162,6 @@
       
       #<a href="https://erinskidds.com/blog/tags/markdown/">markdown</a>&nbsp;
       
-      #<a href="https://erinskidds.com/blog/tags/blog/">blog</a>&nbsp;
-      
     </span>
   
 
@@ -526,12 +524,14 @@
 <li><code>datatable.html</code> for tables</li>
 <li><code>datalist.html</code> for lists</li>
 </ol>
+<p>These are in my Gist linked above.</p>
 <p>Example Dataview query that works with this setup (replace ~ with backticks):</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-markdown" data-lang="markdown"><span class="line"><span class="cl">~~~dataview
 </span></span><span class="line"><span class="cl">	TABLE file.name AS &#34;Name&#34;, title AS &#34;Title&#34;, file.path AS &#34;URL&#34;
 </span></span><span class="line"><span class="cl">	FROM &#34;Blogs&#34;
 </span></span><span class="line"><span class="cl">~~~
 </span></span></code></pre></div><h3 id="pdf-embedding">PDF Embedding</h3>
+<p>This is in my Gist linked above.</p>
 <p>Create a shortcode for PDF embedding (<code>layouts/shortcodes/pdf.html</code>):</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;pdf-container&#34;</span><span class="p">&gt;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">iframe</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;{{ .Get &#34;</span><span class="na">src</span><span class="err">&#34;</span> <span class="err">}}&#34;</span> <span class="na">style</span><span class="o">=</span><span class="s">&#34;width: 100%; height: 800px;&#34;</span> <span class="na">frameborder</span><span class="o">=</span><span class="s">&#34;0&#34;</span><span class="p">&gt;</span>
