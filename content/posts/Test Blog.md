@@ -43,7 +43,6 @@ Random Text
 
 ## Kanban - h2
 
-<h2>1</h2>
 <div class="kanban-board">
 <style>
             .kanban-board {
@@ -70,7 +69,7 @@ Random Text
                 margin-bottom: 1rem;
                 padding-bottom: 0.5rem;
                 border-bottom: 2px solid var(--accent);
-                color: var(--color);
+                color: var(--accent);
             }
             .kanban-cards {
                 flex: 1;
@@ -89,26 +88,29 @@ Random Text
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
             .kanban-card-text {
-                color: var(--color);
+                color: var(--foreground);
                 font-size: 0.9rem;
                 white-space: pre-wrap;
-            }
-            .kanban-card-checkbox {
-                margin-right: 0.5rem;
-                opacity: 0.6;
             }
             .kanban-card-title {
                 font-weight: bold;
                 margin-bottom: 0.5rem;
+                color: var(--accent);
             }
             .kanban-card-checklist {
-                margin-left: 1.5rem;
                 margin-top: 0.5rem;
+                list-style: none;
+                padding-left: 0;
             }
             .kanban-card-checklist-item {
                 display: flex;
                 align-items: flex-start;
                 margin-bottom: 0.25rem;
+                color: var(--foreground);
+            }
+            .kanban-card-checkbox {
+                margin-right: 0.5rem;
+                opacity: 0.6;
             }
             @media (max-width: 768px) {
                 .kanban-board {
@@ -120,93 +122,34 @@ Random Text
             }
         </style>
 <div class="kanban-lane">
-<div class="kanban-lane-header">-</div>
+<div class="kanban-lane-header">1</div>
 <div class="kanban-cards">
 <div class="kanban-card">
-<div class="kanban-card-text"><span class="kanban-card-checkbox">☐</span>Another One</div>
-</div>
-<div class="kanban-card">
-<div class="kanban-card-text"><span class="kanban-card-checkbox">☐</span>Checklist</div>
-</div>
-<div class="kanban-card">
-<div class="kanban-card-text"><span class="kanban-card-checkbox">☐</span>Test</div>
+<div class="kanban-card-title">First Card</div>
+<div class="kanban-card-text">Text</div>
 </div>
 </div>
 </div>
 <div class="kanban-lane">
-<div class="kanban-lane-header">]</div>
+<div class="kanban-lane-header">2</div>
 <div class="kanban-cards">
 <div class="kanban-card">
-<div class="kanban-card-text"><span class="kanban-card-checkbox">☐</span>Another One</div>
-</div>
-<div class="kanban-card">
-<div class="kanban-card-text"><span class="kanban-card-checkbox">☐</span>Checklist</div>
-</div>
-<div class="kanban-card">
-<div class="kanban-card-text"><span class="kanban-card-checkbox">☐</span>Test</div>
+<div class="kanban-card-text">Another One</div>
+<ul class="kanban-card-checklist">
+<li class="kanban-card-checklist-item">
+<span class="kanban-card-checkbox">☐</span>Checklist
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="kanban-lane">
-<div class="kanban-lane-header">rs</div>
+<div class="kanban-lane-header">3</div>
 <div class="kanban-cards">
 <div class="kanban-card">
-<div class="kanban-card-text"><span class="kanban-card-checkbox">☐</span>Another One</div>
+<div class="kanban-card-text">Test</div>
+<div class="kanban-card-text">%% kanban:settings<br>```<br>{"kanban-plugin":"board","list-collapse":[false,false,false]}<br>```<br>%%</div>
 </div>
-<div class="kanban-card">
-<div class="kanban-card-text"><span class="kanban-card-checkbox">☐</span>Checklist</div>
-</div>
-<div class="kanban-card">
-<div class="kanban-card-text"><span class="kanban-card-checkbox">☐</span>Test</div>
-</div>
-</div>
-</div>
-<div class="kanban-lane">
-<div class="kanban-lane-header">#</div>
-<div class="kanban-cards">
-<div class="kanban-card">
-<div class="kanban-card-text"><span class="kanban-card-checkbox">☐</span>Another One</div>
-</div>
-<div class="kanban-card">
-<div class="kanban-card-text"><span class="kanban-card-checkbox">☐</span>Checklist</div>
-</div>
-<div class="kanban-card">
-<div class="kanban-card-text"><span class="kanban-card-checkbox">☐</span>Test</div>
-</div>
-</div>
-</div>
-<div class="kanban-lane">
-<div class="kanban-lane-header">no</div>
-<div class="kanban-cards">
-<div class="kanban-card">
-<div class="kanban-card-text"><span class="kanban-card-checkbox">☐</span>Checklist</div>
-</div>
-<div class="kanban-card">
-<div class="kanban-card-text"><span class="kanban-card-checkbox">☐</span>Test</div>
-</div>
-</div>
-</div>
-<div class="kanban-lane">
-<div class="kanban-lane-header">-</div>
-<div class="kanban-cards">
-<div class="kanban-card">
-<div class="kanban-card-text"><span class="kanban-card-checkbox">☐</span>Test</div>
-</div>
-</div>
-</div>
-<div class="kanban-lane">
-<div class="kanban-lane-header">`</div>
-<div class="kanban-cards">
-</div>
-</div>
-<div class="kanban-lane">
-<div class="kanban-lane-header">"b</div>
-<div class="kanban-cards">
-</div>
-</div>
-<div class="kanban-lane">
-<div class="kanban-lane-header">[f</div>
-<div class="kanban-cards">
 </div>
 </div>
 </div>
