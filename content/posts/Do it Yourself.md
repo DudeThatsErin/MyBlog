@@ -14,6 +14,7 @@ categories:
   - tech
 draft: false
 toc: true
+lastmod: 2025-02-12T01:27:00
 ---
 # Create your own blog from Markdown!
 
