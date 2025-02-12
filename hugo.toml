@@ -21,7 +21,7 @@ pagination.pagerSize = 5
 [params]
   # Terminal theme specific settings
   contentTypeName = "posts"
-  themeColor = "blue"
+  themeColor = "teal"
   showMenuItems = 2
   fullWidthTheme = false
   centerTheme = true
