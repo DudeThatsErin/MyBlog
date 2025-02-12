@@ -33,9 +33,9 @@ Random Text
 `inline code` random text here next to it.
 
 ## Image - h2
-![IMG-20250210021231096.jpeg](/blog/images/IMG-20250210021231096.jpeg)
+![[IMG-20250210021231096.jpeg]]
 ### PDF - h3
-{{< pdf src="/blog/files/IMG-20250210021231508.pdf" >}}
+![[IMG-20250210021231508.pdf|src3]]
 
 ## Kanban - h2
 

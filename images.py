@@ -703,240 +703,6 @@ def parse_kanban(kanban_content):
         print(kanban_content[:500])  # Print first 500 chars to help debug
         return f'<div class="error">Error parsing Kanban board: {str(e)}</div>'
 
-def parse_canvas(canvas_content):
-    """Parse a Canvas file and convert it to HTML."""
-    try:
-        print("\nProcessing Canvas content:")
-        print(f"Content preview: {canvas_content[:200]}...")
-        
-        # Try to parse the JSON content
-        try:
-            data = json.loads(canvas_content)
-        except json.JSONDecodeError as e:
-            print(f"JSON parsing error: {e}")
-            print("Raw canvas content:")
-            print(canvas_content)
-            raise ValueError(f"Failed to parse Canvas content as JSON: {e}")
-        
-        if not data or not isinstance(data, dict):
-            raise ValueError("Invalid Canvas data format")
-        
-        print(f"Found {len(data.get('nodes', []))} nodes and {len(data.get('edges', []))} edges")
-        
-        html = ['<div class="canvas-container">']
-        html.append('''<style>
-            .canvas-container {
-                position: relative;
-                width: 100%;
-                height: 800px;
-                background-color: var(--background);
-                background-image: radial-gradient(circle, var(--border-color) 1px, transparent 1px);
-                background-size: 20px 20px;
-                border: 1px solid var(--border-color);
-                border-radius: 8px;
-                overflow: hidden;
-                margin: 1rem 0;
-                cursor: grab;
-            }
-            .canvas-container:active {
-                cursor: grabbing;
-            }
-            .canvas-node {
-                position: absolute;
-                background: var(--background);
-                border: 2px solid var(--border-color);
-                border-radius: 4px;
-                padding: 1rem;
-                max-width: 300px;
-                transition: all 0.2s ease;
-                z-index: 1;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            .canvas-node:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-                z-index: 2;
-            }
-            .canvas-node-text {
-                font-size: 0.9rem;
-                color: var(--color);
-                white-space: pre-wrap;
-            }
-            .canvas-node-file {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                background: var(--background);
-                padding: 1rem;
-                border-radius: 4px;
-            }
-            .canvas-node-file img {
-                max-width: 100%;
-                height: auto;
-                margin-bottom: 0.5rem;
-                border-radius: 4px;
-                border: 1px solid var(--border-color);
-            }
-            .canvas-node-file a {
-                color: var(--accent);
-                text-decoration: none;
-                font-weight: bold;
-                padding: 0.5rem 1rem;
-                background: var(--background);
-                border: 1px solid var(--accent);
-                border-radius: 4px;
-                transition: all 0.2s ease;
-            }
-            .canvas-node-file a:hover {
-                background: var(--accent);
-                color: var(--background);
-            }
-            .canvas-edge {
-                position: absolute;
-                height: 2px;
-                background: var(--accent);
-                opacity: 0.5;
-                transform-origin: left center;
-                pointer-events: none;
-                transition: opacity 0.2s ease;
-            }
-            .canvas-edge:hover {
-                opacity: 1;
-            }
-            @media (max-width: 768px) {
-                .canvas-container {
-                    height: auto;
-                    min-height: 600px;
-                    background-image: none;
-                }
-                .canvas-node {
-                    position: relative !important;
-                    left: 0 !important;
-                    top: 0 !important;
-                    margin: 1rem 0;
-                    max-width: none;
-                }
-                .canvas-edge {
-                    display: none;
-                }
-            }
-        </style>''')
-        
-        # Add pan and zoom functionality
-        html.append('''<script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const container = document.querySelector('.canvas-container');
-                let isPanning = false;
-                let startX, startY, scrollLeft, scrollTop;
-
-                container.addEventListener('mousedown', function(e) {
-                    isPanning = true;
-                    startX = e.pageX - container.offsetLeft;
-                    startY = e.pageY - container.offsetTop;
-                    scrollLeft = container.scrollLeft;
-                    scrollTop = container.scrollTop;
-                });
-
-                container.addEventListener('mousemove', function(e) {
-                    if (!isPanning) return;
-                    e.preventDefault();
-                    const x = e.pageX - container.offsetLeft;
-                    const y = e.pageY - container.offsetTop;
-                    const dx = x - startX;
-                    const dy = y - startY;
-                    container.scrollLeft = scrollLeft - dx;
-                    container.scrollTop = scrollTop - dy;
-                });
-
-                container.addEventListener('mouseup', function() {
-                    isPanning = false;
-                });
-
-                container.addEventListener('mouseleave', function() {
-                    isPanning = false;
-                });
-
-                // Prevent dragging on nodes
-                container.querySelectorAll('.canvas-node').forEach(node => {
-                    node.addEventListener('mousedown', e => e.stopPropagation());
-                });
-            });
-        </script>''')
-        
-        # Process nodes with enhanced styling
-        node_positions = {}
-        for node in data.get('nodes', []):
-            node_id = node.get('id', '')
-            x = node.get('x', 0)
-            y = node.get('y', 0)
-            node_type = node.get('type', '')
-            width = node.get('width', 300)
-            height = node.get('height', 'auto')
-            
-            node_positions[node_id] = {'x': x, 'y': y}
-            
-            html.append(f'<div class="canvas-node" id="node-{node_id}" style="left: {x}px; top: {y}px; width: {width}px; height: {height}px;">')
-            
-            if node_type == 'text':
-                text = node.get('text', '')
-                html.append(f'<div class="canvas-node-text">{text}</div>')
-            elif node_type == 'file':
-                file_path = node.get('file', '')
-                file_name = os.path.basename(file_path)
-                file_ext = os.path.splitext(file_name)[1].lower()
-                
-                html.append('<div class="canvas-node-file">')
-                if file_ext in ['.jpg', '.jpeg', '.png', '.gif']:
-                    html.append(f'<img src="/blog/images/{file_name}" alt="{file_name}">')
-                    html.append(f'<a href="/blog/images/{file_name}" target="_blank">View Image</a>')
-                elif file_ext == '.pdf':
-                    html.append(f'<a href="/blog/files/{file_name}" target="_blank">Open PDF: {file_name}</a>')
-                elif file_ext == '.md':
-                    title = os.path.splitext(file_name)[0]
-                    url = get_file_url(title)
-                    html.append(f'<a href="/blog/{url}">View Post: {title}</a>')
-                else:
-                    html.append(f'<div class="canvas-node-text">{file_name}</div>')
-                html.append('</div>')
-            
-            html.append('</div>')
-        
-        # Process edges with enhanced styling
-        for edge in data.get('edges', []):
-            from_id = edge.get('fromNode', '')
-            to_id = edge.get('toNode', '')
-            
-            if from_id in node_positions and to_id in node_positions:
-                from_pos = node_positions[from_id]
-                to_pos = node_positions[to_id]
-                
-                dx = to_pos['x'] - from_pos['x']
-                dy = to_pos['y'] - from_pos['y']
-                length = (dx * dx + dy * dy) ** 0.5
-                angle = math.atan2(dy, dx) * (180 / math.pi)
-                
-                html.append(f'''<div class="canvas-edge" style="
-                    left: {from_pos['x']}px;
-                    top: {from_pos['y']}px;
-                    width: {length}px;
-                    transform: rotate({angle}deg);
-                "></div>''')
-        
-        html.append('</div>')
-        
-        result = '\n'.join(html)
-        print("\nGenerated Canvas HTML preview:")
-        print(result[:200])
-        return result
-        
-    except Exception as e:
-        print(f"Error parsing Canvas: {e}")
-        print("Full traceback:")
-        traceback.print_exc()
-        print("\nCanvas content preview:")
-        print(canvas_content[:500])
-        return f'<div class="error">Error parsing Canvas: {str(e)}</div>'
-
 def is_kanban_file(content):
     """Check if a file is a Kanban board by looking for the kanban-plugin YAML frontmatter."""
     try:
@@ -949,12 +715,12 @@ def is_kanban_file(content):
     return False
 
 def process_embedded_files(content, base_name):
-    """Process embedded Kanban and Canvas files."""
+    """Process embedded Kanban files."""
     print("\nChecking content for embedded files...")
     print(f"Content preview: {content[:200]}...")  # Debug: Show content preview
     
     # Pattern for embedded files: ![[filename.extension|embed]] or ![[filename.extension]]
-    embed_pattern = r'!\[\[(.*?(?:\.canvas|\.md))(?:\|([^]]*)?)?\]\]'
+    embed_pattern = r'!\[\[(.*?(?:\.md))(?:\|([^]]*)?)?\]\]'
     matches = list(re.finditer(embed_pattern, content, re.IGNORECASE))
     print(f"Found {len(matches)} potential embedded files")  # Debug: Show number of matches
     
@@ -980,9 +746,7 @@ def process_embedded_files(content, base_name):
             os.path.join(attachments_base, file_name),
             os.path.join(posts_dir, file_name),
             os.path.join(posts_dir, "attachments", file_name),
-            # Add more specific paths for Canvas files
-            os.path.join(attachments_base, base_name, file_name),
-            os.path.join(attachments_base, "Canvas", file_name)
+            os.path.join(attachments_base, base_name, file_name)
         ]
         
         file_found = False
@@ -1006,10 +770,6 @@ def process_embedded_files(content, base_name):
                                 print(f"Generated HTML preview: {html[:200]}...")  # Debug: Show generated HTML
                             else:
                                 html = f'<div class="error">Not a Kanban board: {file_name}</div>'
-                        elif file_ext == '.canvas':
-                            print(f"Processing Canvas file: {file_name}")
-                            html = parse_canvas(file_content)
-                            print(f"Generated Canvas HTML preview: {html[:200]}...")  # Debug: Show generated HTML
                         else:
                             html = f'<div class="error">Unsupported file type for embedding: {file_ext}</div>'
                         
@@ -1086,7 +846,7 @@ for filename in os.listdir(posts_dir):
         cardlink_pattern = r'```cardlink\n(.*?)\n```'
         content = re.sub(cardlink_pattern, lambda m: parse_cardlink(m.group(1)), content, flags=re.DOTALL)
 
-        # Process embedded Kanban and Canvas files
+        # Process embedded Kanban files
         content = process_embedded_files(content, base_name)
 
         # Handle internal links
@@ -1099,74 +859,6 @@ for filename in os.listdir(posts_dir):
                 markdown_link = f"[{meta['title']}](/blog/{meta['url']})"
                 print(f"Converting internal link: {link_name} -> {markdown_link}")
                 content = re.sub(r'\[\[' + re.escape(link_name) + r'\]\]', markdown_link, content)
-
-        # Handle media files (images and PDFs)
-        # Updated pattern to handle folder paths and aliases
-        media_pattern = r'!\[\[(.*?(?:\.jpg|\.jpeg|\.png|\.gif|\.pdf))(?:\|([^]]*)?)?\]\]'
-        media_matches = re.finditer(media_pattern, content, re.IGNORECASE)
-        
-        for match in media_matches:
-            file_path = match.group(1)
-            alias = match.group(2) if match.group(2) else None
-            file_name = clean_filename(file_path)
-            file_ext = os.path.splitext(file_name)[1].lower()
-            
-            # Get the post-specific attachments directory
-            post_attachments_dir = get_post_attachments_dir(base_name)
-            
-            # Try multiple possible locations for the file
-            possible_sources = [
-                os.path.join(post_attachments_dir, file_name),  # In post's attachments folder
-                os.path.join(attachments_base, file_name),      # In base attachments
-                os.path.join(posts_dir, file_name),             # Direct in posts
-                os.path.join(posts_dir, "attachments", file_name)  # In posts/attachments
-            ]
-            
-            print(f"\nLooking for {file_name}")
-            print(f"Original path: {file_path}")
-            print(f"Alias: {alias}")
-            print(f"Post attachments dir: {post_attachments_dir}")
-            
-            file_found = False
-            for file_source in possible_sources:
-                print(f"Trying path: {file_source}")
-                if os.path.exists(file_source):
-                    print(f"Found file at: {file_source}")
-                    if file_ext in ['.jpg', '.jpeg', '.png', '.gif']:
-                        # Handle images
-                        target_path = os.path.join(static_images_dir, file_name)
-                        shutil.copy(file_source, target_path)
-                        markdown_link = f'![{alias or file_name}](/blog/images/{file_name})'
-                        print(f"Copied image to: {target_path}")
-                    elif file_ext == '.pdf':
-                        # Handle PDFs
-                        target_path = os.path.join(static_files_dir, file_name)
-                        shutil.copy(file_source, target_path)
-                        markdown_link = f'{{{{< pdf src="/blog/files/{file_name}" >}}}}'
-                        print(f"Copied PDF to: {target_path}")
-                    
-                    print(f"Replacing {match.group(0)} with {markdown_link}")
-                    # Replace the Obsidian link with the new markdown/shortcode
-                    content = content.replace(match.group(0), markdown_link)
-                    file_found = True
-                    break
-            
-            if not file_found:
-                print(f"Warning: File not found in any location")
-                print(f"Tried paths:")
-                for path in possible_sources:
-                    print(f"  - {path}")
-                print(f"\nContents of directories:")
-                print(f"Post attachments dir ({post_attachments_dir}):")
-                try:
-                    print(os.listdir(post_attachments_dir))
-                except Exception as e:
-                    print(f"Error listing post attachments directory: {e}")
-                print(f"\nBase attachments dir ({attachments_base}):")
-                try:
-                    print(os.listdir(attachments_base))
-                except Exception as e:
-                    print(f"Error listing base attachments directory: {e}")
 
         # Write the updated content back
         with open(filepath, "w", encoding="utf-8") as file:
