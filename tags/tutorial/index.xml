@@ -687,7 +687,6 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
 });
 &lt;/script&gt; 
 &lt;h2 id=&#34;kanban---h2&#34;&gt;Kanban - h2&lt;/h2&gt;
-&lt;h2&gt;1&lt;/h2&gt;
 &lt;div class=&#34;kanban-board&#34;&gt;
 &lt;style&gt;
             .kanban-board {
@@ -714,7 +713,7 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
                 margin-bottom: 1rem;
                 padding-bottom: 0.5rem;
                 border-bottom: 2px solid var(--accent);
-                color: var(--color);
+                color: var(--accent);
             }
             .kanban-cards {
                 flex: 1;
@@ -733,26 +732,29 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
             .kanban-card-text {
-                color: var(--color);
+                color: var(--foreground);
                 font-size: 0.9rem;
                 white-space: pre-wrap;
-            }
-            .kanban-card-checkbox {
-                margin-right: 0.5rem;
-                opacity: 0.6;
             }
             .kanban-card-title {
                 font-weight: bold;
                 margin-bottom: 0.5rem;
+                color: var(--accent);
             }
             .kanban-card-checklist {
-                margin-left: 1.5rem;
                 margin-top: 0.5rem;
+                list-style: none;
+                padding-left: 0;
             }
             .kanban-card-checklist-item {
                 display: flex;
                 align-items: flex-start;
                 margin-bottom: 0.25rem;
+                color: var(--foreground);
+            }
+            .kanban-card-checkbox {
+                margin-right: 0.5rem;
+                opacity: 0.6;
             }
             @media (max-width: 768px) {
                 .kanban-board {
@@ -764,93 +766,34 @@ document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
             }
         &lt;/style&gt;
 &lt;div class=&#34;kanban-lane&#34;&gt;
-&lt;div class=&#34;kanban-lane-header&#34;&gt;-&lt;/div&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;1&lt;/div&gt;
 &lt;div class=&#34;kanban-cards&#34;&gt;
 &lt;div class=&#34;kanban-card&#34;&gt;
-&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Another One&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;kanban-card&#34;&gt;
-&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Checklist&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;kanban-card&#34;&gt;
-&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Test&lt;/div&gt;
+&lt;div class=&#34;kanban-card-title&#34;&gt;First Card&lt;/div&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;Text&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&#34;kanban-lane&#34;&gt;
-&lt;div class=&#34;kanban-lane-header&#34;&gt;]&lt;/div&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;2&lt;/div&gt;
 &lt;div class=&#34;kanban-cards&#34;&gt;
 &lt;div class=&#34;kanban-card&#34;&gt;
-&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Another One&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;kanban-card&#34;&gt;
-&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Checklist&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;kanban-card&#34;&gt;
-&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Test&lt;/div&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;Another One&lt;/div&gt;
+&lt;ul class=&#34;kanban-card-checklist&#34;&gt;
+&lt;li class=&#34;kanban-card-checklist-item&#34;&gt;
+&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Checklist
+&lt;/li&gt;
+&lt;/ul&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&#34;kanban-lane&#34;&gt;
-&lt;div class=&#34;kanban-lane-header&#34;&gt;rs&lt;/div&gt;
+&lt;div class=&#34;kanban-lane-header&#34;&gt;3&lt;/div&gt;
 &lt;div class=&#34;kanban-cards&#34;&gt;
 &lt;div class=&#34;kanban-card&#34;&gt;
-&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Another One&lt;/div&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;Test&lt;/div&gt;
+&lt;div class=&#34;kanban-card-text&#34;&gt;%% kanban:settings&lt;br&gt;```&lt;br&gt;{&#34;kanban-plugin&#34;:&#34;board&#34;,&#34;list-collapse&#34;:[false,false,false]}&lt;br&gt;```&lt;br&gt;%%&lt;/div&gt;
 &lt;/div&gt;
-&lt;div class=&#34;kanban-card&#34;&gt;
-&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Checklist&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;kanban-card&#34;&gt;
-&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Test&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;kanban-lane&#34;&gt;
-&lt;div class=&#34;kanban-lane-header&#34;&gt;#&lt;/div&gt;
-&lt;div class=&#34;kanban-cards&#34;&gt;
-&lt;div class=&#34;kanban-card&#34;&gt;
-&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Another One&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;kanban-card&#34;&gt;
-&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Checklist&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;kanban-card&#34;&gt;
-&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Test&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;kanban-lane&#34;&gt;
-&lt;div class=&#34;kanban-lane-header&#34;&gt;no&lt;/div&gt;
-&lt;div class=&#34;kanban-cards&#34;&gt;
-&lt;div class=&#34;kanban-card&#34;&gt;
-&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Checklist&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;kanban-card&#34;&gt;
-&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Test&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;kanban-lane&#34;&gt;
-&lt;div class=&#34;kanban-lane-header&#34;&gt;-&lt;/div&gt;
-&lt;div class=&#34;kanban-cards&#34;&gt;
-&lt;div class=&#34;kanban-card&#34;&gt;
-&lt;div class=&#34;kanban-card-text&#34;&gt;&lt;span class=&#34;kanban-card-checkbox&#34;&gt;☐&lt;/span&gt;Test&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;kanban-lane&#34;&gt;
-&lt;div class=&#34;kanban-lane-header&#34;&gt;`&lt;/div&gt;
-&lt;div class=&#34;kanban-cards&#34;&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;kanban-lane&#34;&gt;
-&lt;div class=&#34;kanban-lane-header&#34;&gt;&#34;b&lt;/div&gt;
-&lt;div class=&#34;kanban-cards&#34;&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;kanban-lane&#34;&gt;
-&lt;div class=&#34;kanban-lane-header&#34;&gt;[f&lt;/div&gt;
-&lt;div class=&#34;kanban-cards&#34;&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;</content>
