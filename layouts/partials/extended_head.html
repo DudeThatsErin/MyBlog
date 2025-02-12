@@ -5,9 +5,8 @@
 <link rel="manifest" href="/blog/site.webmanifest">
 <meta name="theme-color" content="#ff6188">
 
-<!-- Custom CSS -->
-{{ $customCSS := resources.Get "css/custom.css" | minify }}
-<link rel="stylesheet" href="{{ $customCSS.RelPermalink }}">
+<!-- Terminal Theme CSS -->
+<link rel="stylesheet" href="/blog/terminal.css">
 
 <!-- Override theme CSS variables -->
 <style>
