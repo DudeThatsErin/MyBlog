@@ -1,5 +1,5 @@
 enabled: true
-
+home_menu_item: false
 built_in_css: true
 extra_admin_twig_path: 'theme://admin/templates'
 admin_list:
@@ -12,3 +12,4 @@ directories:
   - 'blueprints://flex-objects/pages.yaml'
   - 'blueprints://flex-objects/user-accounts.yaml'
   - 'blueprints://flex-objects/user-groups.yaml'
+  - 'blueprints://flex-objects/blog.yaml'
